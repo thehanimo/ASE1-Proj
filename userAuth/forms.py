@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
+from phonenumber_field.formfields import PhoneNumberField
 
 from userAuth.models import Agent, Customer, Executive, User
 
@@ -36,3 +37,15 @@ class ExecutiveSignUpForm(UserCreationForm):
 		if commit:
 			user.save()
 		return user
+
+class CustomerDetailsForm(forms.ModelForm):
+	class Meta:
+		model = Customer
+		fields = ('fullname', 'photo', 'phone', 'street', 'area')
+
+	def save(self, user=None):
+		customer_details = super(CustomerDetailsForm, self).save(commit=False)
+		if user:
+			customer_details.user = user
+		customer_details.save()
+		return customer_details

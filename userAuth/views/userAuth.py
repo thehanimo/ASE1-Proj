@@ -12,7 +12,7 @@ def home(request):
             return redirect('agent:home')
         elif request.user.user_type == 1:
         	return redirect('customer:home')
-        else:
+        elif request.user.user_type == 3:
             return redirect('executive:home')
 
     return render(request, 'userAuth/home.html')
