@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import FormView
 from ..models import User
 from ..forms import PasswordResetForm, NewPasswordForm
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, render_to_response
@@ -70,4 +71,16 @@ def new_password(request, uidb64, token):
 		return render(request, 'registration/new_password.html', {'form':form})
 	else:
 		return render(request, 'registration/activation_err.html')
+
+@login_required(login_url='forbidden')
+def change_password(request):
+	form = NewPasswordForm()
+	if request.method=='POST':
+		form = NewPasswordForm(request.POST)
+		if form.is_valid():
+			user = request.user
+			form.save(user)
+			login(request, user)
+			return redirect('/')
+	return render(request, 'registration/new_password.html', {'form':form})
 

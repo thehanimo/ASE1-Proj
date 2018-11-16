@@ -4,14 +4,16 @@
 {% block content %}
   <div class="row">
     <div class="col-md-8 col-sm-10 col-12">
-      <h2>My Profile</h2><br>
+      <h1>My Profile</h1><br>
       <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}">
         <b>Email:</b><span style="padding-left: 31px;">{{user.email}}</span><br>
         <table>{{ form }}</table>
+        <br/>
         <button type="submit" class="btn btn-success">Submit</button>
       </form>
     </div>
   </div>
+    Change your password <a href="{% url 'change_password' %}">here.</a>
 {% endblock %}

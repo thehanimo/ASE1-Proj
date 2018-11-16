@@ -30,6 +30,7 @@ urlpatterns = [
 	path('accounts/signup/', customers.CustomerSignUpView.as_view(), name='signup'),
 	path('accounts/iforgot/', userAuth.password_reset, name='password_reset'),
 	url(r'^accounts/NewPassword/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', userAuth.new_password, name='new_password'),
+	path('accounts/changepassword', userAuth.change_password, name='change_password')
 ]
 #urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
