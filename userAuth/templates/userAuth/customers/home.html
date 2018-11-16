@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-</head>
-<body>
-Hi Customer!
-<img src='media/{{user.customer.photo}}'>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<h3>Hi {{user.username}}!</h3>
+<img src='media/{{user.customer.photo}}' onerror="if (this.src != 'media/default.jpg') this.src = 'media/default.jpg';" width="200px" height="200px"><br>
+<a href="{% url 'customer:editprofile' %}">View/Edit profile</a>
+{% endblock %}

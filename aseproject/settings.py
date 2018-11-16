@@ -127,6 +127,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'thewatercomp@gmail.com'
+EMAIL_HOST_PASSWORD = 'wat3r123'
+EMAIL_PORT = 587
+
+ALLOWED_HOSTS = ['*']

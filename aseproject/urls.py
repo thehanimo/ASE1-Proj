@@ -17,9 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 from userAuth.views import userAuth, customers, agents, executives
 from . import settings
-from django.contrib.staticfiles.urls import static
+from django.contrib.staticfiles.urls import static\
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns
- 
+from django.conf.urls import url
  
 
 
@@ -27,10 +27,9 @@ urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('', include('userAuth.urls')),
 	path('accounts/', include('django.contrib.auth.urls')),
-	path('accounts/signup/', userAuth.SignUpView.as_view(), name='signup'),
-    path('accounts/signup/agent/', agents.AgentSignUpView.as_view(), name='agent_signup'),
-	path('accounts/signup/customer/', customers.CustomerSignUpView.as_view(), name='customer_signup'),
-	path('accounts/signup/executive/', executives.ExecutiveSignUpView.as_view(), name='executive_signup'),
+	path('accounts/signup/', customers.CustomerSignUpView.as_view(), name='signup'),
+	path('accounts/iforgot/', userAuth.password_reset, name='password_reset'),
+	url(r'^accounts/NewPassword/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', userAuth.new_password, name='new_password'),
 ]
 #urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
