@@ -30,7 +30,6 @@ class User(AbstractUser):
 class Agent(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 	fullname = models.CharField(max_length=50, validators=[alphabets])
-	photo = models.ImageField(upload_to=upload_path_handler, blank=True)
 	phone = PhoneNumberField(null=False, blank=False, unique=True)
 	area = models.CharField(max_length=6, default='', choices=AREA_CHOICES)
 	rating = models.FloatField(default=0)

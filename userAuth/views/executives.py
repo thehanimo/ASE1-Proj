@@ -18,8 +18,8 @@ from ..tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from ..decorators import executive_required
-from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm
-from ..models import User, Executive
+from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm
+from ..models import User, Executive, Agent
 
 class ExecutiveSignUpView(CreateView):
 	model = User
@@ -70,14 +70,44 @@ class ExecutiveDetailsView(UpdateView):
 		return reverse("executive:home")
 
 def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.email_verified = True
-        user.save()
-        return render(request, 'registration/exec_activation_suc.html')
-    else:
-        return render(request, 'registration/activation_err.html')
+	try:
+		uid = force_text(urlsafe_base64_decode(uidb64))
+		user = User.objects.get(pk=uid)
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+	if user is not None and account_activation_token.check_token(user, token):
+		user.email_verified = True
+		user.save()
+		return render(request, 'registration/exec_activation_suc.html')
+	else:
+		return render(request, 'registration/activation_err.html')
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class AgentsView(ListView):
+	model = Agent
+	ordering = ('fullname', )
+	context_object_name = 'agents'
+	template_name = 'userAuth/executives/agents_list.html'
+
+	def get_queryset(self):
+		queryset = Agent.objects.all()
+		return queryset
+
+@login_required
+@executive_required
+def AgentEditView(request, id):
+	try:
+		uid = int(id)
+		agent_user = User.objects.get(pk=uid)
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		agent_user = None
+	if agent_user:
+		form = AgentDetailsForm()
+		if request.method == 'POST':
+			form = AgentDetailsForm(request.POST)
+			if form.is_valid():
+				form.save(agent_user)
+				return redirect('/')
+
+		return render(request, 'registration/agent_edit.html', {'form':form})
+	return redirect('forbidden')

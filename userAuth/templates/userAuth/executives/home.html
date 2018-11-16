@@ -3,6 +3,8 @@
 <h3>Hi {{user.username}}!</h3>
 <h6>Executive site</h6>
 <img src='/media/{{user.executive.photo}}' onerror="if (this.src != '/media/default.jpg') this.src = '/media/default.jpg';" width="200px" height="200px"><br>
-<a href="{% url 'executive:viewprofile' %}">View/Edit profile picture</a>
+<a href="{% url 'executive:viewprofile' %}">View/Edit profile</a>
 <h4>Complaint(s) assigned: {{user.executive.complaints_queue}}</h4>
+<a href="{% url 'agent:register' %}">Add an agent</a><br/>
+<a href="{% url 'executive:agentslist' %}">View agents</a>
 {% endblock %}

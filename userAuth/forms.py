@@ -6,8 +6,10 @@ from phonenumber_field.formfields import PhoneNumberField
 from userAuth.models import Agent, Customer, Executive, User
 
 class AgentSignUpForm(UserCreationForm):
+    email = forms.EmailField(max_length=200, help_text='Required')
     class Meta(UserCreationForm.Meta):
         model = User
+        fields = ('username', 'email', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -15,6 +17,23 @@ class AgentSignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class AgentSignUpFormExtended(forms.ModelForm):
+    class Meta:
+        model = Agent
+        fields = ('fullname', 'phone', 'area', 'rating')
+
+class AgentDetailsForm(forms.ModelForm):
+    class Meta:
+        model = Agent
+        fields = ('fullname', 'phone', 'area', 'rating')
+
+    def save(self, user=None):
+        agent_details = super(AgentDetailsForm, self).save(commit=False)
+        if user:
+            agent_details.user = user
+        agent_details.save()
+        return agent_details
 
 class CustomerSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Required')

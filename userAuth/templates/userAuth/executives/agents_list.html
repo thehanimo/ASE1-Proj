@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Agents List</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">Agents List</h2>
+  <a href="{% url 'agent:register' %}" class="btn btn-primary mb-3" role="button">Add Agent</a>
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Area</th>
+          <th>Rating</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for agent in agents %}
+          <tr>
+            <td class="align-middle"><a href="#">{{ agent.fullname }}</a></td>
+            <td class="align-middle">{{ agent.phone }}</td>
+            <td class="align-middle">{{ agent.area }}</td>
+            <td class="align-middle">{{ agent.rating }}</td>
+            <td class="text-right">
+              <a href="{% url 'executive:editagent' id=agent.user.id %}" class="btn btn-primary">Edit Agent</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No agents have been added yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -10,6 +10,7 @@ urlpatterns = [
 
     path('agent/', include(([
         path('home', agents.HomeView.as_view(), name='home'),
+        path('register', agents.AgentSignUp, name='register')
     ], 'userAuth'), namespace='agent')),
 
     path('', include(([
@@ -22,6 +23,8 @@ urlpatterns = [
         path('home', executives.HomeView.as_view(), name='home'),
         path('profile/view', executives.ExecutiveDetailsView.as_view(), name='viewprofile'),
         path('register', executives.ExecutiveSignUpView.as_view(), name='register'),
+        path('agentslist/view', executives.AgentsView.as_view(), name='agentslist'),
+        path('agentedit/<str:id>', executives.AgentEditView, name='editagent')
     ], 'userAuth'), namespace='executive')),
 
 ]
