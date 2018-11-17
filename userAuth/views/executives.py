@@ -18,7 +18,7 @@ from ..tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from ..decorators import executive_required
-from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm
+from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm, AgentDeleteForm
 from ..models import User, Executive, Agent
 
 class ExecutiveSignUpView(CreateView):
@@ -106,6 +106,25 @@ def AgentEditView(request, id):
 		if request.method == 'POST':
 			form = AgentDetailsForm(request.POST)
 			if form.is_valid():
+				form.save(agent_user)
+				return redirect('/')
+
+		return render(request, 'registration/agent_edit.html', {'form':form})
+	return redirect('forbidden')
+
+@login_required
+@executive_required
+def AgentDeleteView(request, id):
+	try:
+		uid = int(id)
+		agent_user = User.objects.get(pk=uid)
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		agent_user = None
+	if agent_user:
+		form = AgentDeleteForm()
+		if request.method == 'POST':
+			form = AgentDeleteForm(request.POST)
+			if request.POST['check']:
 				form.save(agent_user)
 				return redirect('/')
 

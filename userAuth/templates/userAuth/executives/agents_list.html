@@ -28,6 +28,7 @@
             <td class="align-middle">{{ agent.rating }}</td>
             <td class="text-right">
               <a href="{% url 'executive:editagent' id=agent.user.id %}" class="btn btn-primary">Edit Agent</a>
+              <a href="{% url 'executive:deleteagent' id=agent.user.id %}"><button type="submit" class="btn">Delete Agent</button></a>
             </td>
           </tr>
         {% empty %}

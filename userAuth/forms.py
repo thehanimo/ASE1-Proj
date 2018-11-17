@@ -19,9 +19,10 @@ class AgentSignUpForm(UserCreationForm):
         return user
 
 class AgentSignUpFormExtended(forms.ModelForm):
+    email = forms.EmailField(max_length=200, help_text='Required')
     class Meta:
         model = Agent
-        fields = ('fullname', 'phone', 'area', 'rating')
+        fields = ('email', 'fullname', 'phone', 'area', 'rating')
 
 class AgentDetailsForm(forms.ModelForm):
     class Meta:
@@ -34,6 +35,18 @@ class AgentDetailsForm(forms.ModelForm):
             agent_details.user = user
         agent_details.save()
         return agent_details
+
+class AgentDeleteForm(forms.ModelForm):
+    check = forms.BooleanField()
+    class Meta:
+        model = Agent
+        fields = ('check',)
+
+    def save(self, user=None):
+        agent = Agent.objects.get(user=user)
+        agent.delete()
+        user.delete()
+        return
 
 class CustomerSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Required')
