@@ -11,10 +11,22 @@ AREA_CHOICES = [
 		('600040','Anna Nagar'),
 	]
 
+BILLING_TYPES = [
+		('1','COD'),
+		('2','ONLINE'),
+	]
+ORDER_STATUSES = [
+		('0', 'FAILED'),
+		('1','PLACED'),
+		('2','CONFIRMED'),
+		('3','OUT FOR DELIVERY'),
+		('4','DELIVERED')
+	]
+
 def upload_path_handler(instance, filename):
-    import os.path
-    fn, ext = os.path.splitext(filename)
-    return "{id}{ext}".format(id=instance.pk, ext=ext)
+	import os.path
+	fn, ext = os.path.splitext(filename)
+	return "{id}{ext}".format(id=instance.pk, ext=ext)
 
 class User(AbstractUser):
 	USER_TYPE_CHOICES = (
@@ -48,5 +60,3 @@ class Executive(models.Model):
 	fullname = models.CharField(max_length=50, validators=[alphabets])
 	photo = models.ImageField(upload_to=upload_path_handler, blank=True)
 	complaints_queue = models.IntegerField(default=0)
-	
-

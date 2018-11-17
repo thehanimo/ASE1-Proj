@@ -18,6 +18,7 @@ urlpatterns = [
         path('home', customers.HomeView.as_view(), name='home'),
         path('profile/edit', customers.CustomerDetailsView.as_view(), name='editprofile'),
         path('profile/new', customers.NewCustomerDetailsView.as_view(), name='newprofile'),
+        #path('shop', customers.ShopView.as_view(), name='shop')
     ], 'userAuth'), namespace='customer')),
 
     path('executive/', include(([

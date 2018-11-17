@@ -1,5 +1,6 @@
 {% autoescape off %}
-Hi {{ user.username }},
-Please click on the link to confirm your registration,
+Hi {{ user.agent.fullname }},
+Your username : {{ user.username }}
+Please click on the link to confirm your registration and set up your password.
 http://{{ domain }}{% url 'agent_activate' uidb64=uid token=token %}
 {% endautoescape %}

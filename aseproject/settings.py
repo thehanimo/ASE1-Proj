@@ -31,6 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'shop.apps.ShopConfig',
+    'cart.apps.CartConfig',
+    'orders.apps.OrdersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -139,3 +142,5 @@ EMAIL_HOST_PASSWORD = 'wat3r123'
 EMAIL_PORT = 587
 
 ALLOWED_HOSTS = ['*']
+
+CART_SESSION_ID = 'cart'
