@@ -16,6 +16,7 @@
           <th>Phone</th>
           <th>Area</th>
           <th>Rating</th>
+          <th>Email Verification</th>
           <th></th>
         </tr>
       </thead>
@@ -26,6 +27,7 @@
             <td class="align-middle">{{ agent.phone }}</td>
             <td class="align-middle">{{ agent.area }}</td>
             <td class="align-middle">{{ agent.rating }}</td>
+            <td class="align-middle">{{ agent.user.email_verified }}</td>
             <td class="text-right">
               <a href="{% url 'executive:editagent' id=agent.user.id %}" class="btn btn-primary">Edit Agent</a>
               <a href="{% url 'executive:deleteagent' id=agent.user.id %}"><button type="submit" class="btn">Delete Agent</button></a>

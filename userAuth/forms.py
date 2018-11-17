@@ -1,9 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
-from phonenumber_field.formfields import PhoneNumberField
 
 from userAuth.models import Agent, Customer, Executive, User
+
+
+
+
 
 class AgentSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Required')
@@ -35,6 +38,11 @@ class AgentDetailsForm(forms.ModelForm):
             agent_details.user = user
         agent_details.save()
         return agent_details
+
+    def dummy_phone_save(self, user, phone):
+        agent = Agent.objects.get(user=user)
+        agent.phone = phone 
+        agent.save()
 
 class AgentDeleteForm(forms.ModelForm):
     check = forms.BooleanField()

@@ -4,7 +4,7 @@
 {% block content %}
   <div>
     <div class="col-md-8 col-sm-10 col-12">
-      <h1>Sign up!</h1>
+      <h1>Edit Agent</h1>
       <form method="post" enctype='multipart/form-data' novalidate>
         {% csrf_token %}
         <table>
@@ -14,10 +14,9 @@
           </tr>
         {% endfor %}
         </table>
-        <a href='/'><button type="submit" class="btn btn-success">Sign up</button></a>
+        <a href='/'><button type="submit" class="btn btn-success">Edit</button></a>
       </form>
     </div>
     <br/>
-    Already have an account? Login <a href="{% url 'login' %}">here!</a>
   </div>
 {% endblock %}

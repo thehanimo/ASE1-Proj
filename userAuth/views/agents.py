@@ -40,25 +40,25 @@ def AgentSignUp(request):
 			if User.objects.filter(email=email):
 				form_extended.add_error(error="Already exists", field='email')
 				return render(request, 'registration/agent_signup_form.html', {'form_extended':form_extended})
-			user = User.objects.create(username=username, password=password, email=email, user_type=2, is_active=False)
-			user.username = 'agent'+str(1000+user.id)
-			user.save()
-			agent = Agent.objects.create(fullname=fullname, phone=phone, area=area, rating=rating, user=user)
+			user1 = User.objects.create(username=username, password=password, email=email, user_type=2, is_active=False)
+			user1.username = 'agent'+str(1000+user1.id)
+			user1.save()
+			agent = Agent.objects.create(fullname=fullname, phone=phone, area=area, rating=rating, user=user1)
 
 			current_site = get_current_site(request)
 			mail_subject = 'Activate your account.'
 			message = render_to_string('registration/agent_acc_active_email.html', {
-				'user': user,
+				'user': user1,
 				'domain': current_site.domain,
-				'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-				'token':account_activation_token.make_token(user),
+				'uid':urlsafe_base64_encode(force_bytes(user1.pk)).decode(),
+				'token':account_activation_token.make_token(user1),
 			})
-			to_email = form.cleaned_data.get('email')
+			to_email = email
 			email = EmailMessage(
 						mail_subject, message, to=[to_email]
 			)
 			email.send()
-			return render_to_response('registration/newUser.html')
+			return render(request, 'registration/newAgent.html')
 
 			
 
@@ -67,6 +67,9 @@ def AgentSignUp(request):
 @method_decorator([login_required, agent_required], name='dispatch')
 class HomeView(ListView):
 	template_name = 'userAuth/agents/home.html'
+
+	def get_queryset(self):
+		return []
 
 
 def activate(request, uidb64, token):

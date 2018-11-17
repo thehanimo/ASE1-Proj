@@ -102,9 +102,16 @@ def AgentEditView(request, id):
 	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
 		agent_user = None
 	if agent_user:
-		form = AgentDetailsForm()
+		form = AgentDetailsForm(initial={
+			'fullname': agent_user.agent.fullname,
+			'phone': agent_user.agent.phone,
+			'area': agent_user.agent.area,
+			'rating': agent_user.agent.rating,
+			})
 		if request.method == 'POST':
 			form = AgentDetailsForm(request.POST)
+			if request.POST['phone'] == agent_user.agent.phone:
+				form.dummy_phone_save(agent_user, '')
 			if form.is_valid():
 				form.save(agent_user)
 				return redirect('/')
@@ -128,5 +135,5 @@ def AgentDeleteView(request, id):
 				form.save(agent_user)
 				return redirect('/')
 
-		return render(request, 'registration/agent_edit.html', {'form':form})
+		return render(request, 'registration/agent_edit.html', {'form':form, 'agent':agent_user})
 	return redirect('forbidden')
