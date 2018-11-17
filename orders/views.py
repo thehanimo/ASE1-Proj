@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from .models import OrderItem, Order
 from cart.cart import Cart
 from django.contrib.auth.decorators import login_required
+from userAuth.models import Agent
 
 from .decorators import customer_required, customer_details_required
 
@@ -15,13 +16,19 @@ from django.utils.encoding import force_bytes, force_text
 def order_create(request):
     if request.method == 'POST':
         cart = Cart(request)
-        order = Order.objects.create(customer=request.user)
+        try:
+            agent = Agent.objects.get(area=request.user.customer.area)
+            if agent.user.is_active == False:
+                raise Agent.DoesNotExist
+        except Agent.DoesNotExist:
+            return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.get_area_display()})
+        order = Order.objects.create(customer=request.user, agent=agent.user)
         for item in cart:
             OrderItem.objects.create(
                 order=order,
                 product=item['product'],
                 price=item['price'],
-                quantity=item['quantity']
+                quantity=item['quantity'],
             )
         cart.clear()
         order.save()

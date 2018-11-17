@@ -18,7 +18,8 @@ urlpatterns = [
         path('home', customers.HomeView.as_view(), name='home'),
         path('profile/edit', customers.CustomerDetailsView.as_view(), name='editprofile'),
         path('profile/new', customers.NewCustomerDetailsView.as_view(), name='newprofile'),
-        #path('shop', customers.ShopView.as_view(), name='shop')
+        path('home/myorders', customers.MyOrdersView.as_view(), name='myorders'),
+        path('home/myorders/<int:oid>', customers.OrderView.as_view(), name='order'),
     ], 'userAuth'), namespace='customer')),
 
     path('executive/', include(([

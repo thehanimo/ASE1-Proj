@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Your Shopping Cart| Sorry
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row" style="margin-top: 6%">
+            <div class="col-md-8 col-md-offset-2">
+                <h3 class="page-header">We're so sorry :(
+                </h3>
+                <p>We do not deliver in <strong>{{ area }}</strong>.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

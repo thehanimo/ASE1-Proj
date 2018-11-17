@@ -21,6 +21,7 @@ from django.core.mail import EmailMessage
 from ..decorators import customer_required, customer_details_required, customer_details_empty
 from ..forms import CustomerSignUpForm, CustomerDetailsForm
 from ..models import User, Customer
+from orders.models import Order, OrderItem
 
 class CustomerSignUpView(CreateView):
 	model = User
@@ -96,3 +97,26 @@ def activate(request, uidb64, token):
         return render(request, 'registration/activation_suc.html')
     else:
         return render(request, 'registration/activation_err.html')
+
+@method_decorator([login_required, customer_required], name='dispatch')
+class MyOrdersView(ListView):
+	model = Order
+	ordering = ('created', )
+	context_object_name = 'orders'
+	template_name = 'userAuth/customers/orders_list.html'
+
+	def get_queryset(self):
+		queryset = Order.objects.filter(customer=self.request.user)
+		return queryset
+
+@method_decorator([login_required, customer_required], name='dispatch')
+class OrderView(ListView):
+	model = OrderItem
+	ordering = ('id', )
+	context_object_name = 'items'
+	template_name = 'userAuth/customers/items_list.html'
+
+	def get_queryset(self):
+		order = Order.objects.get(id=self.kwargs['oid'])
+		queryset = OrderItem.objects.filter(order=order)
+		return queryset
