@@ -41,3 +41,12 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('shop:product_detail', args=[self.id, self.slug])
+
+    def reduce_stock(self, n):
+        if self.stock - n >= 0:
+            self.stock -= n
+
+            if self.stock ==0:
+                self.available = False
+            return True
+        return False

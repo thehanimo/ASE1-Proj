@@ -3,10 +3,10 @@
 {% block content %}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">My Orders</li>
+      <li class="breadcrumb-item active" aria-current="page">Order {{ items.first.order.id }}</li>
     </ol>
   </nav>
-  <h2 class="mb-3">My Orders</h2> 
+  <h2 class="mb-3">Order {{ items.first.order.id }}</h2> 
   <div class="card">
     <table class="table mb-0">
       <thead>

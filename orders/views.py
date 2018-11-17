@@ -2,6 +2,7 @@ from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
 from .models import OrderItem, Order
 from cart.cart import Cart
+from shop.models import Product
 from django.contrib.auth.decorators import login_required
 from userAuth.models import Agent
 
@@ -9,32 +10,42 @@ from .decorators import customer_required, customer_details_required
 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
+from .forms import CheckoutForm
 
 @login_required
 @customer_required
 @customer_details_required
 def order_create(request):
+    cart = Cart(request)
+    form = CheckoutForm()
     if request.method == 'POST':
-        cart = Cart(request)
-        try:
-            agent = Agent.objects.get(area=request.user.customer.area)
-            if agent.user.is_active == False:
-                raise Agent.DoesNotExist
-        except Agent.DoesNotExist:
-            return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.get_area_display()})
-        order = Order.objects.create(customer=request.user, agent=agent.user)
-        for item in cart:
-            OrderItem.objects.create(
-                order=order,
-                product=item['product'],
-                price=item['price'],
-                quantity=item['quantity'],
-            )
-        cart.clear()
-        order.save()
-        oid = urlsafe_base64_encode(force_bytes(order.id)).decode()
-        return HttpResponseRedirect('/orders/placed/'+oid)
-    return render(request, '500.html')
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            try:
+                agent = Agent.objects.get(area=request.user.customer.area)
+                if agent.user.is_active == False:
+                    raise Agent.DoesNotExist
+            except Agent.DoesNotExist:
+                return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.get_area_display()})
+            order = Order.objects.create(customer=request.user, agent=agent.user, payment_type=form.cleaned_data['payment_type'])
+            for item in cart:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item['product'],
+                    price=item['price'],
+                    quantity=item['quantity'],
+                )
+                a = item['product'].reduce_stock(item['quantity'])
+                if a:
+                    item['product'].save()
+                else:
+                    raise Product.DoesNotExist
+            cart.clear()
+            order.save()
+            oid = urlsafe_base64_encode(force_bytes(order.id)).decode()
+            return HttpResponseRedirect('/orders/placed/'+oid)
+
+    return render(request, 'orders/order/create.html', {'form':form,'cart': cart})
 
 @login_required
 @customer_required
