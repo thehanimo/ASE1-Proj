@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 100%; /* IE10 */
+  flex: 100%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 90%; /* IE10 */
+  flex: 90%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
+
+.container {
+  background-color: #f2f2f2;
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+span.price {
+  float: right;
+  color: grey;
+}
+
+
+@media (max-width: 800px) {
+  .row {
+    flex-direction: column-reverse;
+  }
+
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+
+body {
+    font-size: 28px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: grey;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+
+.myButton {
+	background-color:grey;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:0px;
+	border:1px solid black;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:17px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 0px 12px #5b6178;
+}
+.myButton:hover {
+	background-color:black;
+}
+.myButton:active {
+	position:relative;
+	top:4px;
+
+
+
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="header" >
+  <h2>WATER CAN MANAGEMENT</h2>
+</div>
+
+<ul>
+
+    <li><a href="{% url 'userpage:userpage' %}">Home</a></li>
+    <li><a href="{% url 'userpage:yourorders' %}">Your Orders</a></li>
+    <li><a href="{% url 'userpage:notifications' %}" class="notification"><span>Notifications</span>{% if unseen_notifications_count %}<span class="badge">{{unseen_notifications_count}}</span>{% endif %}</a></li>
+    <li style="float:right"><a  href="">logout</a></li>
+    <li style="float:right"><a  href="">profile</a></li></ul>
+{% load common %}
+{% set c = 1 %}
+<h3>Make Sure Before Checkout !</h3>
+<div class="col-25" >
+  <div class="container">
+    <h3>Check Out<span class="price" style="color:black"><i class="fa fa-shopping-cart"></i></span></h3>
+    <table width='100%'>
+      <tr>
+        <th>Item</th>
+        <th>MRP</th>
+        <th>Quantity</th>
+        <th>Cost</th>
+      </tr>
+      {% if Items_required.1%}
+      <tr>
+        <td align="center">Cans</td>
+        <td align="center" class="price" style="color:grey">30</td>
+        <td align="center">{{Items_required.1}}</td>
+        <td align="center" class="price" style="color:grey">{{t_list.1}}</td>
+      </tr>
+      {% endif  %}
+      {% if Items_required.2%}
+      <tr>
+        <td align="center">Bottle</td>
+        <td align="center" class="price" style="color:grey">15</td>
+        <td align="center">{{Items_required.2}}</td>
+        <td align="center" class="price" style="color:grey">{{t_list.2}}</td>
+      </tr>
+      {% endif  %}
+      {% if Items_required.3%}
+      <tr>
+        <td align="center">Tissues</td>
+        <td  align="center"class="price" style="color:grey">20</td>
+        <td align="center">{{Items_required.3}}</td>
+        <td align="center" class="price" style="color:grey">{{t_list.3}}</td>
+      </tr>
+      {% endif  %}
+    </table>
+
+    <br><br><br>
+    {% if total %}
+    <p>Total <span class="price" style="color:black"><b>{{total}}</b></span></p>
+    {% endif  %}
+  </div>
+</div>
+<br><br><br>
+<div class="row">
+  <div class="col-75">
+    <div class="container">
+      <label>
+        <input type="radio" name="address" value="defaultaddress"  onclick="document.getElementById('selectadd').disabled=this.checked;">Place order To Default Address<br><br>
+        <input type="radio" name="address" value="newaddress" checked onclick="document.getElementById('selectadd').disabled=false;">Add New Address
+      </label>
+
+      <form action="/../user/orderplaced/" method="post" >
+        {% csrf_token %}
+        <fieldset id='selectadd' >
+            <h3>Billing Address</h3>
+
+            <label for="fname"><i></i> Full Name</label>
+            <input type="text" id="fname" name="firstname" placeholder="Full Name" required>
+            <label for="email"><i></i> Email</label>
+            <input type="text" id="email" name="email" placeholder="abc@email.com" required>
+            <label for="pno"><i></i> Phone Number</label>
+            <input type="text" id="pno" name="pno" placeholder="+91 ----------" required>
+            <label for="adr"><i></i> Address</label>
+            <input type="text" id="adr" name="address" placeholder="Address" required>
+            <label for="city"><i></i> City</label>
+            <input type="text" id="city" name="city" placeholder="City" required>
+
+            <div class="row">
+              <div class="col-50">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" placeholder="State" required>
+              </div>
+              <div class="col-50">
+                <label for="zip">Zip</label>
+                <input type="text" id="zip" name="pin" placeholder="Pin Code" required>
+              </div>
+            </div>
+        </fieldset>
+        <br><br><br>
+        <input type="submit" value="Continue to checkout" class="btn">
+        <br><br>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

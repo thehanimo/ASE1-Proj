@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+
+  #notification {
+    background-color: grey;
+    color: white;
+    text-decoration: none;
+    padding: 15px 26px;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+  }
+
+  #notification:hover {
+    background: black;
+  }
+
+  #notification .badge {
+    position: absolute;
+    top: -0px;
+    right: -20px;
+    padding: 10px 10px;
+    border-radius: 0%;
+    background-color: red;
+    color: white;
+  }
+  </style>
+
+  <style>
+  font-family: Arial;
+  font-size: 17px;
+  padding: 8px;
+  }
+
+  * {
+  box-sizing: border-box;
+  }
+
+  ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+  }
+  body {
+      font-size: 28px;
+  }
+
+  ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: grey;
+      position: -webkit-sticky; /* Safari */
+      position: sticky;
+      top: 0;
+  }
+
+  li {
+      float: left;
+  }
+
+  li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+  }
+
+  li a:hover {
+      background-color: #111;
+  }
+
+  .active {
+      background-color: black;
+  }
+
+  .myButton {
+  	background-color:grey;
+  	-moz-border-radius:28px;
+  	-webkit-border-radius:28px;
+  	border-radius:0px;
+  	border:1px solid black;
+  	display:inline-block;
+  	cursor:pointer;
+  	color:#ffffff;
+  	font-family:Verdana;
+  	font-size:17px;
+  	padding:16px 31px;
+  	text-decoration:none;
+  	text-shadow:0px 0px 12px #5b6178;
+  }
+  .myButton:hover {
+  	background-color:black;
+  }
+  .myButton:active {
+  	position:relative;
+  	top:4px;
+
+
+
+
+  }
+
+
+  </style>
+
+
+
+
+</head>
+<body>
+  <div class="header" >
+    <h2>WATER CAN MANAGEMENT</h2>
+  </div>
+
+  <ul>
+    <li><a class="active" href="{% url 'agentpage:agentpage' %}">Home</a></li>
+    <li><a href="{% url 'agentpage:delivered' %}"><span>Delivered History</span></a></li>
+    <li><a href="{% url 'agentpage:delivering' %}"><span>Now Delivering</span></a></li>
+    <li><a href="{% url 'agentpage:todo' %}" id="notification"><span>ToDo</span>{% if todo_count %}<span class="badge">{{todo_count}}</span>{% endif %}</a></li>
+    <li style="float:right"><a  href="#logout">logout</a></li>
+    <li style="float:right"><a  href="#profile">profile</a></li>
+  </ul><br><br><br>
+
+
+
+  <form action="{% url 'agentpage:addemployee' %}" method="post" >
+    {% csrf_token %}
+
+        <h3>Add Employee</h3>
+
+        <label for="employeename"><i></i>Employee Name</label>
+        <input type="text" id="employeename" name="employeename" placeholder="Full Name" required>
+        <label for="phone"><i></i>Phone Number</label>
+        <input type="text" id="phone" name="phone" placeholder="+91 ----------" required>
+        <label for="address"><i></i>Address</label>
+        <input type="text" id="address" name="address" placeholder="Address" required>
+        <label for="email"><i></i> email</label>
+        <input type="text" id="email" name="email" placeholder="abc@email.com" required>
+        <label for="aadhar"><i></i> aadhar</label>
+       <input type="text" id="aadhar" name="aadhar" placeholder="xxxx-xxxx-xxxx-xxxx" required>
+
+    <br><br><br>
+    <input type="submit" value="Add Employee" class="btn">
+    <br><br>
+  </form>
+
+
+
+
+</body>
+</html>

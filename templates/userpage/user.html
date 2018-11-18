@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+.notification {
+  background-color: grey;
+  color: white;
+  text-decoration: none;
+  padding: 15px 26px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification:hover {
+  background: black;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -0px;
+  right: -20px;
+  padding: 10px 10px;
+  border-radius: 0%;
+  background-color: red;
+  color: white;
+}
+</style>
+<style>
+font-family: Arial;
+font-size: 17px;
+padding: 8px;
+}
+
+* {
+box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+body {
+    font-size: 28px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: grey;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+
+.myButton {
+	background-color:grey;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:0px;
+	border:1px solid black;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:17px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 0px 12px #5b6178;
+}
+.myButton:hover {
+	background-color:black;
+}
+.myButton:active {
+	position:relative;
+	top:4px;
+
+
+
+
+}
+
+</style>
+<style>
+.slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="header" >
+  <h2>WATER CAN MANAGEMENT</h2>
+</div>
+
+<ul>
+  <li><a href="{% url 'userpage:userpage' %}">Home</a></li>
+  <li><a href="{% url 'userpage:yourorders' %}">Your Orders</a></li>
+  <li><a href="{% url 'userpage:notifications' %}" class="notification"><span>Notifications</span>{% if unseen_notifications_count %}<span class="badge">{{unseen_notifications_count}}</span>{% endif %}</a></li>
+  <li style="float:right"><a  href="">logout</a></li>
+  <li style="float:right"><a  href="">profile</a></li>
+</ul>
+
+<form action="/../user/checkout/" method="post">
+  {% csrf_token %}
+<h3>Place Your Order</h3>
+
+<div>
+<h2>Cans</h2>
+<div class="""slidecontainer">
+  <input type="range" name="cans" min="0" max="100" value="0" class="slider" id="1">
+  <p>Value: <span id="can"></span></p>
+</div>
+</div>
+
+<div>
+<h2>Bottles</h2>
+<div class="""slidecontainer">
+  <input type="range" name="bottles" min="0" max="100" value="0" class="slider" id="2">
+  <p>Value: <span id="bottle"></span></p>
+</div>
+</div>
+
+<div>
+<h2>Tissues</h2>
+<div class="""slidecontainer">
+  <input type="range" name="tissues" min="0" max="100" value="0" class="slider" id="3">
+  <p>Value: <span id="tissue"></span></p>
+</div>
+</div>
+
+<input type="submit" value="PLACE ORDER" class="myButton"  >
+
+</form>
+<script>
+
+var slider1 = document.getElementById("1");
+var output1 = document.getElementById("can");
+output1.innerHTML = slider1.value;
+var slider2 = document.getElementById("2");
+var output2 = document.getElementById("bottle");
+output2.innerHTML = slider2.value;
+var slider3 = document.getElementById("3");
+var output3 = document.getElementById("tissue");
+output3.innerHTML = slider3.value;
+
+slider1.oninput = function() {
+  output1.innerHTML = this.value;
+}
+slider2.oninput = function() {
+  output2.innerHTML = this.value;
+}
+slider3.oninput = function() {
+  output3.innerHTML = this.value;
+}
+
+</script>
+
+</body>
+</html>

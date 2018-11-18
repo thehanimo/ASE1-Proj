@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<form method="POST" action="/../agent/employee/logined/">
+{% csrf_token %}
+{% for w in work %}
+<a>{{w.employeeid}}----------------{{w.orderid}} -------{{w.orderid.billingamount}}</a>
+<button type='submit' name='order delivered' value="{{w.orderid}}"> order deliovered</button><br><br>
+{% endfor %}
+</form>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+
+.container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.darker {
+    border-color: #ccc;
+    background-color: #bbb;
+}
+
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.container img {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.container img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right:0;
+}
+
+.time-right {
+    float: right;
+    color: #aaa;
+}
+
+.time-left {
+    float: left;
+    color: #999;
+}
+</style>
+  <style>
+  font-family: Arial;
+  font-size: 17px;
+  padding: 8px;
+  }
+
+  * {
+  box-sizing: border-box;
+  }
+
+  ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+  }
+  body {
+      font-size: 28px;
+  }
+
+  ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: grey;
+      position: -webkit-sticky; /* Safari */
+      position: sticky;
+      top: 0;
+  }
+
+  li {
+      float: left;
+  }
+
+  li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+  }
+
+  li a:hover {
+      background-color: #111;
+  }
+
+  .active {
+      background-color: #4CAF50;
+  }
+
+  .myButton {
+  	background-color:grey;
+  	-moz-border-radius:28px;
+  	-webkit-border-radius:28px;
+  	border-radius:0px;
+  	border:1px solid black;
+  	display:inline-block;
+  	cursor:pointer;
+  	color:#ffffff;
+  	font-family:Verdana;
+  	font-size:17px;
+  	padding:16px 31px;
+  	text-decoration:none;
+  	text-shadow:0px 0px 12px #5b6178;
+  }
+  .myButton:hover {
+  	background-color:black;
+  }
+  .myButton:active {
+  	position:relative;
+  	top:4px;
+
+
+
+
+  }
+
+  </style>
+</head>
+<body>
+
+  <div class="header" >
+    <h2>WATER CAN MANAGEMENT</h2>
+  </div>
+
+  <ul>
+
+      <li><a href="{% url 'userpage:userpage' %}">Home</a></li>
+      <li><a href="{% url 'userpage:yourorders' %}">Your Orders</a></li>
+      <li><a href="{% url 'userpage:notifications' %}" class="notification"><span>Notifications</span>{% if unseen_notifications_count %}<span class="badge">{{unseen_notifications_count}}</span>{% endif %}</a></li>
+      <li style="float:right"><a  href="">logout</a></li>
+      <li style="float:right"><a  href="">profile</a></li>
+    </ul>
+
+
+{% for notify in Notifications_list_unseen %}
+<div class="container darker">
+  <p><strong>{{notify.notifiedfrom}}  : </strong></p>
+  <p>{{notify.message}}</p>
+  <span class="time-right">{{notify.date}}</span>
+</div>
+{% endfor %}
+
+{% for notify in Notifications_list_seen %}
+<div class="container">
+  <p><strong>{{notify.notifiedfrom}}  : </strong></p>
+  <p>{{notify.message}}</p>
+  <span class="time-right">{{notify.date}}</span>
+</div>
+{% endfor %}
+
+
+
+
+
+</body>
+</html>
