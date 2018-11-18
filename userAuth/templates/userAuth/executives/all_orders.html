@@ -25,17 +25,17 @@
       <tbody>
         {% for order in orders %}
           <tr>
-            <td class="align-middle"><a href="{% url 'customer:order' oid=order.id %}">{{ order.id }}</a></td>
+            <td class="align-middle"><a href="{% url 'executive:order' oid=order.id %}">{{ order.id }}</a></td>
             <td class="align-middle">{{ order.created }}</td>
             <td class="align-middle">{{ order.updated }}</td>
             <td class="align-middle">{{ order.customer }}</td>
-            <td class="align-middle"><a href="{% url 'agent:viewprofile' aid=order.agent.id %}">{{ order.agent }}</a></td>
+            <td class="align-middle"><a href="{% url 'executive:viewagentprofile' aid=order.agent.id %}">{{ order.agent }}</a></td>
             <td class="align-middle">{{ order.get_order_status_display }}</td>
             <td class="align-middle">{{ order.get_payment_type_display }}</td>
             <td class="align-middle">Rs.{{ order.get_total_cost }}</td>
             <td class="text-right">
               {% if order.order_status != '4' and order.order_status != 'X'%}
-              <a href="{% url 'agent:cancel_order' oid=order.id %}"><button type="submit" class="btn">Cancel Order</button></a>
+              <a href="{% url 'executive:cancel_order' oid=order.id %}"><button type="submit" class="btn">Cancel Order</button></a>
               {% endif %}
             </td>
           </tr>
