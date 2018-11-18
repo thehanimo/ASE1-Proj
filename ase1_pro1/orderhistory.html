@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ORDER HISTORY</title>
+    <style>
+        table, th, td {
+    border: 1px solid black;
+}
+    </style>
+</head>
+<body>
+    <table >
+        <tr>
+        <th>order_id </th>
+        <th>billing_address</th>
+        <th>billing_date</th>
+        <th>billing_type </th>
+            <th>billing_amount</th>
+            <th>order_placed</th>
+         <th>order_status</th>
+        </tr>
+         {% for item in query_result %}
+        <tr>
+            <td> {{ item.order_id }} </td>
+            <td> {{ item.billing_address }} </td>
+            <td> {{ item.billing_date }} </td>
+            <td> {{ item.billing_type }} </td>
+            <td> {{ item.billing_amount }}</td>
+            <td> {{ item.order_placed }}</td>
+            <td> {{ item.order_status }}</td>
+        </tr>
+         {% endfor %}
+    </table>
+
+</body>
+</html>
