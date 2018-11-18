@@ -7,7 +7,9 @@ BILLING_TYPES = [
         ('2','ONLINE'),
     ]
 ORDER_STATUSES = [
-        ('0', 'FAILED'),
+        ('0','FAILED'),
+        ('X','CANCELLED'),
+        ('W','CANCEL REQUESTED'),
         ('1','PLACED'),
         ('2','CONFIRMED'),
         ('3','OUT FOR DELIVERY'),

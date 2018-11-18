@@ -26,9 +26,12 @@
             <td class="align-middle">{{ order.created }}</td>
             <td class="align-middle">{{ order.get_order_status_display }}</td>
             <td class="align-middle">{{ order.get_payment_type_display }}</td>
-            <td class="align-middle">{{ order.get_total_cost }}</td>
+            <td class="align-middle">Rs.{{ order.get_total_cost }}</td>
             <td class="text-right">
-              </td>
+              {% if order.order_status == '1' %}
+              <a href="{% url 'customer:cancel_order' oid=order.id %}"><button type="submit" class="btn">Cancel Order</button></a>
+              {% endif %}
+            </td>
           </tr>
         {% empty %}
           <tr>

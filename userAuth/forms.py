@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
+from orders.models import Order
 from userAuth.models import Agent, Customer, Executive, User
 
 
@@ -54,6 +55,18 @@ class AgentDeleteForm(forms.ModelForm):
         agent = Agent.objects.get(user=user)
         agent.delete()
         user.delete()
+        return
+
+class OrderCancelForm(forms.ModelForm):
+    check = forms.BooleanField()
+    class Meta:
+        model = Order
+        fields = ('check',)
+
+    def save(self, order=None):
+        order = Order.objects.get(id=order.id)
+        order.order_status = 'W'
+        order.save()
         return
 
 class CustomerSignUpForm(UserCreationForm):

@@ -20,6 +20,7 @@ urlpatterns = [
         path('profile/new', customers.NewCustomerDetailsView.as_view(), name='newprofile'),
         path('home/myorders', customers.MyOrdersView.as_view(), name='myorders'),
         path('home/myorders/<int:oid>', customers.OrderView.as_view(), name='order'),
+        path('home/myorders/cancel/<int:oid>', customers.CancelOrderView, name='cancel_order'),
     ], 'userAuth'), namespace='customer')),
 
     path('executive/', include(([

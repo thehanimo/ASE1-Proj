@@ -19,7 +19,7 @@ from ..tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from ..decorators import customer_required, customer_details_required, customer_details_empty
-from ..forms import CustomerSignUpForm, CustomerDetailsForm
+from ..forms import CustomerSignUpForm, CustomerDetailsForm, OrderCancelForm
 from ..models import User, Customer
 from orders.models import Order, OrderItem
 
@@ -120,3 +120,25 @@ class OrderView(ListView):
 		order = Order.objects.get(id=self.kwargs['oid'])
 		queryset = OrderItem.objects.filter(order=order)
 		return queryset
+
+@login_required
+@customer_required
+def CancelOrderView(request, oid):
+	try:
+		order = Order.objects.get(id=oid)
+	except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
+		order = None
+	if order:
+		form = OrderCancelForm()
+		if request.method == 'POST':
+			form = OrderCancelForm(request.POST)
+			if request.POST['check']:
+				form.save(order)
+				return redirect('customer:myorders')
+
+		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
+	return redirect('forbidden')
+
+
+
+
