@@ -174,7 +174,7 @@ def AcceptOrderView(request, oid):
 	return redirect('forbidden')
 
 @login_required
-@agent_required
+@agent_or_executive_required
 def CancelOrderView(request, oid):
 	try:
 		order = Order.objects.get(id=oid)
@@ -186,7 +186,7 @@ def CancelOrderView(request, oid):
 			form = OrderCancelConfirmForm(request.POST)
 			if request.POST.get('check', False):
 				form.save(order)
-				return redirect('agent:incomingorders')
+				return redirect('home')
 
 		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
 	return redirect('forbidden')
