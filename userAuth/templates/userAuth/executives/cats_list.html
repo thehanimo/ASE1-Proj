@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Categories</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">Categories</h2>
+  <a href="{% url 'executive:create_category' %}" class="btn btn-primary mb-3" role="button">Add Category</a>
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>slug</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cat in cats %}
+          <tr>
+            <td class="align-middle"><a href="#">{{ cat.name }}</a></td>
+            <td class="align-middle">{{ cat.slug }}</td>
+            <td class="text-right">
+              <a href="#"><button type="submit" class="btn">Delete Category</button></a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No categories have been added yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

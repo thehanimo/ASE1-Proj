@@ -34,6 +34,26 @@ def executive_required(function=None, redirect_field_name=None, login_url='forbi
         return actual_decorator(function)
     return actual_decorator
 
+def agent_or_executive_required(function=None, redirect_field_name=None, login_url='forbidden'):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_active and (u.user_type == 2 or (u.user_type == 3 and hasattr(u, 'executive'))),
+        login_url=login_url,
+        redirect_field_name=redirect_field_name
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+def customer_or_executive_required(function=None, redirect_field_name=None, login_url='forbidden'):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_active and (u.user_type == 1 or (u.user_type == 3 and hasattr(u, 'executive'))),
+        login_url=login_url,
+        redirect_field_name=redirect_field_name
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
 def customer_details_required(function=None, redirect_field_name=None, login_url='customer:newprofile'):
     actual_decorator = user_passes_test(
         lambda u: hasattr(u, 'customer'),

@@ -3,7 +3,7 @@ from django.urls import reverse
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=150, db_index=True)
+    name = models.CharField(max_length=150, db_index=True, unique=True)
     slug = models.SlugField(max_length=150, unique=True ,db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -19,10 +19,14 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('shop:product_list_by_category', args=[self.slug])
 
+def upload_path_handler(instance, filename):
+    import os.path
+    fn, ext = os.path.splitext(filename)
+    return "{path}{id}{ext}".format(path='product/', id=instance.name, ext=ext)
 
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, db_index=True)
+    name = models.CharField(max_length=100, db_index=True, unique=True)
     slug = models.SlugField(max_length=100, db_index=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -30,7 +34,7 @@ class Product(models.Model):
     stock = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+    image = models.ImageField(upload_to=upload_path_handler, blank=True)
 
     class Meta:
         ordering = ('name', )
@@ -49,4 +53,5 @@ class Product(models.Model):
             if self.stock ==0:
                 self.available = False
             return True
+        self.available = False
         return False

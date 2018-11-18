@@ -18,8 +18,10 @@ from ..tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from ..decorators import executive_required
-from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm, AgentDeleteForm
+from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm, AgentDeleteForm, CategorySignUpForm, ProductSignUpForm
 from ..models import User, Executive, Agent
+from orders.models import Order
+from shop.models import Product, Category
 
 class ExecutiveSignUpView(CreateView):
 	model = User
@@ -93,6 +95,40 @@ class AgentsView(ListView):
 		queryset = Agent.objects.all()
 		return queryset
 
+@method_decorator([login_required, executive_required], name='dispatch')
+class AllOrdersView(ListView):
+	model = Order
+	ordering = ('updated', )
+	context_object_name = 'orders'
+	template_name = 'userAuth/executives/all_orders.html'
+
+	def get_queryset(self):
+		queryset = Order.objects.all()
+		return queryset
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class CategoriesView(ListView):
+	model = Category
+	ordering = ('name', )
+	context_object_name = 'cats'
+	template_name = 'userAuth/executives/cats_list.html'
+
+	def get_queryset(self):
+		queryset = Category.objects.all()
+		return queryset
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class ProductsView(ListView):
+	model = Product
+	ordering = ('name', )
+	context_object_name = 'prds'
+	template_name = 'userAuth/executives/prds_list.html'
+
+	def get_queryset(self):
+		queryset = Product.objects.all()
+		return queryset
+
+
 @login_required
 @executive_required
 def AgentEditView(request, id):
@@ -137,3 +173,23 @@ def AgentDeleteView(request, id):
 
 		return render(request, 'registration/agent_edit.html', {'form':form, 'agent':agent_user})
 	return redirect('forbidden')
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class CategoryCreateView(CreateView):
+	model = Category
+	form_class = CategorySignUpForm
+	template_name = 'registration/create.html'
+
+	def form_valid(self,form):
+		form.save()
+		return redirect('/')
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class ProductCreateView(CreateView):
+	model = Product
+	form_class = ProductSignUpForm
+	template_name = 'registration/create.html'
+
+	def form_valid(self,form):
+		form.save()
+		return redirect('/')

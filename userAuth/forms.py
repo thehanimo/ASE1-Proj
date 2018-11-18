@@ -4,7 +4,7 @@ from django.db import transaction
 
 from orders.models import Order
 from userAuth.models import Agent, Customer, Executive, User
-
+from shop.models import Product, Category
 
 
 
@@ -129,6 +129,34 @@ class CustomerSignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class CategorySignUpForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ('name','slug')
+
+    def save(self):
+        cat = Category.objects.create(slug=self.cleaned_data['slug'], name=self.cleaned_data['name'])
+        cat.save()
+
+class ProductSignUpForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('category','name','slug','description','price','available','stock','image')
+
+    def save(self):
+        prod = Product.objects.create(
+            category=self.cleaned_data['category'],
+            slug=self.cleaned_data['slug'],
+            name=self.cleaned_data['name'],
+            description=self.cleaned_data['description'],
+            price=self.cleaned_data['price'],
+            available=self.cleaned_data['available'],
+            stock=self.cleaned_data['stock'],
+            image=self.cleaned_data['image'],
+            )
+        a=prod.reduce_stock(0)
+        prod.save()
 
 class ExecutiveSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Required')

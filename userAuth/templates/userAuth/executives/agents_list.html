@@ -23,7 +23,7 @@
       <tbody>
         {% for agent in agents %}
           <tr>
-            <td class="align-middle"><a href="#">{{ agent.fullname }}</a></td>
+            <td class="align-middle"><a href="{% url 'agent:viewprofile' aid=agent.user.id %}">{{ agent.fullname }}</a></td>
             <td class="align-middle">{{ agent.phone }}</td>
             <td class="align-middle">{{ agent.area }}</td>
             <td class="align-middle">{{ agent.rating }}</td>

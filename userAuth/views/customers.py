@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from ..tokens import account_activation_token
 from django.core.mail import EmailMessage
 
-from ..decorators import customer_required, customer_details_required, customer_details_empty
+from ..decorators import customer_required, customer_details_required, customer_details_empty, customer_or_executive_required
 from ..forms import CustomerSignUpForm, CustomerDetailsForm, OrderCancelForm
 from ..models import User, Customer
 from orders.models import Order, OrderItem
@@ -109,7 +109,7 @@ class MyOrdersView(ListView):
 		queryset = Order.objects.filter(customer=self.request.user)
 		return queryset
 
-@method_decorator([login_required, customer_required], name='dispatch')
+@method_decorator([login_required, customer_or_executive_required], name='dispatch')
 class OrderView(ListView):
 	model = OrderItem
 	ordering = ('id', )

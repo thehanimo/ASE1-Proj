@@ -6,5 +6,8 @@
 <a href="{% url 'executive:viewprofile' %}">View/Edit profile</a>
 <h4>Complaint(s) assigned: {{user.executive.complaints_queue}}</h4>
 <a href="{% url 'agent:register' %}">Add an agent</a><br/>
-<a href="{% url 'executive:agentslist' %}">View agents</a>
+<a href="{% url 'executive:agentslist' %}">View agents</a><br/>
+<a href="{% url 'executive:product' %}">Products</a><br/>
+<a href="{% url 'executive:category' %}">Categories</a><br/>
+<a href="{% url 'executive:all_orders' %}">All orders</a><br/>
 {% endblock %}

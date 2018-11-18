@@ -10,7 +10,7 @@ from django.views.generic import CreateView, ListView, UpdateView
 from django.shortcuts import render, redirect, render_to_response
 
 
-from ..decorators import agent_required, executive_required
+from ..decorators import agent_required, executive_required, agent_or_executive_required
 from ..forms import AgentSignUpForm, AgentSignUpFormExtended, NewPasswordForm, OrderAcceptForm, OrderCancelConfirmForm, OrderOutForDeliveryForm, OrderDeliveredForm
 from ..models import User, Agent
 from orders.models import Order
@@ -77,12 +77,18 @@ def HomeView(request):
 
 
 @login_required 
-@agent_required
-def AgentDetailsView(request):
-	details = {}
-	for field in Agent._meta.get_fields():
-		details[field.name] = getattr(request.user.agent, field.name)
-	return render(request, "registration/details_view.html", {'details':details})
+@agent_or_executive_required
+def AgentDetailsView(request, aid):
+	try:
+		agent = User.objects.get(pk=aid)
+	except:
+		agent = None
+	if agent and (agent.id == request.user.id or request.user.user_type == 3):
+		details = {}
+		for field in Agent._meta.get_fields():
+			details[field.name] = getattr(agent.agent, field.name)
+		return render(request, "registration/details_view.html", {'details':details})
+	return render(request, '500.html')
 
 
 def activate(request, uidb64, token):
