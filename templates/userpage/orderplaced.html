@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="refresh" content="15;url=/../user/" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);
+}
+
+window.onload = function () {
+    var timer = 14,
+        display = document.querySelector('#time');
+    startTimer(timer, display);
+};
+</script>
+
+
+<style>
+
+body {
+font-family: Arial;
+font-size: 17px;
+padding: 8px;
+}
+
+* {
+box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+
+.myButton {
+	background-color:grey;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:0px;
+	border:1px solid black;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:17px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 0px 12px #5b6178;
+}
+.myButton:hover {
+	background-color:black;
+}
+.myButton:active {
+	position:relative;
+	top:4px;
+
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="header" >
+  <h2>WATER CAN MANAGEMENT</h2>
+</div>
+
+<ul>
+  <li><a href="{% url 'userpage:userpage' %}">Home</a></li>
+  <li><a href="{% url 'userpage:yourorders' %}">Your Orders</a></li>
+  <li><a href="{% url 'userpage:notifications' %}" class="notification"><span>Notifications</span>{% if unseen_notifications_count %}<span class="badge">{{unseen_notifications_count}}</span>{% endif %}</a></li>
+  <li style="float:right"><a  href="">logout</a></li>
+  <li style="float:right"><a  href="">profile</a></li>
+</ul>
+
+<br><br><br>
+<div class="container">
+  <div class="alert alert-success">
+    <h2><strong>Success &#10004;    </strong> Your Order Is Been Placed !</h2>
+    <div> Do Not Reload This Page !</div>
+    <div>Will Be Redirected Within <strong><span id="time">00:14</span> seconds....</strong></div>
+
+
+  </div>
+<br><br>
+<div class="container">
+  <div class="alert alert-info">
+    <h2>Billed Address   :   </h2>
+    {{order.billingaddress}}<br>
+    <h2>Billed Date      :   </h2>
+    {{order.billingdate}}<br>
+    <h2>Total Amount     :   </h2>
+    {{order.billingamount}}<br>
+    <h2>Billing Type     :   </h2>
+    {{order.billingtype}}<br>
+  </div>
+</div>
+<br><br>
+  <div class="alert alert-warning">
+    <h2><strong>Correct Address ?</strong> Make sure if you ordered to correct address.</h2>
+  </div>
+</div>
+
+
+</body>
+</html>

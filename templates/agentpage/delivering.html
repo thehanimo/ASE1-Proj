@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+.notification {
+  background-color: grey;
+  color: white;
+  text-decoration: none;
+  padding: 15px 26px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification:hover {
+  background: black;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -0px;
+  right: -20px;
+  padding: 10px 10px;
+  border-radius: 0%;
+  background-color: red;
+  color: white;
+}
+</style>
+
+<style>
+font-family: Arial;
+font-size: 17px;
+padding: 8px;
+}
+
+* {
+box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+body {
+    font-size: 28px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: grey;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+.active {
+    background-color: black;
+}
+
+.myButton {
+	background-color:grey;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:0px;
+	border:1px solid black;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:17px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 0px 12px #5b6178;
+}
+.myButton:hover {
+	background-color:black;
+}
+.myButton:active {
+	position:relative;
+	top:4px;
+
+
+
+
+}
+
+
+</style>
+
+
+  <style>
+  .delivering_container {
+  	margin: auto;
+  	width:90%;
+      background-color: grey;
+      color:black;
+      text-align: justify;
+      font-size: 20px;
+      padding: 10px 10px 10px 10px;
+      border-top-style: solid;
+      border-bottom-style: solid;
+      border-top-width:8px;
+      border-bottom-width:8px;
+      border-top-color:#ffbf00;
+      border-bottom-color:#ffbf00;
+  }
+
+
+  .feedback {
+  font-size:30px;
+  background-color : orange;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 0px;
+  border-width:5px;
+  border-color: black;
+}
+
+#printbutton {
+  position: fixed;
+  bottom: -4px;
+  right: 10px;
+}
+
+  </style>
+  <script type="text/javascript">
+
+function printDiv(divName) {
+
+ var printContents = document.getElementById(divName).innerHTML;
+ w=window.open();
+ w.document.write(printContents);
+ w.print();
+ w.close();
+}
+</script>
+
+</head>
+<body>
+  <div class="header" >
+    <h2>WATER CAN MANAGEMENT</h2>
+  </div>
+
+  <ul>
+    <li><a href="{% url 'agentpage:agentpage' %}">Home</a></li>
+    <li><a href="{% url 'agentpage:delivered' %}"><span>Delivered History</span></a></li>
+    <li><a class="active" href="{% url 'agentpage:delivering' %}"><span>Now Delivering</span></a></li>
+    <li><a href="{% url 'agentpage:todo' %}" class="notification"><span>ToDo</span>{% if todo_count %}<span class="badge">{{todo_count}}</span>{% endif %}</a></li>
+    <li style="float:right"><a  href="#logout">logout</a></li>
+    <li style="float:right"><a  href="#profile">profile</a></li>
+  </ul><br><br><br>
+
+
+
+
+<div id="print-content">
+  {% for delivering in order_delivering_list %}
+  <form method="POST" action="{% url 'agentpage:delivering' %}">
+    {% csrf_token %}
+
+  <div class="delivering_container">
+    <table style="width:100%;">
+    <tr>
+      <td style="width:75%;">
+      <strong>Order ID : </strong><a>{{delivering.orderid}}</a><br>
+      <strong>Order Address : </strong><a>{{delivering.billingaddress}}</a><br>
+      <strong>Billing Date and Time  : </strong><a>{{delivering.billingdate}}</a><br>
+      <strong>Total Amount : </strong><a>{{delivering.billingamount}}</a><br>
+      <strong>Items : </strong><a></a>
+      </td>
+      <td>
+        <button type="submit" id="{{delivering.orderid}}" value={{delivering.orderid}}  name="Deliver Later">Deliver Later</button>
+      </td>
+    </tr>
+    </table>
+  </div><br>
+
+  </form>
+{% endfor %}
+</div>
+<div id="printbutton">
+  <button class="feedback" onclick="printDiv('print-content')">Print List</button>
+</div>
+</body>
+</html>

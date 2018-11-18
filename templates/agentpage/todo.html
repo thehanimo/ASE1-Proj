@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    height:70%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+</style>
+
+  <style>
+
+  #notification {
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    padding: 15px 26px;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+  }
+
+  #notification:hover {
+    background: black;
+  }
+
+  #notification .badge {
+    position: absolute;
+    top: -0px;
+    right: -20px;
+    padding: 10px 10px;
+    border-radius: 0%;
+    background-color: red;
+    color: white;
+  }
+  </style>
+
+  <style>
+  font-family: Arial;
+  font-size: 17px;
+  padding: 8px;
+  }
+
+  * {
+  box-sizing: border-box;
+  }
+
+  ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+  }
+  body {
+      font-size: 28px;
+  }
+
+  ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: grey;
+      position: -webkit-sticky; /* Safari */
+      position: sticky;
+      top: 0;
+  }
+
+  li {
+      float: left;
+  }
+
+  li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+  }
+
+  li a:hover {
+      background-color: #111;
+  }
+
+  .active {
+      background-color: black;
+  }
+
+  .myButton {
+  	background-color:grey;
+  	-moz-border-radius:28px;
+  	-webkit-border-radius:28px;
+  	border-radius:0px;
+  	border:1px solid black;
+  	display:inline-block;
+  	cursor:pointer;
+  	color:#ffffff;
+  	font-family:Verdana;
+  	font-size:17px;
+  	padding:16px 31px;
+  	text-decoration:none;
+  	text-shadow:0px 0px 12px #5b6178;
+  }
+  .myButton:hover {
+  	background-color:black;
+  }
+  .myButton:active {
+  	position:relative;
+  	top:4px;
+
+
+
+
+  }
+
+
+  </style>
+
+
+  <style>
+  .todo_container {
+  	margin: auto;
+  	width:90%;
+      background-color: grey;
+      color:black;
+      text-align: justify;
+      font-size: 20px;
+      padding: 10px 10px 10px 10px;
+      border-top-style: solid;
+      border-bottom-style: solid;
+      border-top-width:8px;
+      border-bottom-width:8px;
+      border-top-color:#ffbf00;
+      border-bottom-color:#ffbf00;
+  }
+
+  </style>
+</head>
+<body>
+  <div class="header" >
+    <h2>WATER CAN MANAGEMENT</h2>
+  </div>
+
+  <ul>
+    <li><a  href="{% url 'agentpage:agentpage' %}">Home</a></li>
+    <li><a href="{% url 'agentpage:delivered' %}"><span>Delivered History</span></a></li>
+    <li><a href="{% url 'agentpage:delivering' %}"><span>Now Delivering</span></a></li>
+    <li><a class="active" href="{% url 'agentpage:todo' %}" id="notification"><span>ToDo</span>{% if todo_count %}<span class="badge">{{todo_count}}</span>{% endif %}</a></li>
+    <li style="float:right"><a  href="#logout">logout</a></li>
+    <li style="float:right"><a  href="#profile">profile</a></li>
+  </ul><br><br><br>
+
+
+
+
+
+  <form method="POST" action="{% url 'agentpage:todo' %}">
+    {% csrf_token %}
+  {% for todo in order_todo_list %}
+  <div class="todo_container">
+    <table style="width:100%;">
+    <tr>
+      <td style="width:75%;">
+      <strong>Order ID : </strong><a>{{todo.orderid}}</a><br>
+      <strong>Order Address : </strong><a>{{todo.billingaddress}}</a><br>
+      <strong>Billing Date and Time  : </strong><a>{{todo.billingdate}}</a><br>
+      <strong>Total Amount : </strong><a>{{todo.billingamount}}</a><br>
+      <strong>Items : </strong><a></a>
+      </td>
+      <td>
+        <button type="button" id="{{todo.orderid}}" value={{todo.orderid}}  name="Deliver Now" onclick="assignvar(this.id)">Proceed To Deliver</button>
+      </td>
+    </tr>
+    </table>
+  </div><br>
+{% endfor %}
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2>Assign Employee</h2>
+      </div>
+      <div class="modal-body">
+        {% for employee in employee_list %}
+        <p>{{employee.employeeid}}</p>
+        <button type="submit" value={{employee.employeeid}}  name="Assign Work" >Assign Work</button><br><br>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <input type="text" id="orderid" name="orderid"  style="display:none;" value="">
+  </form>
+
+  <script>
+  var modal = document.getElementById('myModal');
+  var span = document.getElementsByClassName("close")[0];
+
+
+  function assignvar(clicked_id) {
+    document.getElementById("orderid").value = clicked_id;
+  	modal.style.display = "block";
+  }
+
+  span.onclick = function() {
+      modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
+  </script>
+
+
+
+
+</body>
+</html>
