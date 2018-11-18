@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-8 col-sm-10 col-12">
+      <h1>My Profile</h1><br>
+        <input type="hidden" name="next" value="{{ next }}">
+        <b>Email</b><span style="padding-left: 31px;">:{{user.email}}</span><br>
+        <table>
+        {% for key,value in details.items %}
+          <tr>
+            <td style="font-weight: bold;">{{ key.title }}</td><td>: {{ value }}</td>
+          </tr>
+        {% endfor %}
+        </table>
+        <br/>
+    </div>
+  </div>
+    Change your password <a href="{% url 'change_password' %}">here.</a>
+{% endblock %}

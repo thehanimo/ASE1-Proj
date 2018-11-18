@@ -131,7 +131,7 @@ def AgentDeleteView(request, id):
 		form = AgentDeleteForm()
 		if request.method == 'POST':
 			form = AgentDeleteForm(request.POST)
-			if request.POST['check']:
+			if request.POST.get('check', False):
 				form.save(agent_user)
 				return redirect('/')
 

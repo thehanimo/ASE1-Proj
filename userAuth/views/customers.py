@@ -132,7 +132,7 @@ def CancelOrderView(request, oid):
 		form = OrderCancelForm()
 		if request.method == 'POST':
 			form = OrderCancelForm(request.POST)
-			if request.POST['check']:
+			if request.POST.get('check', False):
 				form.save(order)
 				return redirect('customer:myorders')
 

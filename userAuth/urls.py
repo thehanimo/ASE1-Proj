@@ -10,8 +10,17 @@ urlpatterns = [
     url(r'^accounts/NewPassword/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', agents.activate, name='agent_activate'),
 
     path('agent/', include(([
-        path('home', agents.HomeView.as_view(), name='home'),
-        path('register', agents.AgentSignUp, name='register')
+        path('home', agents.HomeView, name='home'),
+        path('register', agents.AgentSignUp, name='register'),
+        path('profile/view', agents.AgentDetailsView, name='viewprofile'),
+        path('home/orders/incoming', agents.IncomingOrdersView.as_view(), name='incomingorders'),
+        path('home/orders/assigned', agents.AssignedOrdersView.as_view(), name='assignedorders'),
+        path('home/orders/completed', agents.CompletedOrdersView.as_view(), name='completedorders'),
+        path('home/cancelled/cancelled', agents.CancelledOrdersView.as_view(), name='cancelledorders'),
+        path('home/incomingorders/accept/<int:oid>', agents.AcceptOrderView, name='accept_order'),
+        path('home/incomingorders/cancel/<int:oid>', agents.CancelOrderView, name='cancel_order'),
+        path('home/incomingorders/outfordelivery/<int:oid>', agents.OutForDeliveryOrderView, name='outfordelivery_order'),
+        path('home/incomingorders/delivered/<int:oid>', agents.DeliveredOrderView, name='delivered_order'),
     ], 'userAuth'), namespace='agent')),
 
     path('', include(([

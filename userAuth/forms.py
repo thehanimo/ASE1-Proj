@@ -69,6 +69,54 @@ class OrderCancelForm(forms.ModelForm):
         order.save()
         return
 
+class OrderCancelConfirmForm(forms.ModelForm):
+    check = forms.BooleanField()
+    class Meta:
+        model = Order
+        fields = ('check',)
+
+    def save(self, order=None):
+        order = Order.objects.get(id=order.id)
+        order.order_status = 'X'
+        order.save()
+        return
+
+class OrderAcceptForm(forms.ModelForm):
+    check = forms.BooleanField()
+    class Meta:
+        model = Order
+        fields = ('check',)
+
+    def save(self, order=None):
+        order = Order.objects.get(id=order.id)
+        order.order_status = '2'
+        order.save()
+        return
+
+class OrderOutForDeliveryForm(forms.ModelForm):
+    check = forms.BooleanField()
+    class Meta:
+        model = Order
+        fields = ('check',)
+
+    def save(self, order=None):
+        order = Order.objects.get(id=order.id)
+        order.order_status = '3'
+        order.save()
+        return
+
+class OrderDeliveredForm(forms.ModelForm):
+    check = forms.BooleanField()
+    class Meta:
+        model = Order
+        fields = ('check',)
+
+    def save(self, order=None):
+        order = Order.objects.get(id=order.id)
+        order.order_status = '4'
+        order.save()
+        return
+
 class CustomerSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Required')
     class Meta(UserCreationForm.Meta):
