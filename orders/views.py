@@ -35,11 +35,8 @@ def order_create(request):
                     price=item['price'],
                     quantity=item['quantity'],
                 )
-                a = item['product'].reduce_stock(item['quantity'])
-                if a:
-                    item['product'].save()
-                else:
-                    raise Product.DoesNotExist
+                item['product'].reduce_stock(item['quantity'])
+                item['product'].save()
             cart.clear()
             order.save()
             oid = urlsafe_base64_encode(force_bytes(order.id)).decode()

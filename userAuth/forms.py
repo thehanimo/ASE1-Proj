@@ -57,6 +57,28 @@ class AgentDeleteForm(forms.ModelForm):
         user.delete()
         return
 
+class ProductDeleteForm(forms.ModelForm):
+    check = forms.BooleanField()
+    class Meta:
+        model = Product
+        fields = ('check',)
+
+    def save(self, in_prd=None):
+        prd = Product.objects.get(id=in_prd.id)
+        prd.delete()
+        return
+
+class CategoryDeleteForm(forms.ModelForm):
+    check = forms.BooleanField()
+    class Meta:
+        model = Category
+        fields = ('check',)
+
+    def save(self, in_cat=None):
+        cat = Category.objects.get(id=in_cat.id)
+        cat.delete()
+        return
+
 class OrderCancelForm(forms.ModelForm):
     check = forms.BooleanField()
     class Meta:
@@ -194,6 +216,16 @@ class ExecutiveDetailsForm(forms.ModelForm):
             executive_details.user = user
         executive_details.save()
         return executive_details
+
+class ProductDetailsForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('category','name','slug','description','price','available','stock','image')
+
+    def save(self, user=None):
+        product_details = super(ProductDetailsForm, self).save(commit=False)
+        product_details.save()
+        return product_details
 
 class PasswordResetForm(forms.Form):
     email = forms.EmailField()

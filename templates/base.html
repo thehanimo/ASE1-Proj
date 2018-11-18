@@ -36,6 +36,16 @@
               {% endif %}
             </div>
           </div>
+          <div>
+            <br/>
+            <a href="{% url 'home' %}">Home</a>
+            {% if user.user_type == 1 %}
+            /
+            <a href="{% url 'shop:product_list' %}">Shop</a>
+            /
+            <a href="{% url 'cart:cart_detail' %}">Cart</a>
+            {% endif %}<br/>
+          </div>
           <div class="card mb-3">
             <div class="card-body">
               {% for message in messages %}
@@ -50,15 +60,6 @@
               {% endblock %}
             </div>
           </div>
-          <footer>
-            <a href="{% url 'home' %}">Home</a>
-            {% if user.user_type == 1 %}
-            /
-            <a href="{% url 'shop:product_list' %}">Shop</a>
-            /
-            <a href="{% url 'cart:cart_detail' %}">Cart</a>
-            {% endif %}
-          </footer>
         </div>
       </div>
     </div>

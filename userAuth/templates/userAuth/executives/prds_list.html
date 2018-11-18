@@ -37,7 +37,8 @@
             <td class="align-middle">{{ prd.available }}</td>
             <td class="align-middle">{{ prd.stock }}</td>
             <td class="text-right">
-              <a href="#"><button type="submit" class="btn">Delete Product</button></a>
+              <a href="{% url 'executive:deleteproduct' id=prd.id %}"><button type="submit" class="btn">Delete Product</button></a>
+              <a href="{% url 'executive:editproduct' pid=prd.id %}"><button type="submit" class="btn">Edit Product</button></a>
             </td>
           </tr>
         {% empty %}

@@ -18,7 +18,7 @@ from ..tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from ..decorators import executive_required
-from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm, AgentDeleteForm, CategorySignUpForm, ProductSignUpForm
+from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm, AgentDeleteForm, CategorySignUpForm, ProductSignUpForm, ProductDeleteForm, CategoryDeleteForm, ProductDetailsForm
 from ..models import User, Executive, Agent
 from orders.models import Order
 from shop.models import Product, Category
@@ -26,7 +26,7 @@ from shop.models import Product, Category
 class ExecutiveSignUpView(CreateView):
 	model = User
 	form_class = ExecutiveSignUpForm
-	template_name = 'registration/signup_form.html'
+	template_name = 'registration/exec_signup_form.html'
 
 	def get_context_data(self, **kwargs):
 		kwargs['user_type'] = 3
@@ -193,3 +193,54 @@ class ProductCreateView(CreateView):
 	def form_valid(self,form):
 		form.save()
 		return redirect('/')
+
+@login_required
+@executive_required
+def ProductDeleteView(request, id):
+	try:
+		pid = int(id)
+		prd = Product.objects.get(pk=pid)
+	except(TypeError, ValueError, OverflowError, Product.DoesNotExist):
+		prd = None
+	if prd:
+		form = ProductDeleteForm()
+		if request.method == 'POST':
+			form = ProductDeleteForm(request.POST)
+			if request.POST.get('check', False):
+				form.save(prd)
+				return redirect('/')
+
+		return render(request, 'registration/order_confirm.html', {'form':form})
+	return redirect('forbidden')
+
+@login_required
+@executive_required
+def CategoryDeleteView(request, id):
+	try:
+		cid = int(id)
+		cat = Category.objects.get(pk=cid)
+	except(TypeError, ValueError, OverflowError, Category.DoesNotExist):
+		cat = None
+	if cat:
+		form = CategoryDeleteForm()
+		if request.method == 'POST':
+			form = CategoryDeleteForm(request.POST)
+			if request.POST.get('check', False):
+				form.save(cat)
+				return redirect('/')
+
+		return render(request, 'registration/order_confirm.html', {'form':form})
+	return redirect('forbidden')
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class ProductDetailsView(UpdateView):
+	model = Product
+	template_name = "registration/obj_details.html"
+	form_class = ProductDetailsForm
+
+	def get_object(self):
+		prd = Product.objects.get(id=self.kwargs['pid'])
+		return prd
+
+	def get_success_url(self, *args, **kwargs):
+		return reverse("executive:product")

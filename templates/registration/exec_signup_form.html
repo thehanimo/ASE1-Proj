@@ -4,7 +4,7 @@
 {% block content %}
   <div>
     <div class="col-md-8 col-sm-10 col-12">
-      <h1>Sign up!</h1>
+      <h1>Register for an Executive Account.</h1>
       <form method="post" novalidate>
         {% csrf_token %}
         <table>
@@ -19,6 +19,5 @@
     </div>
     <br/>
     Already have an account? Login <a href="{% url 'login' %}">here!</a><br/>
-    Executive? Register <a href="{% url 'executive:register' %}">here!</a>
   </div>
 {% endblock %}

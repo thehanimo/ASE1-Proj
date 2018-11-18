@@ -47,11 +47,5 @@ class Product(models.Model):
         return reverse('shop:product_detail', args=[self.id, self.slug])
 
     def reduce_stock(self, n):
-        if self.stock - n >= 0:
-            self.stock -= n
+        self.stock = self.stock - n
 
-            if self.stock ==0:
-                self.available = False
-            return True
-        self.available = False
-        return False

@@ -44,6 +44,9 @@ urlpatterns = [
         path('category/', executives.CategoriesView.as_view(), name='category'),
         path('product/create', executives.ProductCreateView.as_view(), name='create_product'),
         path('product/', executives.ProductsView.as_view(), name='product'),
+        path('product/edit/<int:pid>', executives.ProductDetailsView.as_view(), name='editproduct'),
+        path('product/delete/<str:id>', executives.ProductDeleteView, name='deleteproduct'),
+        path('category/delete/<str:id>', executives.CategoryDeleteView, name='deletecategory'),
     ], 'userAuth'), namespace='executive')),
 
 ]
