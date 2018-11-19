@@ -22,8 +22,10 @@
         {% for item in items %}
           <tr>{% if user.user_type == 3 %}
             <td class="align-middle"><a href="{% url 'executive:editproduct' pid=item.product.id %}">{{ item.product.name }}</a></td>
-            {% else %}
+            {% elif user.user_type == 1 and item.available%}
             <td class="align-middle"><a href="{% url 'shop:product_detail' id=item.product.id slug=item.product.slug %}">{{ item.product.name }}</a></td>
+            {% else %}
+            <td class="align-middle">{{ item.product.name }}</td>
             {% endif %}
             <td class="align-middle">{{ item.quantity }}</td>
             <td class="align-middle">{{ item.price }}</td>

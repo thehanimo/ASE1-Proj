@@ -20,7 +20,7 @@ from django.core.mail import EmailMessage
 from ..decorators import executive_required
 from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm, AgentDeleteForm, CategorySignUpForm, ProductSignUpForm, ProductDeleteForm, CategoryDeleteForm, ProductDetailsForm
 from ..models import User, Executive, Agent
-from orders.models import Order
+from orders.models import Order, OrderItem
 from shop.models import Product, Category
 
 class ExecutiveSignUpView(CreateView):
@@ -104,6 +104,18 @@ class AllOrdersView(ListView):
 
 	def get_queryset(self):
 		queryset = Order.objects.all()
+		return queryset
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class OrderView(ListView):
+	model = OrderItem
+	ordering = ('id', )
+	context_object_name = 'items'
+	template_name = 'userAuth/customers/items_list.html'
+
+	def get_queryset(self):
+		order = Order.objects.get(id=self.kwargs['oid'])
+		queryset = OrderItem.objects.filter(order=order)
 		return queryset
 
 @method_decorator([login_required, executive_required], name='dispatch')

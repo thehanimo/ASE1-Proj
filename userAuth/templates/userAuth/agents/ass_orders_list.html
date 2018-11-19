@@ -22,7 +22,7 @@
       <tbody>
         {% for order in orders %}
           <tr>
-            <td class="align-middle"><a href="{% url 'customer:order' oid=order.id %}">{{ order.id }}</a></td>
+            <td class="align-middle"><a href="{% url 'agent:order' oid=order.id %}">{{ order.id }}</a></td>
             <td class="align-middle">{{ order.created }}</td>
             <td class="align-middle">{{ order.get_order_status_display }}</td>
             <td class="align-middle">{{ order.get_payment_type_display }}</td>

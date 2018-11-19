@@ -109,7 +109,7 @@ class MyOrdersView(ListView):
 		queryset = Order.objects.filter(customer=self.request.user)
 		return queryset
 
-@method_decorator([login_required], name='dispatch')
+@method_decorator([login_required, customer_required], name='dispatch')
 class OrderView(ListView):
 	model = OrderItem
 	ordering = ('id', )
@@ -118,7 +118,8 @@ class OrderView(ListView):
 
 	def get_queryset(self):
 		order = Order.objects.get(id=self.kwargs['oid'])
-		if (request.user.user_type == 1 and order.customer.id != request.user.id) or (request.user.user_type == 2 and order.agent.id != request.user.id):
+		cur_user = self.request.user
+		if cur_user.id != order.customer.id:
 			return []
 		queryset = OrderItem.objects.filter(order=order)
 		return queryset

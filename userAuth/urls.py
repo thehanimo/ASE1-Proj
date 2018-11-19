@@ -13,6 +13,7 @@ urlpatterns = [
         path('home', agents.HomeView, name='home'),
         path('register', agents.AgentSignUp, name='register'),
         path('profile/view/<int:aid>', agents.AgentDetailsView, name='viewprofile'),
+        path('orders/<int:oid>', agents.OrderView.as_view(), name='order'),
         path('orders/incoming', agents.IncomingOrdersView.as_view(), name='incomingorders'),
         path('orders/assigned', agents.AssignedOrdersView.as_view(), name='assignedorders'),
         path('orders/completed', agents.CompletedOrdersView.as_view(), name='completedorders'),
@@ -48,7 +49,7 @@ urlpatterns = [
         path('product/delete/<str:id>', executives.ProductDeleteView, name='deleteproduct'),
         path('category/delete/<str:id>', executives.CategoryDeleteView, name='deletecategory'),
         path('orders/all', executives.AllOrdersView.as_view(), name='all_orders'),
-        path('orders/<int:oid>', customers.OrderView.as_view(), name='order'),
+        path('orders/<int:oid>', executives.OrderView.as_view(), name='order'),
         path('orders/cancel/<int:oid>', agents.CancelOrderView, name='cancel_order'),
     ], 'userAuth'), namespace='executive')),
 

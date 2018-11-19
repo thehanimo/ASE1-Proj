@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect, render_to_response
 from ..decorators import agent_required, executive_required, agent_or_executive_required
 from ..forms import AgentSignUpForm, AgentSignUpFormExtended, NewPasswordForm, OrderAcceptForm, OrderCancelConfirmForm, OrderOutForDeliveryForm, OrderDeliveredForm
 from ..models import User, Agent
-from orders.models import Order
+from orders.models import Order, OrderItem
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, render_to_response
@@ -23,6 +23,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from ..tokens import account_activation_token
 from django.core.mail import EmailMessage
+
 
 @login_required
 @executive_required
@@ -110,6 +111,21 @@ def activate(request, uidb64, token):
 		return render(request, 'registration/new_password.html', {'form':form})
 	else:
 		return render(request, 'registration/activation_err.html')
+
+@method_decorator([login_required, agent_required], name='dispatch')
+class OrderView(ListView):
+	model = OrderItem
+	ordering = ('id', )
+	context_object_name = 'items'
+	template_name = 'userAuth/customers/items_list.html'
+
+	def get_queryset(self):
+		order = Order.objects.get(id=self.kwargs['oid'])
+		cur_user = self.request.user
+		if cur_user.id != order.agent.id:
+			return []
+		queryset = OrderItem.objects.filter(order=order)
+		return queryset
 
 @method_decorator([login_required, agent_required], name='dispatch')
 class IncomingOrdersView(ListView):
