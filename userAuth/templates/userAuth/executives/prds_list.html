@@ -27,7 +27,7 @@
           <tr>
             <td class="align-middle">
               <a href="{% url 'executive:editproduct' pid=prd.id %}">
-                <img src='/media/{{product.image}}' onerror="if (this.src != '/media/product/default.jpg') this.src = '/media/product/default.jpg';" alt=".." style="height: 30px; width: 50px;">
+                <img src='/media/{{prd.image}}' onerror="if (this.src != '/media/product/default.jpg') this.src = '/media/product/default.jpg';" alt=".." style="height: 30px; width: 50px;">
               </a>
             </td>
             <td class="align-middle">{{ prd.category }}</td>
