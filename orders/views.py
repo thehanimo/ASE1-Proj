@@ -4,9 +4,9 @@ from .models import OrderItem, Order
 from cart.cart import Cart
 from shop.models import Product
 from django.contrib.auth.decorators import login_required
-from userAuth.models import Agent
+from agents.models import Agent
 
-from .decorators import customer_required, customer_details_required
+from userAuth.decorators import customer_required, customer_details_required
 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text

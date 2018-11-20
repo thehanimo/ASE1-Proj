@@ -25,7 +25,7 @@ def home(request):
 		elif request.user.is_superuser == 1:
 			return redirect('/admin')
 
-	return render(request, 'userAuth/home.html')
+	return render(request, 'home.html')
 
 
 def password_reset(request):
