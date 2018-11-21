@@ -5,6 +5,8 @@ from ..models import User, AgentApplications
 from ..forms import PasswordResetForm, NewPasswordForm, AgentSignUpForm
 from django.contrib.auth.decorators import login_required
 
+from django.utils.decorators import method_decorator
+from userAuth.decorators import anonymous_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth import login, authenticate
@@ -27,6 +29,8 @@ def home(request):
 
 	return render(request, 'home.html')
 
+
+@method_decorator([anonymous_required], name='dispatch')
 class PartnerWithUsView(CreateView):
 	model = AgentApplications
 	fields = ('fullname', 'email', 'phone', 'zipcode','area')

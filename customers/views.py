@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, ListView, UpdateView, FormView
 
+from userAuth.decorators import anonymous_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, render_to_response
@@ -25,6 +26,7 @@ from userAuth.models import User
 from customers.models import Customer
 from orders.models import Order, OrderItem
 
+@method_decorator([anonymous_required], name='dispatch')
 class CustomerSignUpView(CreateView):
 	model = User
 	form_class = CustomerSignUpForm
