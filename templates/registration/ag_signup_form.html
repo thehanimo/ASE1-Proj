@@ -2,9 +2,9 @@
 
 
 {% block content %}
-  <div class="row">
+  <div>
     <div class="col-md-8 col-sm-10 col-12">
-      <h1>My Profile</h1><br>
+      <h1>Register for an Executive Account.</h1>
       <form method="post" novalidate>
         {% csrf_token %}
         <table>
@@ -22,10 +22,11 @@
         <button id="submit" type="submit" class="btn btn-success" disabled="true">Sign up</button>
       </form>
     </div>
+    <br/>
+    Already have an account? Login <a href="{% url 'login' %}">here!</a><br/>
   </div>
-    Change your password <a href="{% url 'change_password' %}">here.</a>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript">
+  <script type="text/javascript">
     function zipcodeAutoFill() {
       var el = $("#id_zipcode");
       if ((el.val().length == 6) && $.isNumeric(el.val())) {
@@ -54,5 +55,5 @@
     $(window).on('load', zipcodeAutoFill());
     $("#id_zipcode").keyup(zipcodeAutoFill);
 
-  </script>
+</script>
 {% endblock %}

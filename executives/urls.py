@@ -5,7 +5,6 @@ from django.urls import path, include
 app_name = 'executive'
 
 urlpatterns = [
-	path('register', views.ExecutiveSignUpView.as_view(), name='register'),
     path('home', views.HomeView.as_view(), name='home'),
     path('profile/view', views.ExecutiveDetailsView.as_view(), name='viewprofile'),
     path('agents_view', views.AgentsView.as_view(), name='agentslist'),

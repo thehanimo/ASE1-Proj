@@ -4,12 +4,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import RegexValidator
 
 alphabets = RegexValidator(r'^[ a-zA-Z]*$', 'Only alphabets are allowed.')
-
-AREA_CHOICES = [
-		('600018','Abhiramapuram'),
-		('600020','Adyar'),
-		('600040','Anna Nagar'),
-	]
+zipcode_validator = RegexValidator(r'^[0-9]{6}$', 'Only 6-digit zipcodes supported.')
 
 def upload_path_handler(instance, filename):
 	import os.path
@@ -22,5 +17,6 @@ class Customer(models.Model):
 	fullname = models.CharField(max_length=50, validators=[alphabets])
 	photo = models.ImageField(upload_to=upload_path_handler, blank=True)
 	phone = PhoneNumberField(null=False, blank=False, unique=True)
-	area = models.CharField(max_length=6, default='', choices=AREA_CHOICES)
+	zipcode = models.CharField(max_length=6, default='', validators=[zipcode_validator])
 	street = models.CharField(max_length=100, default='')
+	area = models.CharField(max_length=30, default='', validators=[alphabets])

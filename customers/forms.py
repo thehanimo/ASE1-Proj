@@ -26,7 +26,7 @@ class CustomerSignUpForm(UserCreationForm):
 class CustomerDetailsForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ('fullname', 'photo', 'phone', 'street', 'area')
+        fields = ('fullname', 'photo', 'phone', 'street', 'zipcode', 'area')
 
     def save(self, user=None):
         customer_details = super(CustomerDetailsForm, self).save(commit=False)

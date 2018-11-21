@@ -23,3 +23,8 @@ class NewPasswordForm(UserCreationForm):
             user.set_password(self.cleaned_data['password1'])
         user.save()
         return user
+
+class AgentSignUpForm(forms.Form):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('fullname', 'email', 'phone', 'area')

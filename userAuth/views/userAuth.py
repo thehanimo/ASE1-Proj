@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render, reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import FormView
-from ..models import User
-from ..forms import PasswordResetForm, NewPasswordForm
+from django.views.generic import FormView, CreateView
+from ..models import User, AgentApplications
+from ..forms import PasswordResetForm, NewPasswordForm, AgentSignUpForm
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -27,6 +27,24 @@ def home(request):
 
 	return render(request, 'home.html')
 
+class PartnerWithUsView(CreateView):
+	model = AgentApplications
+	fields = ('fullname', 'email', 'phone', 'zipcode','area')
+	template_name = 'registration/ag_signup_form.html'
+
+	def form_valid(self, form):
+		existing_queries = len(User.objects.filter(email=form.cleaned_data.get('email'))) + len(AgentApplications.objects.filter(email=form.cleaned_data.get('email')))
+		if not existing_queries:
+			new_appl = AgentApplications.objects.create(
+					fullname = form.cleaned_data.get('fullname'),
+					email = form.cleaned_data.get('email'),
+					phone = form.cleaned_data.get('phone'),
+					zipcode = form.cleaned_data.get('zipcode'),
+					area = form.cleaned_data.get('area')
+				)
+			new_appl.save()
+			return render_to_response('registration/newUser.html')
+		return redirect('home')
 
 def password_reset(request):
 	form = PasswordResetForm()
@@ -34,8 +52,10 @@ def password_reset(request):
 		form = PasswordResetForm(request.POST)
 		if form.is_valid():
 			to_email = form.cleaned_data.get('email')
-			user = User.objects.get(email=to_email)
-			print(user.pk)
+			try:
+				user = User.objects.get(email=to_email)
+			except User.DoesNotExist:
+				user = None
 			if user:
 				current_site = get_current_site(request)
 				mail_subject = 'Reset your Password.'
