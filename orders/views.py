@@ -26,7 +26,7 @@ def order_create(request):
                 if agent.user.is_active == False:
                     raise Agent.DoesNotExist
             except Agent.DoesNotExist:
-                return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.get_area_display()})
+                return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.area})
             order = Order.objects.create(customer=request.user, agent=agent.user, payment_type=form.cleaned_data['payment_type'])
             for item in cart:
                 OrderItem.objects.create(
