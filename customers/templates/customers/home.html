@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Hi {{user.username}}!</h3>
+<img src='{{ MEDIA_URL}}{{user.customer.photo}}' onerror="if (this.src != '{{ MEDIA_URL}}default.jpg') this.src = '{{ MEDIA_URL}}default.jpg';" width="200px" height="200px"><br>
+<a href="{% url 'customer:editprofile' %}">View/Edit profile</a><br/>
+<a href="{% url 'customer:myorders' %}">My Orders</a>
+{% endblock %}
