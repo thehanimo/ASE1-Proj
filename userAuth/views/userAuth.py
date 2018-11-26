@@ -28,6 +28,25 @@ def home(request):
 	return render(request, 'userAuth/home.html')
 
 
+@method_decorator([anonymous_required], name='dispatch')
+class PartnerWithUsView(CreateView):
+	model = AgentApplications
+	fields = ('fullname', 'email', 'phone', 'zipcode','area')
+	template_name = 'registration/ag_signup_form.html'
+
+	def form_valid(self, form):
+		existing_queries = len(User.objects.filter(email=form.cleaned_data.get('email'))) + len(AgentApplications.objects.filter(email=form.cleaned_data.get('email')))
+		if not existing_queries:
+			new_appl = AgentApplications.objects.create(
+					fullname = form.cleaned_data.get('fullname'),
+					email = form.cleaned_data.get('email'),
+					phone = form.cleaned_data.get('phone'),
+					zipcode = form.cleaned_data.get('zipcode'),
+					area = form.cleaned_data.get('area')
+				)
+			new_appl.save()
+			return render_to_response('registration/newAgentAppl.html')
+		return render_to_response('registration/rejectAgentAppl.html')
 def password_reset(request):
 	form = PasswordResetForm()
 	if request.method=='POST':

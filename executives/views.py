@@ -14,13 +14,17 @@ from django.contrib.auth import login, authenticate
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from ..tokens import account_activation_token
+from userAuth.tokens import account_activation_token
 from django.core.mail import EmailMessage
 
-from ..decorators import executive_required
-from ..forms import ExecutiveSignUpForm, ExecutiveDetailsForm, AgentDetailsForm, AgentDeleteForm, CategorySignUpForm, ProductSignUpForm, ProductDeleteForm, CategoryDeleteForm, ProductDetailsForm
-from ..models import User, Executive, Agent
-from orders.models import Order
+from userAuth.decorators import executive_required, agent_or_executive_required
+from executives.forms import ExecutiveSignUpForm, ExecutiveDetailsForm
+from agents.forms import AgentDetailsForm, AgentDeleteForm
+from shop.forms import CategorySignUpForm, ProductSignUpForm, ProductDeleteForm, CategoryDeleteForm, ProductDetailsForm
+from userAuth.models import User, AgentApplications
+from executives.models import Executive
+from agents.models import Agent
+from orders.models import Order, OrderItem
 from shop.models import Product, Category
 
 class ExecutiveSignUpView(CreateView):
@@ -53,7 +57,7 @@ class ExecutiveSignUpView(CreateView):
 
 @method_decorator([login_required, executive_required], name='dispatch')
 class HomeView(ListView):
-	template_name = 'userAuth/executives/home.html'
+	template_name = 'executives/home.html'
 
 	def get_queryset(self):
 		return []
@@ -89,7 +93,7 @@ class AgentsView(ListView):
 	model = Agent
 	ordering = ('fullname', )
 	context_object_name = 'agents'
-	template_name = 'userAuth/executives/agents_list.html'
+	template_name = 'executives/agents_list.html'
 
 	def get_queryset(self):
 		queryset = Agent.objects.all()
@@ -100,18 +104,48 @@ class AllOrdersView(ListView):
 	model = Order
 	ordering = ('updated', )
 	context_object_name = 'orders'
-	template_name = 'userAuth/executives/all_orders.html'
+	template_name = 'executives/all_orders.html'
 
 	def get_queryset(self):
 		queryset = Order.objects.all()
 		return queryset
 
 @method_decorator([login_required, executive_required], name='dispatch')
+class OrderView(ListView):
+	model = OrderItem
+	ordering = ('id', )
+	context_object_name = 'items'
+	template_name = 'customers/items_list.html'
+
+	def get_queryset(self):
+		order = Order.objects.get(id=self.kwargs['oid'])
+		queryset = OrderItem.objects.filter(order=order)
+		return queryset
+
+@login_required
+@agent_or_executive_required
+def CancelOrderView(request, oid):
+	try:
+		order = Order.objects.get(id=oid)
+	except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
+		order = None
+	if order:
+		form = OrderCancelConfirmForm()
+		if request.method == 'POST':
+			form = OrderCancelConfirmForm(request.POST)
+			if request.POST.get('check', False):
+				form.save(order)
+				return redirect('home')
+
+		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
+	return redirect('forbidden')
+
+@method_decorator([login_required, executive_required], name='dispatch')
 class CategoriesView(ListView):
 	model = Category
 	ordering = ('name', )
 	context_object_name = 'cats'
-	template_name = 'userAuth/executives/cats_list.html'
+	template_name = 'executives/cats_list.html'
 
 	def get_queryset(self):
 		queryset = Category.objects.all()
@@ -122,11 +156,102 @@ class ProductsView(ListView):
 	model = Product
 	ordering = ('name', )
 	context_object_name = 'prds'
-	template_name = 'userAuth/executives/prds_list.html'
+	template_name = 'executives/prds_list.html'
 
 	def get_queryset(self):
 		queryset = Product.objects.all()
 		return queryset
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class AgentApplicationsView(ListView):
+	model = AgentApplications
+	ordering = ('id', )
+	context_object_name = 'appls'
+	template_name = 'executives/appls_list.html'
+
+	def get_queryset(self):
+		queryset = AgentApplications.objects.all()
+		return queryset
+
+@login_required
+@executive_required
+def AcceptAgentApplication(request, aid):
+	try:
+		agent_appl = AgentApplications.objects.get(pk=aid)
+	except:
+		agent_appl = None
+	if agent_appl:
+		newAgent = User.objects.create(
+			username='testagent001',
+			password=User.objects.make_random_password(),
+			email=agent_appl.email,
+			user_type=2,
+			is_active=False
+		)
+		newAgent.username = 'agent'+str(1000+newAgent.id)
+		newAgent.save()
+		newAgentDetails = Agent.objects.create(
+			fullname=agent_appl.fullname,
+			phone=agent_appl.phone,
+			area=agent_appl.area,
+			rating=0,
+			user=newAgent,
+		)
+		agent_appl.delete()
+		current_site = get_current_site(request)
+		mail_subject = 'Welcome aboard, '+newAgentDetails.fullname+'!'
+		message = render_to_string('email/agent_appl_accepted.html', {
+			'user': newAgent,
+			'domain': current_site.domain,
+			'uid':urlsafe_base64_encode(force_bytes(newAgent.pk)).decode(),
+			'token':account_activation_token.make_token(newAgent),
+		})
+		to_email = newAgent.email
+		email = EmailMessage(
+					mail_subject, message, to=[to_email]
+		)
+		email.send()
+		return render(request, 'registration/newAgent.html')
+	return render(request, '500.html')
+
+@login_required
+@executive_required
+def RejectAgentApplication(request, aid):
+	try:
+		agent_appl = AgentApplications.objects.get(pk=aid)
+	except:
+		agent_appl = None
+	if agent_appl:
+		fullname = agent_appl.fullname
+		to_email = agent_appl.email
+		agent_appl.delete()
+		current_site = get_current_site(request)
+		mail_subject = "We're sorry, "+fullname+'.'
+		message = render_to_string('email/agent_appl_rejected.html', {
+			'name': fullname,
+		})
+		email = EmailMessage(
+					mail_subject, message, to=[to_email]
+		)
+		email.send()
+		return render(request, 'registration/rejectAgent.html')
+	return render(request, '500.html')
+
+
+
+@login_required 
+@agent_or_executive_required
+def AgentDetailsView(request, aid):
+	try:
+		agent = User.objects.get(pk=aid)
+	except:
+		agent = None
+	if agent and (agent.id == request.user.id or request.user.user_type == 3):
+		details = {}
+		for field in Agent._meta.get_fields():
+			details[field.name] = getattr(agent.agent, field.name)
+		return render(request, "registration/details_view.html", {'details':details})
+	return render(request, '500.html')
 
 
 @login_required

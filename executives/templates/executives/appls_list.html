@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Agent Applications</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">Agent Applications</h2>
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Area</th>
+          <th>Zipcode</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appl in appls %}
+          <tr>
+            <td class="align-middle"><a href="#">{{ appl.fullname }}</a></td>
+            <td class="align-middle">{{ appl.phone }}</td>
+            <td class="align-middle">{{ appl.email }}</td>
+            <td class="align-middle">{{ appl.area }}</td>
+            <td class="align-middle">{{ appl.zipcode }}</td>
+            <td class="text-right">
+              <a href="{% url 'executive:accept_agent_appl' aid=appl.id %}"><button type="submit" class="btn">Accept</button></a>
+              <a href="{% url 'executive:reject_agent_appl' aid=appl.id %}"><button type="submit" class="btn">Reject</button></a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No categories have been added yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

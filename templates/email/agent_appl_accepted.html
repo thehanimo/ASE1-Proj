@@ -1,0 +1,7 @@
+{% autoescape off %}
+Hey there! 
+We're pleased to inform you that your application has been reviewed. You are now part of TWC family!
+Your username : {{ user.username }}
+Please click on the link to confirm your registration and set up your password.
+http://{{ domain }}{% url 'agent_activate' uidb64=uid token=token %}
+{% endautoescape %}

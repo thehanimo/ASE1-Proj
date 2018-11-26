@@ -5,7 +5,7 @@
 <img src='/media/{{user.executive.photo}}' onerror="if (this.src != '/media/default.jpg') this.src = '/media/default.jpg';" width="200px" height="200px"><br>
 <a href="{% url 'executive:viewprofile' %}">View/Edit profile</a>
 <h4>Complaint(s) assigned: {{user.executive.complaints_queue}}</h4>
-<a href="{% url 'agent:register' %}">Add an agent</a><br/>
+<a href="{% url 'executive:agent_applications' %}">View Agent Applications</a><br/>
 <a href="{% url 'executive:agentslist' %}">View agents</a><br/>
 <a href="{% url 'executive:product' %}">Products</a><br/>
 <a href="{% url 'executive:category' %}">Categories</a><br/>

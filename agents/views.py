@@ -10,10 +10,12 @@ from django.views.generic import CreateView, ListView, UpdateView
 from django.shortcuts import render, redirect, render_to_response
 
 
-from ..decorators import agent_required, executive_required, agent_or_executive_required
-from ..forms import AgentSignUpForm, AgentSignUpFormExtended, NewPasswordForm, OrderAcceptForm, OrderCancelConfirmForm, OrderOutForDeliveryForm, OrderDeliveredForm
-from ..models import User, Agent
-from orders.models import Order
+from userAuth.decorators import agent_required, executive_required, agent_or_executive_required
+from userAuth.forms import NewPasswordForm
+from orders.forms import OrderAcceptForm, OrderCancelConfirmForm, OrderOutForDeliveryForm, OrderDeliveredForm
+from userAuth.models import User
+from .models import Agent
+from orders.models import Order, OrderItem
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, render_to_response
@@ -21,49 +23,8 @@ from django.contrib.auth import login, authenticate
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from ..tokens import account_activation_token
+from userAuth.tokens import account_activation_token
 from django.core.mail import EmailMessage
-
-@login_required
-@executive_required
-def AgentSignUp(request):
-	form_extended = AgentSignUpFormExtended()
-	if request.method == 'POST':
-		form_extended = AgentSignUpFormExtended(request.POST)
-		if form_extended.is_valid():
-			username = 'testagent001'
-			password = User.objects.make_random_password()
-			email = request.POST['email']
-			fullname = request.POST['fullname']
-			phone = request.POST['phone']
-			area = request.POST['area']
-			rating = request.POST['rating']
-			if User.objects.filter(email=email):
-				form_extended.add_error(error="Already exists", field='email')
-				return render(request, 'registration/agent_signup_form.html', {'form_extended':form_extended})
-			user1 = User.objects.create(username=username, password=password, email=email, user_type=2, is_active=False)
-			user1.username = 'agent'+str(1000+user1.id)
-			user1.save()
-			agent = Agent.objects.create(fullname=fullname, phone=phone, area=area, rating=rating, user=user1)
-
-			current_site = get_current_site(request)
-			mail_subject = 'Activate your account.'
-			message = render_to_string('registration/agent_acc_active_email.html', {
-				'user': user1,
-				'domain': current_site.domain,
-				'uid':urlsafe_base64_encode(force_bytes(user1.pk)).decode(),
-				'token':account_activation_token.make_token(user1),
-			})
-			to_email = email
-			email = EmailMessage(
-						mail_subject, message, to=[to_email]
-			)
-			email.send()
-			return render(request, 'registration/newAgent.html')
-
-			
-
-	return render(request, 'registration/agent_signup_form.html', {'form_extended':form_extended})
 
 @login_required
 @agent_required
@@ -72,7 +33,7 @@ def HomeView(request):
 	ass_orders = len(Order.objects.filter(agent=request.user, order_status='2')) + len(Order.objects.filter(agent=request.user, order_status='3'))
 	del_orders = len(Order.objects.filter(agent=request.user, order_status='4'))
 	can_orders = len(Order.objects.filter(agent=request.user, order_status='X'))
-	return render(request, "userAuth/agents/home.html", {'inc_orders':inc_orders,'ass_orders':ass_orders,'del_orders':del_orders, 'can_orders':can_orders,})
+	return render(request, "agents/home.html", {'inc_orders':inc_orders,'ass_orders':ass_orders,'del_orders':del_orders, 'can_orders':can_orders,})
 
 
 
@@ -112,11 +73,26 @@ def activate(request, uidb64, token):
 		return render(request, 'registration/activation_err.html')
 
 @method_decorator([login_required, agent_required], name='dispatch')
+class OrderView(ListView):
+	model = OrderItem
+	ordering = ('id', )
+	context_object_name = 'items'
+	template_name = 'customers/items_list.html'
+
+	def get_queryset(self):
+		order = Order.objects.get(id=self.kwargs['oid'])
+		cur_user = self.request.user
+		if cur_user.id != order.agent.id:
+			return []
+		queryset = OrderItem.objects.filter(order=order)
+		return queryset
+
+@method_decorator([login_required, agent_required], name='dispatch')
 class IncomingOrdersView(ListView):
 	model = Order
 	ordering = ('created', )
 	context_object_name = 'orders'
-	template_name = 'userAuth/agents/inc_orders_list.html'
+	template_name = 'agents/inc_orders_list.html'
 
 	def get_queryset(self):
 		queryset = Order.objects.filter(agent=self.request.user, order_status='W') | Order.objects.filter(agent=self.request.user, order_status='1')
@@ -127,7 +103,7 @@ class AssignedOrdersView(ListView):
 	model = Order
 	ordering = ('created', )
 	context_object_name = 'orders'
-	template_name = 'userAuth/agents/ass_orders_list.html'
+	template_name = 'agents/ass_orders_list.html'
 
 	def get_queryset(self):
 		queryset = Order.objects.filter(agent=self.request.user, order_status='2') | Order.objects.filter(agent=self.request.user, order_status='3')
@@ -138,7 +114,7 @@ class CompletedOrdersView(ListView):
 	model = Order
 	ordering = ('created', )
 	context_object_name = 'orders'
-	template_name = 'userAuth/agents/compl_orders_list.html'
+	template_name = 'agents/compl_orders_list.html'
 
 	def get_queryset(self):
 		queryset = Order.objects.filter(agent=self.request.user, order_status='4')
@@ -149,7 +125,7 @@ class CancelledOrdersView(ListView):
 	model = Order
 	ordering = ('created', )
 	context_object_name = 'orders'
-	template_name = 'userAuth/agents/canc_orders_list.html'
+	template_name = 'agents/canc_orders_list.html'
 
 	def get_queryset(self):
 		queryset = Order.objects.filter(agent=self.request.user, order_status='X')
