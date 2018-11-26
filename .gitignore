@@ -1,4 +1,2 @@
 *.pyc
 /media
-/aseproject/settings.py
-*/migrations/0*.py
