@@ -1,10 +1,12 @@
 from django.shortcuts import redirect, render, reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import FormView
-from ..models import User
-from ..forms import PasswordResetForm, NewPasswordForm
+from django.views.generic import FormView, CreateView
+from ..models import User, AgentApplications
+from ..forms import PasswordResetForm, NewPasswordForm, AgentSignUpForm
 from django.contrib.auth.decorators import login_required
 
+from django.utils.decorators import method_decorator
+from userAuth.decorators import anonymous_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth import login, authenticate
@@ -25,7 +27,7 @@ def home(request):
 		elif request.user.is_superuser == 1:
 			return redirect('/admin')
 
-	return render(request, 'userAuth/home.html')
+	return render(request, 'home.html')
 
 
 @method_decorator([anonymous_required], name='dispatch')
@@ -47,14 +49,17 @@ class PartnerWithUsView(CreateView):
 			new_appl.save()
 			return render_to_response('registration/newAgentAppl.html')
 		return render_to_response('registration/rejectAgentAppl.html')
+
 def password_reset(request):
 	form = PasswordResetForm()
 	if request.method=='POST':
 		form = PasswordResetForm(request.POST)
 		if form.is_valid():
 			to_email = form.cleaned_data.get('email')
-			user = User.objects.get(email=to_email)
-			print(user.pk)
+			try:
+				user = User.objects.get(email=to_email)
+			except User.DoesNotExist:
+				user = None
 			if user:
 				current_site = get_current_site(request)
 				mail_subject = 'Reset your Password.'

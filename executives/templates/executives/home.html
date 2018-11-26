@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Hi {{user.username}}!</h3>
+<h6>Executive site</h6>
+<img src='{{ MEDIA_URL}}{{user.executive.photo}}' onerror="if (this.src != '{{ MEDIA_URL}}default.jpg') this.src = '{{ MEDIA_URL}}default.jpg';" width="200px" height="200px"><br>
+<a href="{% url 'executive:viewprofile' %}">View/Edit profile</a>
+<h4>Complaint(s) assigned: {{user.executive.complaints_queue}}</h4>
+<a href="{% url 'executive:agent_applications' %}">View Agent Applications</a><br/>
+<a href="{% url 'executive:agentslist' %}">View agents</a><br/>
+<a href="{% url 'executive:product' %}">Products</a><br/>
+<a href="{% url 'executive:category' %}">Categories</a><br/>
+<a href="{% url 'executive:all_orders' %}">All orders</a><br/>
+{% endblock %}
