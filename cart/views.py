@@ -5,7 +5,7 @@ from .cart import Cart
 from .forms import CartAddProductForm
 from django.contrib.auth.decorators import login_required
 
-from userAuth.decorators import customer_required
+from .decorators import customer_required
 
 @login_required
 @customer_required

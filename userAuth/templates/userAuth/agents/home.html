@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Hi {{user.username}}!</h3>
+<h6>Agent site</h6>
+<img src='/media/default.jpg';" width="200px" height="200px"><br>
+<a href="{% url 'agent:viewprofile' aid=user.id%}">View profile</a>
+<a href="{% url 'agent:incomingorders' %}"><h4 style="color: black;">Incoming Orders(s): {{inc_orders}}</h4></a>
+<a href="{% url 'agent:assignedorders' %}">Assigned Orders : {{ass_orders}}</a><br/>
+<a href="{% url 'agent:completedorders' %}">Completed Orders : {{del_orders}}</a><br/>
+<a href="{% url 'agent:cancelledorders' %}">Cancelled Orders : {{can_orders}}</a>
+{% endblock %}

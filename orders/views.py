@@ -4,9 +4,9 @@ from .models import OrderItem, Order
 from cart.cart import Cart
 from shop.models import Product
 from django.contrib.auth.decorators import login_required
-from agents.models import Agent
+from userAuth.models import Agent
 
-from userAuth.decorators import customer_required, customer_details_required
+from .decorators import customer_required, customer_details_required
 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
@@ -26,7 +26,7 @@ def order_create(request):
                 if agent.user.is_active == False:
                     raise Agent.DoesNotExist
             except Agent.DoesNotExist:
-                return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.area})
+                return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.get_area_display()})
             order = Order.objects.create(customer=request.user, agent=agent.user, payment_type=form.cleaned_data['payment_type'])
             for item in cart:
                 OrderItem.objects.create(

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Products</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">Products</h2>
+  <a href="{% url 'executive:create_product' %}" class="btn btn-primary mb-3" role="button">Add Product</a>
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Category</th>
+          <th>Name</th>
+          <th>Slug</th>
+          <th>Price</th>
+          <th>Available</th>
+          <th>Stock</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prd in prds %}
+          <tr>
+            <td class="align-middle">
+              <a href="{% url 'executive:editproduct' pid=prd.id %}">
+                <img src='/media/{{product.image}}' onerror="if (this.src != '/media/product/default.jpg') this.src = '/media/product/default.jpg';" alt=".." style="height: 30px; width: 50px;">
+              </a>
+            </td>
+            <td class="align-middle">{{ prd.category }}</td>
+            <td class="align-middle">{{ prd.name }}</td>
+            <td class="align-middle">{{ prd.slug }}</td>
+            <td class="align-middle">{{ prd.price }}</td>
+            <td class="align-middle">{{ prd.available }}</td>
+            <td class="align-middle">{{ prd.stock }}</td>
+            <td class="text-right">
+              <a href="{% url 'executive:deleteproduct' id=prd.id %}"><button type="submit" class="btn">Delete Product</button></a>
+              <a href="{% url 'executive:editproduct' pid=prd.id %}"><button type="submit" class="btn">Edit Product</button></a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No products have been added yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="col-md-6 text-right">
-                            <img src='{{ MEDIA_URL}}{{product.image}}' onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" alt=".." style="height: 170px; width: 228px;">
+                            <img src='/media/{{product.image}}' onerror="if (this.src != '/media/product/default.jpg') this.src = '/media/product/default.jpg';" alt=".." style="height: 170px; width: 228px;">
                         </div>
                         <div class="col-md-6" style="padding-left: 20px">
                             <h3>{{ product.name }}</h3>

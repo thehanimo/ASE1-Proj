@@ -20,7 +20,7 @@ from . import settings
 from django.contrib.staticfiles.urls import static\
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import url
-import customers.views as customers
+ 
 
 
 urlpatterns = [
@@ -31,9 +31,6 @@ urlpatterns = [
 	path('accounts/iforgot/', userAuth.password_reset, name='password_reset'),
 	url(r'^accounts/NewPassword/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', userAuth.new_password, name='new_password'),
 	path('accounts/changepassword', userAuth.change_password, name='change_password'),
-    path('agent/', include('agents.urls')),
-    path('customer/', include('customers.urls')),
-    path('executive/', include('executives.urls')),
 	path('cart/', include('cart.urls')),
     path('orders/', include('orders.urls')),
     path('shop/', include('shop.urls')),

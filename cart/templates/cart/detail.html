@@ -26,7 +26,7 @@
                         <tr>
                             <td>
                                 <a href="{{ product.get_absolute_url }}">
-                                    <img src='{{ MEDIA_URL}}{{product.image}}' onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" alt=".." style="height: 170px; width: 228px;">
+                                    <img src='/media/{{product.image}}' onerror="if (this.src != '/media/product/default.jpg') this.src = '/media/product/default.jpg';" alt=".." style="height: 170px; width: 228px;">
                                 </a>
                             </td>
                             <td>{{ product.name }}</td>
