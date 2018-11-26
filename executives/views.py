@@ -21,7 +21,7 @@ from userAuth.decorators import executive_required, agent_or_executive_required
 from executives.forms import ExecutiveSignUpForm, ExecutiveDetailsForm
 from agents.forms import AgentDetailsForm, AgentDeleteForm
 from shop.forms import CategorySignUpForm, ProductSignUpForm, ProductDeleteForm, CategoryDeleteForm, ProductDetailsForm
-from userAuth.models import User
+from userAuth.models import User, AgentApplications
 from executives.models import Executive
 from agents.models import Agent
 from orders.models import Order, OrderItem
@@ -161,6 +161,82 @@ class ProductsView(ListView):
 	def get_queryset(self):
 		queryset = Product.objects.all()
 		return queryset
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class AgentApplicationsView(ListView):
+	model = AgentApplications
+	ordering = ('id', )
+	context_object_name = 'appls'
+	template_name = 'executives/appls_list.html'
+
+	def get_queryset(self):
+		queryset = AgentApplications.objects.all()
+		return queryset
+
+@login_required
+@executive_required
+def AcceptAgentApplication(request, aid):
+	try:
+		agent_appl = AgentApplications.objects.get(pk=aid)
+	except:
+		agent_appl = None
+	if agent_appl:
+		newAgent = User.objects.create(
+			username='testagent001',
+			password=User.objects.make_random_password(),
+			email=agent_appl.email,
+			user_type=2,
+			is_active=False
+		)
+		newAgent.username = 'agent'+str(1000+newAgent.id)
+		newAgent.save()
+		newAgentDetails = Agent.objects.create(
+			fullname=agent_appl.fullname,
+			phone=agent_appl.phone,
+			area=agent_appl.area,
+			rating=0,
+			user=newAgent,
+		)
+		agent_appl.delete()
+		current_site = get_current_site(request)
+		mail_subject = 'Welcome aboard, '+newAgentDetails.fullname+'!'
+		message = render_to_string('email/agent_appl_accepted.html', {
+			'user': newAgent,
+			'domain': current_site.domain,
+			'uid':urlsafe_base64_encode(force_bytes(newAgent.pk)).decode(),
+			'token':account_activation_token.make_token(newAgent),
+		})
+		to_email = newAgent.email
+		email = EmailMessage(
+					mail_subject, message, to=[to_email]
+		)
+		email.send()
+		return render(request, 'registration/newAgent.html')
+	return render(request, '500.html')
+
+@login_required
+@executive_required
+def RejectAgentApplication(request, aid):
+	try:
+		agent_appl = AgentApplications.objects.get(pk=aid)
+	except:
+		agent_appl = None
+	if agent_appl:
+		fullname = agent_appl.fullname
+		to_email = agent_appl.email
+		agent_appl.delete()
+		current_site = get_current_site(request)
+		mail_subject = "We're sorry, "+fullname+'.'
+		message = render_to_string('email/agent_appl_rejected.html', {
+			'name': fullname,
+		})
+		email = EmailMessage(
+					mail_subject, message, to=[to_email]
+		)
+		email.send()
+		return render(request, 'registration/rejectAgent.html')
+	return render(request, '500.html')
+
 
 
 @login_required 

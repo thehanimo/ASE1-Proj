@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 def anonymous_required(function=None, redirect_url=None):
     actual_decorator = user_passes_test(
-        lambda u: not u,
+        lambda u: u,
         login_url='login',
         redirect_field_name=None
     )

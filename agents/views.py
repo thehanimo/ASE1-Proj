@@ -12,7 +12,6 @@ from django.shortcuts import render, redirect, render_to_response
 
 from userAuth.decorators import agent_required, executive_required, agent_or_executive_required
 from userAuth.forms import NewPasswordForm
-from agents.forms import AgentSignUpForm, AgentSignUpFormExtended
 from orders.forms import OrderAcceptForm, OrderCancelConfirmForm, OrderOutForDeliveryForm, OrderDeliveredForm
 from userAuth.models import User
 from .models import Agent
@@ -26,48 +25,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from userAuth.tokens import account_activation_token
 from django.core.mail import EmailMessage
-
-
-@login_required
-@executive_required
-def AgentSignUp(request):
-	form_extended = AgentSignUpFormExtended()
-	if request.method == 'POST':
-		form_extended = AgentSignUpFormExtended(request.POST)
-		if form_extended.is_valid():
-			username = 'testagent001'
-			password = User.objects.make_random_password()
-			email = request.POST['email']
-			fullname = request.POST['fullname']
-			phone = request.POST['phone']
-			area = request.POST['area']
-			rating = request.POST['rating']
-			if User.objects.filter(email=email):
-				form_extended.add_error(error="Already exists", field='email')
-				return render(request, 'registration/agent_signup_form.html', {'form_extended':form_extended})
-			user1 = User.objects.create(username=username, password=password, email=email, user_type=2, is_active=False)
-			user1.username = 'agent'+str(1000+user1.id)
-			user1.save()
-			agent = Agent.objects.create(fullname=fullname, phone=phone, area=area, rating=rating, user=user1)
-
-			current_site = get_current_site(request)
-			mail_subject = 'Activate your account.'
-			message = render_to_string('registration/agent_acc_active_email.html', {
-				'user': user1,
-				'domain': current_site.domain,
-				'uid':urlsafe_base64_encode(force_bytes(user1.pk)).decode(),
-				'token':account_activation_token.make_token(user1),
-			})
-			to_email = email
-			email = EmailMessage(
-						mail_subject, message, to=[to_email]
-			)
-			email.send()
-			return render(request, 'registration/newAgent.html')
-
-			
-
-	return render(request, 'registration/agent_signup_form.html', {'form_extended':form_extended})
 
 @login_required
 @agent_required

@@ -47,8 +47,8 @@ class PartnerWithUsView(CreateView):
 					area = form.cleaned_data.get('area')
 				)
 			new_appl.save()
-			return render_to_response('registration/newUser.html')
-		return redirect('home')
+			return render_to_response('registration/newAgentAppl.html')
+		return render_to_response('registration/rejectAgentAppl.html')
 
 def password_reset(request):
 	form = PasswordResetForm()

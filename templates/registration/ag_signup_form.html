@@ -4,7 +4,7 @@
 {% block content %}
   <div>
     <div class="col-md-8 col-sm-10 col-12">
-      <h1>Register for an Executive Account.</h1>
+      <h1>Partner With Us.</h1>
       <form method="post" novalidate>
         {% csrf_token %}
         <table>
@@ -16,7 +16,7 @@
           {% endif %}
         {% endfor %}
           <tr>
-            <td style="font-weight: 500;">Area:</td><td><input type="text" maxlength="30" required name="area" id="id_area" disabled="true"></td><td></td>
+            <td style="font-weight: 500;">Area:</td><td><input type="text" maxlength="30" required name="area" id="id_area" readonly></td><td></td>
           </tr>
         </table>
         <button id="submit" type="submit" class="btn btn-success" disabled="true">Sign up</button>

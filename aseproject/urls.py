@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from userAuth.views import userAuth, customers, agents, executives
+from userAuth.views import userAuth
+import agents.views as agents
+import customers.views as customers
+import executives.views as executives
 from . import settings
 from django.contrib.staticfiles.urls import static\
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import url
-import customers.views as customers
 
 
 urlpatterns = [
@@ -37,6 +39,7 @@ urlpatterns = [
 	path('cart/', include('cart.urls')),
     path('orders/', include('orders.urls')),
     path('shop/', include('shop.urls')),
+    path('api/', include('api.urls')),
 ]
 #urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

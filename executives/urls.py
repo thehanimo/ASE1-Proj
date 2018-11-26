@@ -5,6 +5,7 @@ from django.urls import path, include
 app_name = 'executive'
 
 urlpatterns = [
+    path('register', views.ExecutiveSignUpView.as_view(), name='register'),
     path('home', views.HomeView.as_view(), name='home'),
     path('profile/view', views.ExecutiveDetailsView.as_view(), name='viewprofile'),
     path('agents_view', views.AgentsView.as_view(), name='agentslist'),
@@ -21,4 +22,7 @@ urlpatterns = [
     path('orders/all', views.AllOrdersView.as_view(), name='all_orders'),
     path('orders/<int:oid>', views.OrderView.as_view(), name='order'),
     path('orders/cancel/<int:oid>', views.CancelOrderView, name='cancel_order'),
+    path('agent_applications', views.AgentApplicationsView.as_view(), name='agent_applications'),
+    path('agent_applications/accept/<int:aid>', views.AcceptAgentApplication, name='accept_agent_appl'),
+    path('agent_applications/reject/<int:aid>', views.RejectAgentApplication, name='reject_agent_appl'),
     ]

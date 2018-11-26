@@ -6,7 +6,6 @@ app_name = 'agent'
 
 urlpatterns = [
 	path('home', views.HomeView, name='home'),
-    path('register', views.AgentSignUp, name='register'),
     path('profile/view/<int:aid>', views.AgentDetailsView, name='viewprofile'),
     path('orders/<int:oid>', views.OrderView.as_view(), name='order'),
     path('orders/incoming', views.IncomingOrdersView.as_view(), name='incomingorders'),

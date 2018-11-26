@@ -9,26 +9,6 @@ from customers.models import Customer
 from executives.models import Executive
 from shop.models import Product, Category
 
-
-class AgentSignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=200, help_text='Required')
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = ('username', 'email', 'password1', 'password2')
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.user_type = 2
-        if commit:
-            user.save()
-        return user
-
-class AgentSignUpFormExtended(forms.ModelForm):
-    email = forms.EmailField(max_length=200, help_text='Required')
-    class Meta:
-        model = Agent
-        fields = ('email', 'fullname', 'phone', 'area', 'rating')
-
 class AgentDetailsForm(forms.ModelForm):
     class Meta:
         model = Agent
