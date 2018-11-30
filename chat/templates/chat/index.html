@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+       <h2>How Can We Help?</h2><br>
+    <form method="post">
+        {% csrf_token %}
+         <input id="rec-submit" type="submit" class="btn" value="Chat"/><br><br>
+    </form>
+    <button class="btn">Email</button><br><br>
+    <button class="btn">Phone</button>
+    {% endblock %}

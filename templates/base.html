@@ -36,6 +36,8 @@
           <div>
             <br/>
             <a href="{% url 'home' %}">Home</a>
+            /
+            <a href="{% url 'chat:index' %}">Support</a>
             {% if user.user_type == 1 %}
             /
             <a href="{% url 'shop:product_list' %}">Shop</a>
