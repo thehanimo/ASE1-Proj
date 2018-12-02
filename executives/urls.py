@@ -25,4 +25,5 @@ urlpatterns = [
     path('agent_applications', views.AgentApplicationsView.as_view(), name='agent_applications'),
     path('agent_applications/accept/<int:aid>', views.AcceptAgentApplication, name='accept_agent_appl'),
     path('agent_applications/reject/<int:aid>', views.RejectAgentApplication, name='reject_agent_appl'),
+    path('support', views.SupportView.as_view(), name='support'),
     ]

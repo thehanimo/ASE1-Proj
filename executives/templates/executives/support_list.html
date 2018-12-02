@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Incoming Support Requests</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">Incoming Support Requests</h2>
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Timestamp</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for req in reqs %}
+          <tr>
+            <td class="align-middle">{{ req.customer.email }}</td>
+            <td class="align-middle">{{ req.timestamp }}</td>
+            <td class="align-middle">
+              <a href="{% url 'chat:room' room_name=req.label%}"><button type="submit" class="btn">Accept</button></a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No incoming support requests.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

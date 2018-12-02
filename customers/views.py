@@ -25,6 +25,9 @@ from orders.forms import OrderCancelForm
 from userAuth.models import User
 from customers.models import Customer
 from orders.models import Order, OrderItem
+from chat.models import Room
+from haikunator import Haikunator
+haikunator = Haikunator()
 
 @method_decorator([anonymous_required], name='dispatch')
 class CustomerSignUpView(CreateView):
@@ -146,6 +149,22 @@ def CancelOrderView(request, oid):
 		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
 	return redirect('forbidden')
 
+def genRoom():
+    label = haikunator.haikunate()
+    room,created = Room.objects.get_or_create(
+        label=label,
+        )
+    return room
 
+@login_required
+@customer_required
+def support(request):
+    if request.method == 'POST':
+        customer = request.user
+        room = genRoom()
+        room.customer = customer
+        room.save()
+        return redirect('chat:room', room_name=room.label)
+    return render(request, 'customers/support.html')
 
 

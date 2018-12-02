@@ -27,6 +27,8 @@ from agents.models import Agent
 from orders.models import Order, OrderItem
 from shop.models import Product, Category
 
+from chat.models import Room
+
 class ExecutiveSignUpView(CreateView):
 	model = User
 	form_class = ExecutiveSignUpForm
@@ -369,3 +371,15 @@ class ProductDetailsView(UpdateView):
 
 	def get_success_url(self, *args, **kwargs):
 		return reverse("executive:product")
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class SupportView(ListView):
+	model = Room
+	ordering = ('id', )
+	context_object_name = 'reqs'
+	template_name = 'executives/support_list.html'
+
+	def get_queryset(self):
+		queryset = Room.objects.filter(executive=None)
+		return queryset
+

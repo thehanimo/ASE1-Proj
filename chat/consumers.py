@@ -3,34 +3,14 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 from .models import Message, Room
-from django.shortcuts import render, redirect, reverse
-from django.http import HttpResponseRedirect
 from userAuth.models import User
-from executives.models import Executive
-
-def genRoom(customer, executive):
-    id1 = customer.id
-    id2 = executive.id
-    label = str((id1* id1) +(id2 * id2))
-    room,created = Room.objects.get_or_create(
-        label=label,
-        customer=customer,
-        executive=executive
-        )
-    return room
-
-
-def index(request):
-    if request.method == 'POST':
-        customer = request.user
-        executive = Executive.objects.all().order_by("-complaints_queue").first().user
-        room = genRoom(customer,executive)
-        return redirect('chat:room', room_name=room.label)
-    return render(request, 'chat/index.html')
-
-
 
 class ChatConsumer(WebsocketConsumer):
+    def executive_connected(self, data):
+        content = {
+            'command': 'executive_connected',
+        }
+        return self.send_chat_message(content)
 
     def fetch_messages(self, data):
         messages = Message.objects.order_by('-timestamp').all()
@@ -75,7 +55,8 @@ class ChatConsumer(WebsocketConsumer):
 
     commands = {
         'fetch_messages': fetch_messages,
-        'new_message': new_message
+        'new_message': new_message,
+        'executive_connected':executive_connected
     }
 
     def connect(self):
@@ -91,16 +72,11 @@ class ChatConsumer(WebsocketConsumer):
         author = self.scope["user"]
         author_user = User.objects.filter(username=author)[0]
         room = Room.objects.get(label=self.room_name)
-        message = Message.objects.create(
-            author=author_user,
-            content='Left',
-            room=room,
-        )
         content = {
-            'command': 'new_message',
-            'message': self.message_to_json(message)
+            'command': 'user_left',
         }
         self.send_chat_message(content)
+        room.delete()
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
