@@ -91,19 +91,19 @@ class HomeView(ListView):
 		return []
 
 def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.email_verified = True
-        user.save()
-        login(request, user)
-        return render(request, 'registration/activation_suc.html')
-    else:
-        return render(request, 'registration/activation_err.html')
+	try:
+		uid = force_text(urlsafe_base64_decode(uidb64))
+		user = User.objects.get(pk=uid)
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+	if user is not None and account_activation_token.check_token(user, token):
+		user.is_active = True
+		user.email_verified = True
+		user.save()
+		login(request, user)
+		return render(request, 'registration/activation_suc.html')
+	else:
+		return render(request, 'registration/activation_err.html')
 
 @method_decorator([login_required, customer_required], name='dispatch')
 class MyOrdersView(ListView):
@@ -150,21 +150,31 @@ def CancelOrderView(request, oid):
 	return redirect('forbidden')
 
 def genRoom():
-    label = haikunator.haikunate()
-    room,created = Room.objects.get_or_create(
-        label=label,
-        )
-    return room
+	label = haikunator.haikunate()
+	room,created = Room.objects.get_or_create(
+		label=label,
+		)
+	return room
 
 @login_required
 @customer_required
 def support(request):
-    if request.method == 'POST':
-        customer = request.user
-        room = genRoom()
-        room.customer = customer
-        room.save()
-        return redirect('chat:room', room_name=room.label)
-    return render(request, 'customers/support.html')
+	if request.method == 'POST':
+		customer = request.user
+		room = genRoom()
+		room.customer = customer
+		room.save()
+		return redirect('chat:room', room_name=room.label)
+	return render(request, 'customers/support.html')
 
+@login_required
+@customer_required
+def orderTrack(request, oid):
+	try:
+		order = Order.objects.get(id=oid)
+	except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
+		order = None
+	if order and order.customer == request.user:
+		return render(request, 'customers/track.html', {'order':order})
+	return redirect('forbidden')
 

@@ -1,0 +1,43 @@
+  <div style="display: none;" id="wait">Tracking not available yet.</div>
+  <div id="mapdiv"></div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+  <script>
+    map = new OpenLayers.Map("mapdiv");
+    map.addLayer(new OpenLayers.Layer.OSM());
+
+    var zoom=16;
+
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    map.addLayer(markers);
+    $(window).on('load', getAndPlotPoint);
+    setInterval(getAndPlotPoint, 10000);
+    function getAndPlotPoint(){
+      $.getJSON('http://localhost:8000/api/track/get_coords/{{order.id}}', function (data) {
+        if(data['enabled'] === 'False'){
+          document.querySelector('#wait').style.display = 'block';
+          document.querySelector('#mapdiv').style.display = 'none';
+        }
+        else{
+          document.querySelector('#wait').style.display = 'none';
+          document.querySelector('#mapdiv').style.display = 'block';
+          var lon = parseFloat(data['longitude']);
+          var lat = parseFloat(data['latitude']);
+          plotPoint(createPoint(lon,lat));
+        }
+      });
+    }
+    function createPoint(lon,lat){
+      var lonLat = new OpenLayers.LonLat(lon, lat)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+        return lonLat
+    }
+    function plotPoint(lonLat){
+      markers.clearMarkers();
+      markers.addMarker(new OpenLayers.Marker(lonLat));
+      map.setCenter(lonLat, zoom);
+    }
+  </script>

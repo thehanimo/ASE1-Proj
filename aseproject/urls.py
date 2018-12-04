@@ -41,6 +41,7 @@ urlpatterns = [
     path('shop/', include('shop.urls')),
     path('api/', include('api.urls')),
     path('support/', include('chat.urls')),
+    path('forbidden', userAuth.forbidden, name='forbidden'),
 ]
 #urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

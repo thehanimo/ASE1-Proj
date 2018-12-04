@@ -291,5 +291,8 @@ a.article{
   background-color:#00e34d;
   padding: 10px 20px;
   border-radius: 25px;
-  font: 400 15px 'Open Sans', sans-serif;
+  font: 400 15px sans-serif;
+}
+body{
+  font: 400 150px sans-serif;
 }

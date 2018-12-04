@@ -108,3 +108,6 @@ def change_password(request):
 			return redirect('/')
 	return render(request, 'registration/new_password.html', {'form':form})
 
+def forbidden(request):
+	return render(request, '500.html')
+

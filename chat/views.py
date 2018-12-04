@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
 import json
 from .models import Room
@@ -7,9 +7,20 @@ from .models import Room
 
 @login_required
 def room(request, room_name):
+	try:
+		room = Room.objects.get(label=room_name)
+	except Room.DoesNotExist:
+		return redirect('forbidden')
 	if request.user.user_type == 3:
-		Room.objects.get(label=room_name).executive = request.user
-
+		if room.executive == None:
+			room.executive = request.user
+		else:
+			return redirect('forbidden')
+	elif request.user.user_type == 1:
+		if room.customer != request.user:
+			return redirect('forbidden')
+	else:
+		return redirect('forbidden')
 	return render(request, 'chat/room.html',{
 		'room_name_json': mark_safe(json.dumps(room_name)),
 		'username': mark_safe(json.dumps(request.user.username)),

@@ -12,9 +12,73 @@
   </head>
 
 <body>
+  <style>
+  .close {
+    position: absolute;
+    right: 32px;
+    top: 32px;
+    width: 32px;
+    height: 32px;
+    opacity: 0.3;
+  }
+  .close:hover {
+    opacity: 1;
+  }
+  .close:before, .close:after {
+    position: absolute;
+    left: 15px;
+    content: ' ';
+    height: 33px;
+    width: 2px;
+    background-color: #333;
+  }
+  .close:before {
+    transform: rotate(45deg);
+  }
+  .close:after {
+    transform: rotate(-45deg);
+  }
+
+
+  .loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
   <div id="wait">
-    <h1>Please Wait...</h1>
+    <center>
+    <div class="loader"></div>
+    Connecting...
+    </center>
   </div>
+  {% if request.user.user_type == 3 %}
+    <a href="{% url 'executive:support' %}" class="close" onclick="execDisc()"></a>
+  {% else %}
+    <a href="{% url 'chat:support_success' %}" class="close" onclick="custDisc()"></a>
+  {% endif %}
   <div id="frame" style="display: none;" class="border">
     <div class="responsive-html5-chat">
     </div>
@@ -36,6 +100,7 @@
       fetchMessages();
       if (user_type === 3){
         console.log(user_type)
+        clearTimeout(timer);
         document.querySelector('#wait').style.display = 'none'
         document.querySelector('#frame').style.display = 'block'
         chatSocket.send(JSON.stringify({
@@ -55,13 +120,14 @@
         } else if (data['command'] === 'new_message'){
           createMessage(data['message']);
         } else if (data['command'] === 'executive_connected'){
+          clearTimeout(timer);
           document.querySelector('#wait').style.display = 'none'
           document.querySelector('#frame').style.display = 'block'
         } else if (data['command'] === 'user_left'){
           if (user_type === 1){
             window.location.replace("{% url 'chat:support_error' %}")
           } else {
-            $('.responsive-html5-chat .messages').append('<div class="message"><p>Customer has left the chat</p></div>');
+            $('.responsive-html5-chat').append('<div class="message"><div class="left"><p>Customer has left the chat</p></div></div>');
           }
         }
     };
@@ -131,8 +197,24 @@ function responsiveChatPush(element, sender, origin, date, message) {
 /* Activating chatbox on element */
 responsiveChat('.responsive-html5-chat');
 
-
-
+window.onbeforeunload = function() { 
+    window.setTimeout(function () { 
+        window.location = "{% url 'home' %}";
+    }, 0); 
+    window.onbeforeunload = null; // necessary to prevent infinite loop, that kills your browser 
+}
+var timer = setTimeout(function() {
+            window.onbeforeunload = null;
+            window.location = "{% url 'chat:support_error' %}";
+        }, 15000);
+function execDisc(){
+  window.onbeforeunload = null;
+  window.location = "{% url 'executive:support' %}";
+}
+function custDisc(){
+  window.onbeforeunload = null;
+  window.location = "{% url 'chat:support_success' %}";
+}
 </script>
 </body>
 
