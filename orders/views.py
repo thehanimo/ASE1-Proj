@@ -1,4 +1,4 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, redirect
 from django.http import HttpResponseRedirect
 from .models import OrderItem, Order
 from cart.cart import Cart
@@ -20,6 +20,8 @@ def order_create(request):
     form = CheckoutForm()
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
+        if cart.get_total_price() == 0:
+            return redirect('cart:cart_detail')
         if form.is_valid():
             try:
                 agent = Agent.objects.get(area=request.user.customer.area)
@@ -27,7 +29,8 @@ def order_create(request):
                     raise Agent.DoesNotExist
             except Agent.DoesNotExist:
                 return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.area})
-            order = Order.objects.create(customer=request.user, agent=agent.user, payment_type=form.cleaned_data['payment_type'])
+            preferred_time = form.cleaned_data['preferred_time']
+            order = Order.objects.create(customer=request.user, agent=agent.user, payment_type=form.cleaned_data['payment_type'], preferred_time=preferred_time)
             for item in cart:
                 OrderItem.objects.create(
                     order=order,
@@ -41,7 +44,6 @@ def order_create(request):
             order.save()
             oid = urlsafe_base64_encode(force_bytes(order.id)).decode()
             return HttpResponseRedirect('/orders/placed/'+oid)
-
     return render(request, 'orders/order/create.html', {'form':form,'cart': cart})
 
 @login_required

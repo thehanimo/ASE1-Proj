@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item active" aria-current="page">Order {{ items.first.order.id }}</li>
@@ -44,8 +46,20 @@
   <br/>
   <div class="card">
     <h4 class="mb-3">Track</h4> 
-    <iframe src="{% url 'customer:order_track' oid=items.first.order.id %}" height="500px">
+    <form id="trackForm" target="track" method="POST" action="{% url 'customer:order_track' %}">
+      {% csrf_token %}
+      <input type="text" name="oid" value="{{ items.first.order.id }}" />
+     <input type="submit">
+    </form>
+    <iframe name="track" src="#" height="500px">
       <p>Your browser does not support iframes.</p>
     </iframe>
+    <script>
+ $(document).ready(function(){
+ var trackform= document.getElementById("trackForm");
+ trackform.style.display = "none";
+ trackform.submit();
+});
+</script>
   </div>
 {% endblock %}

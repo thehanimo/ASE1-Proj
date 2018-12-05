@@ -12,67 +12,69 @@ from shop.models import Product, Category
 
 
 class CheckoutForm(forms.ModelForm):
+	preferred_time=forms.CharField()
 	class Meta:
 		model = Order
 		fields = ('payment_type', )
+		
 
 
 class OrderCancelForm(forms.ModelForm):
-    check = forms.BooleanField()
-    class Meta:
-        model = Order
-        fields = ('check',)
+	check = forms.BooleanField()
+	class Meta:
+		model = Order
+		fields = ('check',)
 
-    def save(self, order=None):
-        order = Order.objects.get(id=order.id)
-        order.order_status = 'W'
-        order.save()
-        return
+	def save(self, order=None):
+		order = Order.objects.get(id=order.id)
+		order.order_status = 'W'
+		order.save()
+		return
 
 class OrderCancelConfirmForm(forms.ModelForm):
-    check = forms.BooleanField()
-    class Meta:
-        model = Order
-        fields = ('check',)
+	check = forms.BooleanField()
+	class Meta:
+		model = Order
+		fields = ('check',)
 
-    def save(self, order=None):
-        order = Order.objects.get(id=order.id)
-        order.order_status = 'X'
-        order.save()
-        return
+	def save(self, order=None):
+		order = Order.objects.get(id=order.id)
+		order.order_status = 'X'
+		order.save()
+		return
 
 class OrderAcceptForm(forms.ModelForm):
-    check = forms.BooleanField()
-    class Meta:
-        model = Order
-        fields = ('check',)
+	check = forms.BooleanField()
+	class Meta:
+		model = Order
+		fields = ('check',)
 
-    def save(self, order=None):
-        order = Order.objects.get(id=order.id)
-        order.order_status = '2'
-        order.save()
-        return
+	def save(self, order=None):
+		order = Order.objects.get(id=order.id)
+		order.order_status = '2'
+		order.save()
+		return
 
 class OrderOutForDeliveryForm(forms.ModelForm):
-    check = forms.BooleanField()
-    class Meta:
-        model = Order
-        fields = ('check',)
+	check = forms.BooleanField()
+	class Meta:
+		model = Order
+		fields = ('check',)
 
-    def save(self, order=None):
-        order = Order.objects.get(id=order.id)
-        order.order_status = '3'
-        order.save()
-        return
+	def save(self, order=None):
+		order = Order.objects.get(id=order.id)
+		order.order_status = '3'
+		order.save()
+		return
 
 class OrderDeliveredForm(forms.ModelForm):
-    check = forms.BooleanField()
-    class Meta:
-        model = Order
-        fields = ('check',)
+	check = forms.BooleanField()
+	class Meta:
+		model = Order
+		fields = ('check',)
 
-    def save(self, order=None):
-        order = Order.objects.get(id=order.id)
-        order.order_status = '4'
-        order.save()
-        return
+	def save(self, order=None):
+		order = Order.objects.get(id=order.id)
+		order.order_status = '4'
+		order.save()
+		return

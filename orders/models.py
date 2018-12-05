@@ -4,7 +4,6 @@ from userAuth.models import User
 
 BILLING_TYPES = [
         ('1','COD'),
-        ('2','ONLINE'),
     ]
 ORDER_STATUSES = [
         ('0','FAILED'),
@@ -23,6 +22,7 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
     payment_type = models.CharField(max_length=1, default='1', choices=BILLING_TYPES)
     order_status = models.CharField(max_length=1, default='1', choices=ORDER_STATUSES)
+    preferred_time = models.CharField(max_length=20,blank=True)
     
 
     class Meta:

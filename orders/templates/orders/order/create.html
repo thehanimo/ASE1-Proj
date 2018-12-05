@@ -9,9 +9,9 @@
         <div class="row" style="margin-top: 6%">
             <div class="col-md-8">
                 <h4 class="page-header">Checkout</h4>
-                <form action="." method="post">
+                <form id="form" action="." method="post">
                     {% csrf_token %}
-                    {{ form.as_p }}<br>
+                    {{ form.as_table }}<span></span><br><br>
                     <input type="submit" class="btn btn-primary" value="Submit order">
                 </form>
             </div>
@@ -33,4 +33,35 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(".errorlist").hide();
+        $("#id_preferred_time").val('a');
+        $("#id_preferred_time").hide();
+        var dt = new Date();
+        var time = dt.getHours() + 2;
+        var day = dt.getDate();
+        var month = dt.getMonth()+1;
+        var year = dt.getFullYear();
+        var date = day + '/' + month + '/' + year;
+        if(time < 9){
+            time = 9;
+        }
+        var data = {
+        }
+            data['ASAP']="As Soon As Possible"
+        while(time<18){
+            data[time+':00'] = time+':00';
+            time=time+1;
+        }
+            data[date]="Deliver Tomorrow"
+
+
+var s = $('<select form="form" name="preferred_time" id="id_preferred_time"/>');
+
+for(var val in data) {
+    $('<option />', {value: val, text: data[val]}).appendTo(s);
+}
+
+s.appendTo('form span');
+</script>
 {% endblock %}

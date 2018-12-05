@@ -169,12 +169,14 @@ def support(request):
 
 @login_required
 @customer_required
-def orderTrack(request, oid):
-	try:
-		order = Order.objects.get(id=oid)
-	except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
-		order = None
-	if order and order.customer == request.user:
-		return render(request, 'customers/track.html', {'order':order})
-	return redirect('forbidden')
+def orderTrack(request):
+	if request.method == 'POST':
+		try:
+			order = Order.objects.get(id=request.POST['oid'])
+		except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
+			order = None
+		if order and order.customer == request.user:
+			return render(request, 'customers/track.html', {'order':order})
+		return redirect('forbidden')
+	return render('500.html')
 

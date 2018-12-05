@@ -15,6 +15,7 @@
           <th>Date Created</th>
           <th>Status</th>
           <th>Payment Type</th>
+          <th>Time of Delivery</th>
           <th>Total</th>
           <th></th>
         </tr>
@@ -26,6 +27,7 @@
             <td class="align-middle">{{ order.created }}</td>
             <td class="align-middle">{{ order.get_order_status_display }}</td>
             <td class="align-middle">{{ order.get_payment_type_display }}</td>
+            <td class="align-middle">{{ order.preferred_time }}</td>
             <td class="align-middle">Rs.{{ order.get_total_cost }}</td>
             <td class="text-right">
             </td>
