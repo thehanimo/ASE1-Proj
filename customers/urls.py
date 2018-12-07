@@ -12,5 +12,7 @@ urlpatterns = [
     path('home/myorders/cancel/<int:oid>', views.CancelOrderView, name='cancel_order'),
     path('profile/edit', views.CustomerDetailsView.as_view(), name='editprofile'),
     path('profile/new', views.NewCustomerDetailsView.as_view(), name='newprofile'),
-    path('support', views.support, name='support')
+    path('support', views.support, name='support'),
+    path('party-orders', views.PartyOrderCreateView.as_view(), name='party_orders'),
+    path('party-orders/success', views.PartyOrderCreateView.as_view(), name='party_orders_success'),
     ]

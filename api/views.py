@@ -31,6 +31,8 @@ def out(request, oid):
 	try:
 		order = Order.objects.get(id=oid)
 		tracking = Tracking.objects.get(order=order)
+		if tracking.enabled == False or tracking.longitude == '' or tracking.latitude == '':
+			raise Tracking.DoesNotExist
 	except(TypeError, ValueError, OverflowError, Order.DoesNotExist, Tracking.DoesNotExist):
 		return JsonResponse({'longitude': '', 'latitude':'', 'enabled':'False'})
 	return JsonResponse({'longitude': tracking.longitude, 'latitude':tracking.latitude, 'enabled':'True'})

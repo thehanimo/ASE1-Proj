@@ -21,7 +21,7 @@ from django.core.mail import EmailMessage
 
 from userAuth.decorators import customer_required, customer_details_required, customer_details_empty, customer_or_executive_required
 from customers.forms import CustomerSignUpForm, CustomerDetailsForm
-from orders.forms import OrderCancelForm
+from orders.forms import OrderCancelForm, PartyOrderCreateForm
 from userAuth.models import User
 from customers.models import Customer
 from orders.models import Order, OrderItem
@@ -179,4 +179,14 @@ def orderTrack(request):
 			return render(request, 'customers/track.html', {'order':order})
 		return redirect('forbidden')
 	return render('500.html')
+
+@method_decorator([login_required, customer_required], name='dispatch')
+class PartyOrderCreateView(FormView):
+	template_name = "orders/partyOrder.html"
+	form_class = PartyOrderCreateForm
+
+	def form_valid(self, form):
+		form.save(self.request.user)
+		return render_to_response('orders/newPartyOrder.html')
+
 

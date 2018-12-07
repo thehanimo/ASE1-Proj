@@ -21,10 +21,11 @@ from userAuth.decorators import executive_required, agent_or_executive_required
 from executives.forms import ExecutiveSignUpForm, ExecutiveDetailsForm
 from agents.forms import AgentDetailsForm, AgentDeleteForm
 from shop.forms import CategorySignUpForm, ProductSignUpForm, ProductDeleteForm, CategoryDeleteForm, ProductDetailsForm
+from orders.forms import OrderCancelConfirmForm
 from userAuth.models import User, AgentApplications
 from executives.models import Executive
 from agents.models import Agent
-from orders.models import Order, OrderItem
+from orders.models import Order, OrderItem, PartyOrders
 from shop.models import Product, Category
 
 from chat.models import Room
@@ -124,6 +125,17 @@ class OrderView(ListView):
 		queryset = OrderItem.objects.filter(order=order)
 		return queryset
 
+@method_decorator([login_required, executive_required], name='dispatch')
+class PartyOrdersView(ListView):
+	model = PartyOrders
+	ordering = ('id', )
+	context_object_name = 'orders'
+	template_name = 'executives/partyOrders_list.html'
+
+	def get_queryset(self):
+		queryset = PartyOrders.objects.all()
+		return queryset
+
 @login_required
 @agent_or_executive_required
 def CancelOrderView(request, oid):
@@ -138,6 +150,24 @@ def CancelOrderView(request, oid):
 			if request.POST.get('check', False):
 				form.save(order)
 				return redirect('home')
+
+		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
+	return redirect('forbidden')
+
+@login_required
+@agent_or_executive_required
+def PartyOrderCancelView(request, oid):
+	try:
+		order = PartyOrders.objects.get(id=oid)
+	except(TypeError, ValueError, OverflowError, PartyOrders.DoesNotExist):
+		order = None
+	if order:
+		form = OrderCancelConfirmForm()
+		if request.method == 'POST':
+			form = OrderCancelConfirmForm(request.POST)
+			if request.POST.get('check', False):
+				order.delete()
+				return redirect('executive:all_party_orders')
 
 		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
 	return redirect('forbidden')

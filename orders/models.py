@@ -1,6 +1,7 @@
 from django.db import models
 from shop.models import Product
 from userAuth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 BILLING_TYPES = [
         ('1','COD'),
@@ -48,11 +49,16 @@ class OrderItem(models.Model):
         return self.price * self.quantity
 
 class Tracking(models.Model):
-    order = models.ForeignKey(Order, related_name='tracking', on_delete=models.CASCADE)
-    enabled = models.BooleanField(default=True)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, primary_key=True)
+    enabled = models.BooleanField(default=False)
     longitude = models.CharField(max_length=20, blank=True)
     latitude = models.CharField(max_length=20, blank=True)
     
     def get_coords(self):
         return [float(self.longitude), float(self.latitude)]
 
+class PartyOrders(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    number_of_cans = models.IntegerField(blank=False,validators=[MinValueValidator(30), MaxValueValidator(300)])
+    comments = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)

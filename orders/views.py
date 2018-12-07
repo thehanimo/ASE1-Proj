@@ -12,6 +12,15 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .forms import CheckoutForm
 
+from InvoiceGenerator.create import create_invoice
+from aseproject.settings import MEDIA_ROOT
+
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+
+
 @login_required
 @customer_required
 @customer_details_required
@@ -56,5 +65,16 @@ def order_complete(request, uidb64):
     except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
         order = None
     if order:
+        create_invoice(request.user, order)
+        current_site = get_current_site(request)
+        mail_subject = 'Your Order.'
+        message = render_to_string('email/order_suc.html')
+        to_email = request.user.email
+        email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+        )
+        email.attach_file(MEDIA_ROOT+'/orders/'+str(order.id)+".pdf")
+        email.send()
         return render(request, 'orders/order/created.html', {'order': order})
     return render(request, '500.html')
+

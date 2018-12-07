@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order
+from .models import Order, Tracking
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
@@ -9,6 +9,7 @@ from agents.models import Agent
 from customers.models import Customer
 from executives.models import Executive
 from shop.models import Product, Category
+from .models import PartyOrders
 
 
 class CheckoutForm(forms.ModelForm):
@@ -64,6 +65,11 @@ class OrderOutForDeliveryForm(forms.ModelForm):
 	def save(self, order=None):
 		order = Order.objects.get(id=order.id)
 		order.order_status = '3'
+		try:
+			tracking = Tracking.objects.get(order=order)
+			tracking.enabled=True
+		except Tracking.DoesNotExist:
+			tracking = Tracking.objects.create(order=order, enabled=True)
 		order.save()
 		return
 
@@ -76,5 +82,20 @@ class OrderDeliveredForm(forms.ModelForm):
 	def save(self, order=None):
 		order = Order.objects.get(id=order.id)
 		order.order_status = '4'
+		tracking = Tracking.objects.get(order=order)
+		tracking.delete()
 		order.save()
 		return
+
+class PartyOrderCreateForm(forms.ModelForm):
+    class Meta:
+        model = PartyOrders
+        fields = ('number_of_cans','comments')
+
+    def save(self, user):
+        order = PartyOrders.objects.create(
+            user=user,
+            number_of_cans=self.cleaned_data['number_of_cans'],
+            comments=self.cleaned_data['comments'],
+            )
+        order.save()

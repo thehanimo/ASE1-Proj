@@ -16,3 +16,4 @@ class Executive(models.Model):
 	fullname = models.CharField(max_length=50, validators=[alphabets])
 	photo = models.ImageField(upload_to=upload_path_handler, blank=True)
 	complaints_queue = models.IntegerField(default=0)
+

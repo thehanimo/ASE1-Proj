@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">All Party Orders</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">All Party Orders</h2>
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Date Created</th>
+          <th>Number of Cans</th>
+          <th>Comments</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+          <tr>
+            <td class="align-middle">{{ order.user }}</td>
+            <td class="align-middle">{{ order.created }}</td>
+            <td class="align-middle">{{ order.number_of_cans }}</td>
+            <td class="align-middle">{{ order.comments }}</td>
+            <td class="text-right">
+              <a href="{% url 'executive:cancel_party_order' oid=order.id %}"><button type="submit" class="btn">Cancel Order</button></a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No orders have been placed yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
