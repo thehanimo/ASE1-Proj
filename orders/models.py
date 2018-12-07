@@ -2,6 +2,7 @@ from django.db import models
 from shop.models import Product
 from userAuth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 
 BILLING_TYPES = [
         ('1','COD'),
@@ -15,6 +16,7 @@ ORDER_STATUSES = [
         ('3','OUT FOR DELIVERY'),
         ('4','DELIVERED')
     ]
+
 class Order(models.Model):
     customer = models.ForeignKey(User, related_name='order_customer', on_delete=models.CASCADE)
     agent = models.ForeignKey(User, related_name='order_agent', on_delete=models.PROTECT)
@@ -62,3 +64,29 @@ class PartyOrders(models.Model):
     number_of_cans = models.IntegerField(blank=False,validators=[MinValueValidator(30), MaxValueValidator(300)])
     comments = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
+
+class Subscription(models.Model):
+    customer = models.ForeignKey(User, related_name='subscription', on_delete=models.CASCADE)
+    subscription = models.CharField(max_length=30)
+    number_of_cans = models.IntegerField(blank=True)
+    subscribed = models.DateTimeField(auto_now_add=True)
+
+    def get_days_remaining(self):
+        return (30 - (timezone.now() - self.subscribed).days)
+
+class Subscriptions(models.Model):
+    name = models.CharField(max_length=30, unique=True)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    number_of_cans = models.IntegerField()
+
+    def get_all_subs():
+        subs = Subscriptions.objects.all()
+        names = []
+        for sub in subs:
+            names.append((str(sub.id),str(sub.name)+' - '+str(sub.description)))
+        return names
+
+
+
+

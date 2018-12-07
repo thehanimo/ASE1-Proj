@@ -18,14 +18,14 @@ from userAuth.tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from userAuth.decorators import executive_required, agent_or_executive_required
-from executives.forms import ExecutiveSignUpForm, ExecutiveDetailsForm
+from executives.forms import ExecutiveSignUpForm, ExecutiveDetailsForm, SubscriptionSignUpForm
 from agents.forms import AgentDetailsForm, AgentDeleteForm
 from shop.forms import CategorySignUpForm, ProductSignUpForm, ProductDeleteForm, CategoryDeleteForm, ProductDetailsForm
 from orders.forms import OrderCancelConfirmForm
 from userAuth.models import User, AgentApplications
 from executives.models import Executive
 from agents.models import Agent
-from orders.models import Order, OrderItem, PartyOrders
+from orders.models import Order, OrderItem, PartyOrders, Subscriptions
 from shop.models import Product, Category
 
 from chat.models import Room
@@ -412,4 +412,45 @@ class SupportView(ListView):
 	def get_queryset(self):
 		queryset = Room.objects.filter(executive=None)
 		return queryset
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class SubscriptionsView(ListView):
+	model = Subscriptions
+	ordering = ('id', )
+	context_object_name = 'subs'
+	template_name = 'executives/subs_list.html'
+
+	def get_queryset(self):
+		queryset = Subscriptions.objects.all()
+		return queryset
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class SubscriptionCreateView(CreateView):
+	model = Subscriptions
+	form_class = SubscriptionSignUpForm
+	template_name = 'registration/create.html'
+
+	def form_valid(self,form):
+		form.save()
+		return redirect('/')
+
+@login_required
+@executive_required
+def SubscriptionDeleteView(request, id):
+	try:
+		sid = int(id)
+		sub = Subscriptions.objects.get(pk=sid)
+	except(TypeError, ValueError, OverflowError, Subscriptions.DoesNotExist):
+		sub = None
+	if sub:
+		form = CategoryDeleteForm()
+		if request.method == 'POST':
+			form = CategoryDeleteForm(request.POST)
+			if request.POST.get('check', False):
+				sub.delete()
+				return redirect('/')
+
+		return render(request, 'registration/order_confirm.html', {'form':form})
+	return redirect('forbidden')
+
 

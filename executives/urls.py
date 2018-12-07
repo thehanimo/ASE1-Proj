@@ -28,4 +28,7 @@ urlpatterns = [
     path('agent_applications/accept/<int:aid>', views.AcceptAgentApplication, name='accept_agent_appl'),
     path('agent_applications/reject/<int:aid>', views.RejectAgentApplication, name='reject_agent_appl'),
     path('support', views.SupportView.as_view(), name='support'),
+    path('subscriptions/', views.SubscriptionsView.as_view(), name='subscriptions'),
+    path('subscriptions/create', views.SubscriptionCreateView.as_view(), name='create_subscription'),
+    path('subscriptions/delete/<str:id>', views.SubscriptionDeleteView, name='deletesubscription'),
     ]

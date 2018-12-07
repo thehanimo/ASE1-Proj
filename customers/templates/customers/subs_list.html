@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">My Subscriptions</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">My Subscriptions</h2> 
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Days Remaining</th>
+          <th>Cans Remaining</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in subs %}
+          <tr>
+            <td class="align-middle">{{ sub.subscription }}</td>
+            <td class="align-middle">{{ sub.get_days_remaining }}</td>
+            <td class="align-middle">{{ sub.number_of_cans }}</td>
+            <td class="text-right">
+              <form action="{% url 'customer:claim_subscription' id=sub.id %}" method="post">
+                {% csrf_token %}
+                <input type="number" name="number_of_cans" placeholder="Enter no. of cans" min="0" max="{{sub.number_of_cans}}" style="width: 150px;">
+                <input class="btn btn-success" type="submit" name="submit" value="Claim Now!">
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No subscriptions yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

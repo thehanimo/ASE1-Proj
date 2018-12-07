@@ -8,6 +8,7 @@ from agents.models import Agent
 from customers.models import Customer
 from executives.models import Executive
 from shop.models import Product, Category
+from orders.models import Subscriptions
 
 
 class ExecutiveSignUpForm(UserCreationForm):
@@ -34,3 +35,17 @@ class ExecutiveDetailsForm(forms.ModelForm):
             executive_details.user = user
         executive_details.save()
         return executive_details
+
+class SubscriptionSignUpForm(forms.ModelForm):
+    class Meta:
+        model = Subscriptions
+        fields = ('name','description', 'price', 'number_of_cans')
+
+    def save(self):
+        sub = Subscriptions.objects.create(
+            name=self.cleaned_data['name'],
+            description=self.cleaned_data['description'],
+            price=self.cleaned_data['price'],
+            number_of_cans=self.cleaned_data['number_of_cans']
+            )
+        sub.save()

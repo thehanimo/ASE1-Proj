@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Subscriptions</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">Subscriptions</h2>
+  <a href="{% url 'executive:create_subscription' %}" class="btn btn-primary mb-3" role="button">Add Subscription</a>
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in subs %}
+          <tr>
+            <td class="align-middle">{{ sub.name }}</td>
+            <td class="align-middle">{{ sub.description }}</td>
+            <td class="align-middle">{{ sub.price }}</td>
+            <td class="text-right">
+              <a href="{% url 'executive:deletesubscription' id=sub.id %}"><button type="submit" class="btn">Delete Subscription</button></a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No subscriptions have been added yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

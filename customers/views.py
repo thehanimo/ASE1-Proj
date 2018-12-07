@@ -20,12 +20,15 @@ from userAuth.tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from userAuth.decorators import customer_required, customer_details_required, customer_details_empty, customer_or_executive_required
-from customers.forms import CustomerSignUpForm, CustomerDetailsForm
+from customers.forms import CustomerSignUpForm, CustomerDetailsForm, SubscriptionForm
 from orders.forms import OrderCancelForm, PartyOrderCreateForm
+from orders.models import Subscription
 from userAuth.models import User
 from customers.models import Customer
 from orders.models import Order, OrderItem
 from chat.models import Room
+from agents.models import Agent
+from shop.models import Product, Category
 from haikunator import Haikunator
 haikunator = Haikunator()
 
@@ -187,6 +190,69 @@ class PartyOrderCreateView(FormView):
 
 	def form_valid(self, form):
 		form.save(self.request.user)
-		return render_to_response('orders/newPartyOrder.html')
+		return render(self.request,'orders/newPartyOrder.html')
+
+@method_decorator([login_required, customer_required, customer_details_required], name='dispatch')
+class SubscriptionsView(FormView):
+	model = Subscription
+	template_name = "customers/Subscription.html"
+	form_class = SubscriptionForm
+
+	def form_valid(self, form):
+		form.save(self.request.user)
+		return render(self.request,'customers/newSubscription.html')
+
+@method_decorator([login_required, customer_required], name='dispatch')
+class MySubscriptionsView(ListView):
+	model = Subscription
+	ordering = ('id', )
+	context_object_name = 'subs'
+	template_name = 'customers/subs_list.html'
+
+	def get_queryset(self):
+		queryset = Subscription.objects.filter(customer=self.request.user)
+		return queryset
+
+def SubscriptionClaimView(request, id):
+	sub = Subscription.objects.get(id=id)
+	try:
+		agent = Agent.objects.get(area=request.user.customer.area)
+		if agent.user.is_active == False:
+			raise Agent.DoesNotExist
+	except Agent.DoesNotExist:
+		return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.area})
+	order = Order.objects.create(customer=request.user, agent=agent.user, payment_type='1', preferred_time='ASAP')
+	cat,created = Category.objects.get_or_create(
+		name="Water",
+		slug="water",
+		)
+	can,created = Product.objects.get_or_create(
+		category=cat,
+		name='Subscribed Water Can',
+		price=0,
+		available=False,
+		stock=0,
+		)
+	OrderItem.objects.create(
+		order=order,
+		product=can,
+		price=0,
+		quantity=request.POST.get('number_of_cans'),
+	)
+	oid = order.id
+	sub.number_of_cans -= int(request.POST.get('number_of_cans'))
+	sub.save()
+	oid = urlsafe_base64_encode(force_bytes(order.id)).decode()
+	return HttpResponseRedirect('/orders/placed/'+str(oid))
+
+
+
+
+
+
+
+
+
+
 
 

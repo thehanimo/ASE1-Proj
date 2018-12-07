@@ -20,7 +20,7 @@
       <tbody>
         {% for cat in cats %}
           <tr>
-            <td class="align-middle"><a href="#">{{ cat.name }}</a></td>
+            <td class="align-middle">{{ cat.name }}</td>
             <td class="align-middle">{{ cat.slug }}</td>
             <td class="text-right">
               <a href="{% url 'executive:deletecategory' id=cat.id %}"><button type="submit" class="btn">Delete Category</button></a>

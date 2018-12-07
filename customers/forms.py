@@ -8,6 +8,7 @@ from agents.models import Agent
 from customers.models import Customer
 from executives.models import Executive
 from shop.models import Product, Category
+from orders.models import Subscription, Subscriptions
 
 
 class CustomerSignUpForm(UserCreationForm):
@@ -34,3 +35,19 @@ class CustomerDetailsForm(forms.ModelForm):
             customer_details.user = user
         customer_details.save()
         return customer_details
+
+class SubscriptionForm(forms.Form):
+    subscription = forms.ChoiceField(choices=Subscriptions.objects.none(),widget=forms.RadioSelect)
+    def __init__(self, *args, **kwargs):
+        super(SubscriptionForm, self).__init__(*args, **kwargs)
+        self.fields['subscription'].choices = Subscriptions.get_all_subs()
+    def save(self, user):
+        sub = Subscriptions.objects.get(id=self.cleaned_data['subscription'])
+        Subscription.objects.create(
+            customer=user,
+            subscription=sub.name,
+            number_of_cans=sub.number_of_cans,
+            )
+        return self.cleaned_data['subscription']
+
+

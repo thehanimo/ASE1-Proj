@@ -13,6 +13,9 @@ urlpatterns = [
     path('profile/edit', views.CustomerDetailsView.as_view(), name='editprofile'),
     path('profile/new', views.NewCustomerDetailsView.as_view(), name='newprofile'),
     path('support', views.support, name='support'),
-    path('party-orders', views.PartyOrderCreateView.as_view(), name='party_orders'),
+    path('party-orders', views.PartyOrderCreateView.as_view(), name='party_order'),
     path('party-orders/success', views.PartyOrderCreateView.as_view(), name='party_orders_success'),
+    path('subscriptions', views.SubscriptionsView.as_view(), name='subscriptions'),
+    path('home/mysubscriptions', views.MySubscriptionsView.as_view(), name='my_subscriptions'),
+    path('home/mysubscriptions/<int:id>', views.SubscriptionClaimView, name='claim_subscription'),
     ]
