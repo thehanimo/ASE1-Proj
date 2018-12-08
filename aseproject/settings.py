@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'api',
     'channels',
     'chat',
+    'feedback',
+    'captcha',
 ]
 
 MIDDLEWARE = [

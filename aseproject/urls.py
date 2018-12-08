@@ -42,6 +42,8 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('support/', include('chat.urls')),
     path('forbidden', userAuth.forbidden, name='forbidden'),
+    path('feedback/', include('feedback.urls')),
+    url(r'^captcha/', include('captcha.urls')),
 ]
 #urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

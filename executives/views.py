@@ -27,6 +27,7 @@ from executives.models import Executive, AgentNotification
 from agents.models import Agent
 from orders.models import Order, OrderItem, PartyOrders, Subscriptions
 from shop.models import Product, Category
+from feedback.models import Feedback
 
 from chat.models import Room
 
@@ -462,5 +463,18 @@ class AgentNotifyView(CreateView):
 	def form_valid(self,form):
 		form.save()
 		return redirect('home')
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class FeedbackView(ListView):
+	model = Feedback
+	ordering = ('id', )
+	context_object_name = 'all_feedback'
+	template_name = 'executives/all_feedback.html'
+
+	def get_queryset(self):
+		queryset = Feedback.objects.all()
+		return enumerate(queryset,1)
+
+
 
 
