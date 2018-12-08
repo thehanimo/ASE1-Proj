@@ -82,6 +82,7 @@ class OrderDeliveredForm(forms.ModelForm):
 	def save(self, order=None):
 		order = Order.objects.get(id=order.id)
 		order.order_status = '4'
+		order.paid = True
 		tracking = Tracking.objects.get(order=order)
 		tracking.delete()
 		order.save()

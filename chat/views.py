@@ -14,6 +14,7 @@ def room(request, room_name):
 	if request.user.user_type == 3:
 		if room.executive == None:
 			room.executive = request.user
+			room.save()
 		else:
 			return redirect('forbidden')
 	elif request.user.user_type == 1:

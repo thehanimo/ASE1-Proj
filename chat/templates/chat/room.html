@@ -99,7 +99,6 @@
     chatSocket.onopen = function(e) {
       fetchMessages();
       if (user_type === 3){
-        console.log(user_type)
         clearTimeout(timer);
         document.querySelector('#wait').style.display = 'none'
         document.querySelector('#frame').style.display = 'block'
@@ -178,7 +177,6 @@ function responsiveChat(element) {
             'message': message,
             'from': username
         }));
-        console.log("aa")
         $(element + ' input[type="text"]').val("");
         showLatestMessage();
     });

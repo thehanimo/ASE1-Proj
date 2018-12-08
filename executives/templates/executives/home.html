@@ -3,8 +3,8 @@
 <h3>Hi {{user.username}}!</h3>
 <h6>Executive site</h6>
 <img src='{{ MEDIA_URL}}{{user.executive.photo}}' onerror="if (this.src != '{{ MEDIA_URL}}default.jpg') this.src = '{{ MEDIA_URL}}default.jpg';" width="200px" height="200px"><br>
-<a href="{% url 'executive:viewprofile' %}">View/Edit profile</a>
-<a href="{% url 'executive:support' %}"><h4>Incoming Support Requests</h4></a>
+<a href="{% url 'executive:viewprofile' %}">View/Edit profile</a><br/>
+<span id="incRequests"><a href="{% url 'executive:support' %}">Incoming Support Requests</a></span><br/>
 <a href="{% url 'executive:agent_applications' %}">View Agent Applications</a><br/>
 <a href="{% url 'executive:agentslist' %}">View agents</a><br/>
 <a href="{% url 'executive:product' %}">Products</a><br/>
@@ -14,5 +14,31 @@
 <a href="{% url 'executive:all_party_orders' %}">Party Orders</a><br/>
 <a href="{% url 'executive:notify_agent' %}">Notify Agent</a><br/>
 <a href="{% url 'executive:feedback_all' %}">All Feedback</a><br/>
+<script type="text/javascript">
+	$( document ).ready(ajaxCall)
+	setInterval(ajaxCall, 1500); //300000 MS == 5 minutes
+
+	function ajaxCall() {
+	    $.ajax({
+	    type: 'POST',
+	    url: '{% url "api:poll"%}',
+	    data: '{"user_id":{{request.user.id}}, "page":"home"}', // or JSON.stringify ({name: 'jonas'}),
+	    success: function(data){
+	       if(data['reload'] === 'true'){
+		    if(data['type'] === 'incRequests'){
+		    	setInterval(function() { blink_text('#incRequests'); }, 1000);
+		    }
+	       }
+	    },
+	    contentType: "application/json",
+	    dataType: 'json'
+		});
+	}
+	
+	function blink_text(id) {
+    $(id).fadeOut(500);
+    $(id).fadeIn(500);
+	}
+</script>
 
 {% endblock %}

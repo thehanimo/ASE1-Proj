@@ -9,6 +9,7 @@ from executives.models import AgentNotification
 from userAuth.models import User
 
 from orders.models import Order, Tracking
+from chat.models import Room
 # Create your views here.
 @csrf_exempt
 @require_POST
@@ -59,4 +60,9 @@ def poll(request):
 			incOrders = Order.objects.filter(agent=user, order_status='W') | Order.objects.filter(agent=user, order_status='1')
 			if len(incOrders) != 0:
 				return JsonResponse({'reload':'true', 'type':'incOrders'})
+	elif user.user_type == 3:
+		if page == 'home':
+			incRequests = Room.objects.filter(executive=None)
+			if len(incRequests) != 0:
+				return JsonResponse({'reload':'true', 'type':'incRequests'})
 	return JsonResponse({'reload': 'false'})
