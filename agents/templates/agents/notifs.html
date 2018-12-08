@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">My Notifications</li>
+    </ol>
+  </nav>
+  <h2 class="mb-3">My Notifications</h2> 
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Message</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for notif in notifs %}
+          <tr>
+            <td class="align-middle">{{ notif.created }}</td>
+            <td class="align-middle">{{ notif.message }}</td>
+            <td class="text-right">
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td class="bg-light text-center font-italic" colspan="5">No Notifications.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

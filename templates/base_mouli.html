@@ -1,0 +1,150 @@
+{% load static %}<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="mobirise v4.8.7, mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="{% static 'assets' %}/images/logo2.png" type="image/x-icon">
+  <!--description of this website-->
+  <meta name="description" content="Watercan Company, provides you all the water nessecities you require. This page is an online platform to serve you. You can place the required number of  water bottles, or water cans or tissues. We also provide you the facility to donate anything you wanted to the disaster affected people or the needy ones. If the consumers places an order, then he/she will shown with the nearest available agents.  Customers can lodge complaints if they have any. And can contact company executives using customer care phone number or customer care email.">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+  <title>{% block title %}The Water Company{% endblock %}</title>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!--
+  linking all css files to this file
+  ==================================
+-->
+  <link rel="stylesheet" href="{% static 'assets' %}/web/{% static 'assets' %}/base-icons/base-icons.css">
+  <link rel="stylesheet" href="{% static 'assets' %}/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'assets' %}/theme/css/style.css">
+  <link rel="stylesheet" href="{% static 'assets' %}/base/css/mbr-additional.css" type="text/css">
+  
+</head>
+<body>
+
+  <section class="menu main_menu" id="home">
+
+    <nav class="navbar navbar-expand navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-label="Toggle navigation">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+        <div class="menu-logo">
+            <div class="navbar-brand">
+                <span class="navbar-logo">
+                    <a href="{% url 'home' %}" style="font-size: 30px;color: white;">Logo</a>
+                </span>
+            </div>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
+              <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'home' %}">Home</a>
+                </li>
+                {% if user.user_type == 1 %}
+                <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'shop:product_list' %}">Shop</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'cart:cart_detail' %}">Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'customer:support' %}">Support</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'customer:party_order' %}">Party Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'customer:subscriptions' %}">Subscribe</a>
+                </li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link link text-white display-4" href="{% url 'logout' %}">Login</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'signup' %}">Signup</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</section>
+              {% block content %}
+              {% endblock %}
+            <section class="contacts mbr-reveal" id="footer1-12" style="">
+
+    <div class="container">
+        <div class="media-container-row content text-white">
+            <div class="col-12 col-md-3">
+                <div class="media-wrap">
+                    <a href="index.html" style="height: 30%;font-size: 40px;">Logo</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-3 mbr-fonts-style display-7">
+                <h5 class="pb-3">Address</h5>
+                <p class="mbr-text">Watercan Company,<br>Sri City, Chittoor dist.<br>PIN - 517646</p>
+            </div>
+            <div class="col-12 col-md-3 mbr-fonts-style display-7">
+                <h5 class="pb-3">Contacts</h5>
+                <p class="mbr-text"></p><p>
+                    Email: company@gmail.com
+                    <br>Phone: +91 9988776655<br>&nbsp;&nbsp; +91 8877665544</p><p></p>
+            </div>
+    
+        </div>
+        <div class="footer-lower">
+            <div class="media-container-row">
+                <div class="col-sm-12">
+                    <hr>
+                </div>
+            </div>
+            <div class="media-container-row mbr-white">
+                <div class="col-sm-6 copyright">
+                    <p class="mbr-text mbr-fonts-style display-7">
+                        © Copyright 2018 Watercan Company - All Rights Reserved
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="social-list align-right">
+                        <div class="soc-item">
+                            <a href="https://twitter.com/" target="_blank" class="fa fa-facebook-f"></a>
+                        </div>
+                        <div class="soc-item">
+                            <a href="https://www.facebook.com/" target="_blank" class="fa fa-twitter"></a>
+                        </div>
+                        <div class="soc-item">
+                            <a href="https://www.youtube.com/" target="_blank" class="fa fa-youtube"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <script type="text/javascript">
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      })
+    </script>
+  </body>
+</html>

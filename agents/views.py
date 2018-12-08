@@ -17,6 +17,7 @@ from userAuth.models import User
 from .models import Agent
 from orders.models import Order, OrderItem
 
+from executives.models import AgentNotification
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth import login, authenticate
@@ -203,3 +204,16 @@ def DeliveredOrderView(request, oid):
 
 		return render(request, 'registration/order_confirm.html', {'form':form, 'order':order})
 	return redirect('forbidden')
+
+@method_decorator([login_required, agent_required], name='dispatch')
+class NotificationsView(ListView):
+	model = AgentNotification
+	context_object_name = 'notifs'
+	template_name = 'agents/notifs.html'
+
+	def get_queryset(self):
+		queryset = AgentNotification.objects.filter(agent=self.request.user)
+		for notif in queryset:
+			notif.notified = True
+			notif.save()
+		return queryset.order_by('-created')

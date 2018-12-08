@@ -6,7 +6,7 @@ from orders.models import Order
 from userAuth.models import User
 from agents.models import Agent
 from customers.models import Customer
-from executives.models import Executive
+from executives.models import Executive,AgentNotification
 from shop.models import Product, Category
 from orders.models import Subscriptions
 
@@ -49,3 +49,11 @@ class SubscriptionSignUpForm(forms.ModelForm):
             number_of_cans=self.cleaned_data['number_of_cans']
             )
         sub.save()
+
+class AgentNotifyForm(forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        super (AgentNotifyForm,self ).__init__(*args,**kwargs) # populates the post
+        self.fields['agent'].queryset = User.objects.filter(user_type='2')
+    class Meta:
+        model = AgentNotification
+        fields = ('agent','message')

@@ -16,4 +16,5 @@ urlpatterns = [
     path('home/incomingorders/cancel/<int:oid>', views.CancelOrderView, name='cancel_order'),
     path('home/incomingorders/outfordelivery/<int:oid>', views.OutForDeliveryOrderView, name='outfordelivery_order'),
     path('home/incomingorders/delivered/<int:oid>', views.DeliveredOrderView, name='delivered_order'),
+    path('home/notifications', views.NotificationsView.as_view(), name='notifications'),
     ]

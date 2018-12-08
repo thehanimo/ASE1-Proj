@@ -8,5 +8,7 @@ app_name = 'api'
 urlpatterns = [
 	path('track/agent/<int:oid>', views.inp, name='api'),
 	path('track/get_coords/<int:oid>', views.out, name='coords_out'),
+	path('poll', views.poll, name='poll'),
+
 ]
 

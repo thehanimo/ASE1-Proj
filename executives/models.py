@@ -17,3 +17,8 @@ class Executive(models.Model):
 	photo = models.ImageField(upload_to=upload_path_handler, blank=True)
 	complaints_queue = models.IntegerField(default=0)
 
+class AgentNotification(models.Model):
+	agent = models.ForeignKey(User, on_delete=models.CASCADE)
+	message = models.TextField()
+	created = models.DateTimeField(auto_now_add=True)
+	notified = models.BooleanField(default=False)

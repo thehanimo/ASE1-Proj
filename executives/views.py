@@ -18,12 +18,12 @@ from userAuth.tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from userAuth.decorators import executive_required, agent_or_executive_required
-from executives.forms import ExecutiveSignUpForm, ExecutiveDetailsForm, SubscriptionSignUpForm
+from executives.forms import ExecutiveSignUpForm, ExecutiveDetailsForm, SubscriptionSignUpForm, AgentNotifyForm
 from agents.forms import AgentDetailsForm, AgentDeleteForm
 from shop.forms import CategorySignUpForm, ProductSignUpForm, ProductDeleteForm, CategoryDeleteForm, ProductDetailsForm
 from orders.forms import OrderCancelConfirmForm
 from userAuth.models import User, AgentApplications
-from executives.models import Executive
+from executives.models import Executive, AgentNotification
 from agents.models import Agent
 from orders.models import Order, OrderItem, PartyOrders, Subscriptions
 from shop.models import Product, Category
@@ -452,5 +452,15 @@ def SubscriptionDeleteView(request, id):
 
 		return render(request, 'registration/order_confirm.html', {'form':form})
 	return redirect('forbidden')
+
+@method_decorator([login_required, executive_required], name='dispatch')
+class AgentNotifyView(CreateView):
+	model = AgentNotification
+	form_class = AgentNotifyForm
+	template_name = 'executives/agent_notify.html'
+
+	def form_valid(self,form):
+		form.save()
+		return redirect('home')
 
 

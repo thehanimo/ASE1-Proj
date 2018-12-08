@@ -3,9 +3,40 @@
 <h3>Hi {{user.username}}!</h3>
 <h6>Agent site</h6>
 <img src='{{ MEDIA_URL}}default.jpg';" width="200px" height="200px"><br>
-<a href="{% url 'agent:viewprofile' aid=user.id%}">View profile</a>
-<a href="{% url 'agent:incomingorders' %}"><h4 style="color: black;">Incoming Orders(s): {{inc_orders}}</h4></a>
+<a href="{% url 'agent:viewprofile' aid=user.id%}">View profile</a><br/>
+<span id='incOrders'><a href="{% url 'agent:incomingorders' %}">Incoming Orders(s)</a></span><br/>
 <a href="{% url 'agent:assignedorders' %}">Assigned Orders : {{ass_orders}}</a><br/>
 <a href="{% url 'agent:completedorders' %}">Completed Orders : {{del_orders}}</a><br/>
-<a href="{% url 'agent:cancelledorders' %}">Cancelled Orders : {{can_orders}}</a>
+<a href="{% url 'agent:cancelledorders' %}">Cancelled Orders : {{can_orders}}</a><br/>
+<span id='notifs'><a href="{% url 'agent:notifications' %}">Notifications</a></span>
+<script type="text/javascript">
+	$( document ).ready(ajaxCall)
+	setInterval(ajaxCall, 3000); //300000 MS == 5 minutes
+
+	function ajaxCall() {
+	    $.ajax({
+	    type: 'POST',
+	    url: '{% url "api:poll"%}',
+	    data: '{"user_id":{{request.user.id}}, "page":"home"}', // or JSON.stringify ({name: 'jonas'}),
+	    success: function(data){
+	       if(data['reload'] === 'true'){
+	       	if(data['type'] === 'notifs'){
+		       	setInterval(function() { blink_text('#notifs'); }, 1000);
+		       }
+		    if(data['type'] === 'incOrders'){
+		    	setInterval(function() { blink_text('#incOrders'); }, 1000);
+		    }
+	       }
+	    },
+	    contentType: "application/json",
+	    dataType: 'json'
+		});
+	}
+	
+	function blink_text(id) {
+    $(id).fadeOut(500);
+    $(id).fadeIn(500);
+	}
+setInterval(function() { blink_text('#incOrders'); }, 1000);
+</script>
 {% endblock %}
