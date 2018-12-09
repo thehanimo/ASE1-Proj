@@ -6,4 +6,5 @@ app_name = 'feedback'
 
 urlpatterns = [
     path('', views.FeedbackView.as_view(), name='feedback'),
+    path('/thanks',views.FeedbackView.as_view(), name='success'),
 ]

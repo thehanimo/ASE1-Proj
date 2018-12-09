@@ -1,55 +1,83 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}
     {% if category %}{{ category.name }} {% else %} Products {% endif %}
 {% endblock %}
 
 {% block content %}
-   <div class="container-fluid">
-      <div class="row" style="margin-top: 6%">
+      <!-- ##### Breadcumb Area Start ##### -->
+    <div class="breadcumb_area bg-img" style="background-image: url({% static 'assets' %}/img/bg-img/breadcumb.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                        <h2>shop</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Breadcumb Area End ##### -->
+      <section class="shop_grid_area section-padding-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="shop_sidebar_area">
 
-        <div class="col-sm-8 blog-main">
-
-          <div class="blog-post">
-              <div class="row">
-                  {% for product in products %}
-                      <div class="col-md-4">
-                        <div class="thumbnail"><center>
-                            <a href="{{ product.get_absolute_url }}">
-                                <img src='{{ MEDIA_URL}}{{product.image}}' onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" alt="..." style="height: 130px; width: 190px;">
-                            </a></center>
-                            <div class="caption">
-                                <h3 class="text-center">
-                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                                </h3>
-                                <p class="text-center">Rs. {{ product.price }}</p>
+                        <!-- ##### Single Widget ##### -->
+                        <div class="widget catagory mb-50">
+                            <!-- Category Title -->
+                            <h6 class="widget-title mb-30">Categories</h6>
+                            
+                            <!--  Categories  -->
+                            <div class="catagories-menu">
+                                <ul class="sub-menu">
+                                    <li><a href="{% url 'shop:product_list' %}">All</a></li>
+                                    {% for c in categories %}
+                                    <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+                                    {% endfor %}
+                                </ul>      
                             </div>
                         </div>
                       </div>
-                  {% endfor %}
-              </div>
+                    </div>
+                    <div class="col-12 col-md-8 col-lg-9">
+                      <div class="shop_grid_product_area">
+                        <div class="row">
 
+                            <!-- Single Product -->
+                            {% for product in products %}
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <div class="single-product-wrapper">
+                                    <!-- Product Image -->
+                                    <div class="product-img">
+                                        <img src='{{ MEDIA_URL}}{{product.image}}' onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" alt="">
+                                    </div>
 
-          </div><!-- /.blog-post -->
+                                    <!-- Product Description -->
+                                    <div class="product-description">
+                                      <span>{{ product.category }}</span>
+                                        <a href="{{ product.get_absolute_url }}">
+                                            <h6>{{ product.name }}</h6>
+                                        </a>
+                                        <p class="product-price">₹{{ product.price }}</p>
 
-        </div><!-- /.blog-main -->
-
-        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
-          <div class="sidebar-module">
-            <h4>Categories</h4>
-            <ol class="list-unstyled">
-              <li {% if not category %} class="active"{% endif %}><a href="{% url 'shop:product_list' %}">All</a></li>
-            {% for c in categories %}
-
-              <li {% if category.slug == c.slug %} class="active"{% endif %}>
-                  <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-              </li>
-            {% endfor %}
-            </ol>
-          </div>
-        </div><!-- /.blog-sidebar -->
-
-      </div><!-- /.row -->
-
-    </div><!-- /.container -->
+                                        <!-- Hover Content -->
+                                        <div class="hover-content">
+                                            <!-- Add to Cart -->
+                                            <div class="add-to-cart-btn">
+                                                <a href="{{ product.get_absolute_url }}" class="btn essence-btn">Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
 {% endblock %}

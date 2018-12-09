@@ -1,44 +1,123 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
+
 {% block title %}
-    Your Shopping Cart| Checkout
+    {% if category %}{{ category.name }} {% else %} Products {% endif %}
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row" style="margin-top: 6%">
-            <div class="col-md-8">
-                <h4 class="page-header">Checkout</h4>
-                <form id="form" action="." method="post">
-                    {% csrf_token %}
-                    {{ form.as_table }}<span></span><br><br>
-                    <input type="submit" class="btn btn-primary" value="Submit order">
-                </form>
-            </div>
-            <div class="col-md-4">
-                <div class="page-header">
-                    Your Order
+      <!-- ##### Breadcumb Area Start ##### -->
+    <div class="breadcumb_area bg-img" style="background-image: url({% static 'assets' %}/img/bg-img/breadcumb.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                        <h2>checkout</h2>
+                    </div>
                 </div>
-                <ul class="list-group">
-                    {% for item in cart %}
-                        <li class="list-group-item">
-                        {{ item.quantity }}x {{ item.product.name }}
-                        <span>Rs. {{ item.total_price }}</span>
-                        </li>
-                    {% endfor %}
-
-                <li class="list-group-item active">Total Cost: Rs. {{ cart.get_total_price }}</li>
-                </ul>
-
             </div>
         </div>
     </div>
+    <!-- ##### Breadcumb Area End ##### -->
+    <!-- ##### Checkout Area Start ##### -->
+    <div class="checkout_area section-padding-80">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-12 col-md-6">
+                    <div class="checkout_details_area mt-50 clearfix">
+                        <div class="cart-page-heading mb-30">
+                            <h5>Billing Address</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <b>Full Name</b><br/>
+                                <span id="first_name">{{details.fullname}}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <b>E-Mail</b><br/>
+                                <span id="first_name">{{request.user.email}}</span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <b>Phone</b><br/>
+                                <span id="phone">{{details.phone}}</span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <b>Address</b><br/>
+                                <span id="address">
+                                    {{details.street}},<br/>
+                                    {{details.area}} - {{details.zipcode}}<br/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
+                    <div class="order-details-confirmation">
+
+                        <div class="cart-page-heading">
+                            <h5>Your Order</h5>
+                            <p>Details</p>
+                        </div>
+
+                        <ul class="order-details-form mb-4">
+                            <li><span>Product</span> <span>Total</span></li>
+                            {% for item in cart %}
+                            <p><span>{{ item.product.name }} ( x {{ item.quantity }})</span> <span>₹{{ item.total_price }}</span></p>
+                            {% endfor %}
+                            <li style="border-top: 2px solid #ebebeb;"><span>Subtotal</span> <span>₹{{ cart.get_total_price }}</span></li>
+                            <li><span>Shipping</span> <span>Free</span></li>
+                            <li><span>Total</span> <span>₹{{ cart.get_total_price }}</span></li>
+                        </ul>
+                        <form id="form" action="." method="post">
+                            {% csrf_token %}
+                            <div id="accordion" role="tablist" class="mb-4">
+                            <div class="card">
+                                <div class="card-header" role="tab" id="headingOne">
+                                    <h6 class="mb-0">
+                                        <span data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><input type="radio" name="payment_type" value="1"> Cash on delivery</span>
+                                    </h6>
+                                </div>
+
+                                <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p>Pay the total amount by Cash/Card to our Agent upon Delivery.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" role="tab" id="headingTwo">
+                                    <h6 class="mb-0">
+                                        <span class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><input type="radio" name="payment_type" value="2" onclick="this.checked=false;"> ONLINE</span>
+                                    </h6>
+                                </div>
+                                <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p>Apologies. We don't accept online payments at the moment.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="preferred_time" id="pref_time">
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <input type="submit" class="btn essence-btn" value="Place Order">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Checkout Area End ##### -->
     <script type="text/javascript">
-        $(".errorlist").hide();
-        $("#id_preferred_time").val('a');
-        $("#id_preferred_time").hide();
         var dt = new Date();
         var time = dt.getHours() + 2;
+        dt.setDate(dt.getDate() + 1);
         var day = dt.getDate();
         var month = dt.getMonth()+1;
         var year = dt.getFullYear();
@@ -48,7 +127,9 @@
         }
         var data = {
         }
+        if(time < 19){
             data['ASAP']="As Soon As Possible"
+        }
         while(time<18){
             data[time+':00'] = time+':00';
             time=time+1;
@@ -56,12 +137,12 @@
             data[date]="Deliver Tomorrow"
 
 
-var s = $('<select form="form" name="preferred_time" id="id_preferred_time"/>');
+var s = $('<label for="id_preferred_time">Preferred Time of Delivery</label><br/><select form="form" name="preferred_time" id="id_preferred_time"/>');
 
 for(var val in data) {
     $('<option />', {value: val, text: data[val]}).appendTo(s);
 }
 
-s.appendTo('form span');
+s.appendTo('#pref_time');
 </script>
 {% endblock %}

@@ -1,41 +1,42 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}
     {% if category %}{{ category.name }} {% else %} Products {% endif %}
 {% endblock %}
 
+
 {% block content %}
-   <div class="container">
-      <div class="row" style="margin-top: 6%">
+      <section class="single_product_details_area d-flex align-items-center">
 
-        <div class="col-sm-8 blog-main">
+        <!-- Single Product Thumb -->
+        <div class="single_product_thumb clearfix">
+          <img src='{{ MEDIA_URL}}{{product.image}}' onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" alt="">
+        </div>
 
-          <div class="blog-post">
-              <div class="row">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="col-md-6 text-right">
-                            <img src='{{ MEDIA_URL}}{{product.image}}' onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" alt=".." style="height: 170px; width: 228px;">
-                        </div>
-                        <div class="col-md-6" style="padding-left: 20px">
-                            <h3>{{ product.name }}</h3>
-                            <h6><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></h6>
-                            <p class="text-muted">Rs. {{ product.price }}</p>
-                            <form action="{% url "cart:cart_add" product.id %}" method="post">
-                                {% csrf_token %}
-                                Qty: <input type="number" name="quantity" min="1" max="{{product.stock}}" value="1">
-                                <input type="submit" value="Add to cart" class="btn btn-primary">
-                            </form>
-                            <p>{{ product.description|safe|linebreaksbr }}</p>
-                        </div>
-                    </div>
+        <!-- Single Product Description -->
+        <div class="single_product_desc clearfix">
+            <span>{{product.category}}</span>
+            <h2>{{ product.name }}</h2>
+            <p class="product-price">₹{{ product.price }}</p>
+            <p class="product-desc">{{ product.description|safe|linebreaksbr }}</p>
+            <!-- Form -->
+            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="cart-form clearfix" method="post">
+              {% csrf_token %}
+                <!-- Select Box -->
+                <div class="select-box d-flex mt-50 mb-30">
+                    <select name="quantity" id="productQty" class="mr-5">
+                        {% for n in product_stock_list %}
+                        <option value="{{n}}">Qty: {{n}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-              </div>
-
-
-          </div><!-- /.blog-post -->
-
-        </div><!-- /.blog-main -->
-      </div><!-- /.row -->
-
-    </div><!-- /.container -->
+                <!-- Cart & Favourite Box -->
+                <div class="cart-fav-box d-flex align-items-center">
+                    <!-- Cart -->
+                    <input type="submit" value="Add to cart" class="btn essence-btn">
+                </div>
+            </form>
+          </div>
+        </section>
 {% endblock %}

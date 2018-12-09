@@ -29,6 +29,9 @@ class CustomerDetailsForm(forms.ModelForm):
         model = Customer
         fields = ('fullname', 'photo', 'phone', 'street', 'zipcode', 'area')
 
+    def __init__(self, *args, **kwargs):
+        super(CustomerDetailsForm, self).__init__(*args, **kwargs)
+        self.fields['area'].widget.attrs['readonly'] = True
     def save(self, user=None):
         customer_details = super(CustomerDetailsForm, self).save(commit=False)
         if user:

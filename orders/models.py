@@ -6,6 +6,7 @@ from django.utils import timezone
 
 BILLING_TYPES = [
         ('1','COD'),
+        ('2','ONLINE'),
     ]
 ORDER_STATUSES = [
         ('0','FAILED'),
@@ -84,7 +85,7 @@ class Subscriptions(models.Model):
         subs = Subscriptions.objects.all()
         names = []
         for sub in subs:
-            names.append((str(sub.id),str(sub.name)+' - '+str(sub.description)))
+            names.append((str(sub.id),str(sub.name)+' - '+str(sub.description)+' @ ₹'+str(sub.price)))
         return names
 
 

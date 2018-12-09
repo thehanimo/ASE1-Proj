@@ -5,7 +5,7 @@ from django.urls import path, include
 app_name = 'customer'
 
 urlpatterns = [
-	path('home', views.HomeView.as_view(), name='home'),
+	path('home', views.HomeView, name='home'),
     path('home/myorders', views.MyOrdersView.as_view(), name='myorders'),
     path('home/myorders/<int:oid>', views.OrderView.as_view(), name='order'),
     path('home/myorders/track/', views.orderTrack, name='order_track'),

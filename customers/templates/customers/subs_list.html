@@ -1,13 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">My Subscriptions</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">My Subscriptions</h2> 
-  <div class="card">
+  <h2 class="mb-3 mt-100 ml-30">My Subscriptions</h2> 
+  <div class="card mr-50 ml-50 mb-30">
     <table class="table mb-0">
       <thead>
         <tr>

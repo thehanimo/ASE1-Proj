@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block title %}
+    Thank you
+{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-md-8 col-sm-10 col-12">
-      <h1>We're getting an amount tailored just for you ;)</h1><br>
-      We'll get back to you via email in 24 hours. Hold on!
-    </div>
-  </div>
+  <section class="welcome_area bg-img background-overlay" style='background-image: url({% static "assets" %}/img/bg-img/bg-1.jpg);'>
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
+                        <h1>We're getting an amount tailored just for you ;)</h1>
+                        <p class="lead">
+                        We'll get back to you via email in 24 hours. Hold on!
+                      </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block title %}
+    Thank you
+{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-md-8 col-sm-10 col-12">
-      <h1>You've successfully subscribed!</h1><br>
-      Our agent will collect the payment from you on your first delivery.
-    </div>
-  </div>
+  <section class="welcome_area bg-img background-overlay" style='background-image: url({% static "assets" %}/img/bg-img/bg-1.jpg);'>
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
+                        <h1>You've successfully subscribed!</h1>
+                        <p class="lead">
+                        Our agent will collect the payment from you on your first delivery.
+                      </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

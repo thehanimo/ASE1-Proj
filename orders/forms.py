@@ -9,14 +9,14 @@ from agents.models import Agent
 from customers.models import Customer
 from executives.models import Executive
 from shop.models import Product, Category
-from .models import PartyOrders
+from .models import PartyOrders, BILLING_TYPES
 
 
-class CheckoutForm(forms.ModelForm):
+class CheckoutForm(forms.Form):
+	payment_type = forms.CharField()
 	preferred_time=forms.CharField()
 	class Meta:
 		model = Order
-		fields = ('payment_type', )
 		
 
 

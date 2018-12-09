@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    Your Shopping Cart| Thank you
+    Thank you
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row" style="margin-top: 6%">
-            <div class="col-md-8 col-md-offset-2">
-                <h3 class="page-header">Thank You For Shopping With Us
-                </h3>
-                <p>Your order has been successfully completed. Your order number is <strong>{{ order.id }}</strong>.</p>
+  <section class="welcome_area bg-img background-overlay" style='background-image: url({% static "assets" %}/img/bg-img/bg-1.jpg);'>
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
+                        <h2>Thank You For Shopping With Us</h2>
+                        <p class="lead">
+                        Your order has been successfully completed. Your order number is <strong>{{ order.id }}</strong>.
+                      </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 {% endblock %}

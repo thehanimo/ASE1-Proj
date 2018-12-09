@@ -16,6 +16,9 @@ from django.template.loader import render_to_string
 from ..tokens import account_activation_token
 from django.core.mail import EmailMessage
 
+def AboutUs(request):
+	return render(request, 'aboutus.html')
+
 def home(request):
 	if request.user.is_authenticated:
 		if request.user.user_type == 2:
@@ -29,6 +32,16 @@ def home(request):
 
 	return render(request, 'home.html')
 
+def myProfile(request):
+	if request.user.is_authenticated:
+		if request.user.user_type == 2:
+			return redirect('agent:home',aid=request.user.id)
+		elif request.user.user_type == 1:
+			return redirect('customer:editprofile')
+		elif request.user.user_type == 3:
+			return redirect('executive:viewprofile')
+
+	return render(request, '500.html')
 
 @method_decorator([anonymous_required], name='dispatch')
 class PartnerWithUsView(CreateView):

@@ -1,8 +1,42 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
 {% block content %}
-<h3>Hi {{user.username}}!</h3>
-<img src='{{ MEDIA_URL}}{{user.customer.photo}}' onerror="if (this.src != '{{ MEDIA_URL}}default.jpg') this.src = '{{ MEDIA_URL}}default.jpg';" width="200px" height="200px"><br>
-<a href="{% url 'customer:editprofile' %}">View/Edit profile</a><br/>
-<a href="{% url 'customer:myorders' %}">My Orders</a><br/>
-<a href="{% url 'customer:my_subscriptions' %}">My Subscriptions</a>
+
+	<!-- ##### Welcome Area Start ##### -->
+    <section class="welcome_area bg-img background-overlay" style="background-image: url({% static 'assets' %}/img/bg-img/bg-1.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
+                        <h6>The Water Company</h6>
+                        <h2>New Products In Store.</h2>
+                        <a href="{% url 'shop:product_list' %}" class="btn essence-btn">Shop Now.</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ##### Welcome Area End ##### -->
+
+    <!-- ##### Top Catagory Area Start ##### -->
+    <div class="top_catagory_area section-padding-80 clearfix">
+        <div class="container">
+            <div class="row justify-content-center">
+            	{% for category in categories %}
+                <!-- Single Catagory -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-color: cadetblue">
+                        <div class="catagory-content">
+                            <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- ##### Top Catagory Area End ##### -->
+
 {% endblock %}

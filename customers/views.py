@@ -25,6 +25,8 @@ from orders.forms import OrderCancelForm, PartyOrderCreateForm
 from orders.models import Subscription
 from userAuth.models import User
 from customers.models import Customer
+
+from cart.cart import Cart
 from orders.models import Order, OrderItem
 from chat.models import Room
 from agents.models import Agent
@@ -83,15 +85,20 @@ class CustomerDetailsView(UpdateView):
 		user = self.request.user
 		return user.customer
 
+	def get_context_data(self, **kwargs):
+		context = super(CustomerDetailsView, self).get_context_data(**kwargs)
+		context.update({'user':self.request.user})
+		return context
+
 	def get_success_url(self, *args, **kwargs):
 		return reverse("customer:home")
 
-@method_decorator([login_required, customer_required], name='dispatch')
-class HomeView(ListView):
-	template_name = 'customers/home.html'
-	
-	def get_queryset(self):
-		return []
+@login_required
+@customer_required
+def HomeView(request):
+	cart = Cart(request)
+	categories = Category.objects.all()
+	return render(request, 'customers/home.html',{'cart':cart, 'categories':categories})
 
 def activate(request, uidb64, token):
 	try:

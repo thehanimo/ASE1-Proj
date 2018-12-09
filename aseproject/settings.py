@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'chat',
     'feedback',
     'captcha',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -161,3 +162,5 @@ EMAIL_PORT = 587
 ALLOWED_HOSTS = ['*']
 
 CART_SESSION_ID = 'cart'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

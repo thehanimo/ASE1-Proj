@@ -1,10 +1,34 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
 {% block content %}
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {% for error in form.non_field_errors %}
+        <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+      {% endfor %}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endif %}
+  <section class="welcome_area bg-img background-overlay" style='background-image: url({% static "assets" %}/img/bg-img/bg-1.jpg);'>
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
        <h2>How Can We Help?</h2><br>
     <form method="post">
         {% csrf_token %}
-         <input id="rec-submit" type="submit" class="btn" value="Chat"/><br><br>
+         <input id="rec-submit" type="submit" class="btn" value="Chat With an Executive"/><br><br>
     </form>
-    <button class="btn">Email</button><br><br>
-    <button class="btn">Phone</button>
-    {% endblock %}
+    <h4>Or</h4>
+    	<h6>Email: thewatercomp@gmail.com </h6>
+    	<h6>Phone: +044-29483944</h6>
+    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
