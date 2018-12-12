@@ -1,0 +1,63 @@
+{% extends 'exec_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">My Profile</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">My Profile</h5>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                              <td style="font-weight: bold;">Photo</td><td>: <img src='{{ MEDIA_URL}}{{user.executive.photo}}' onerror="if (this.src != '{{ MEDIA_URL}}default.jpg') this.src = '{{ MEDIA_URL}}default.jpg';" width="200px"></td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Email</td><td>: {{ request.user.email }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Username</td><td>: {{ request.user.username }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Fullname</td><td>: {{ request.user.executive.fullname }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                        <form method="post" enctype='multipart/form-data' novalidate>
+                                        {% csrf_token %}
+                                        {% for field in form %}
+                                            <div class="form-group">
+                                               {{ field|as_crispy_field }}
+                                             </div>
+                                        {% endfor %}
+                                        <button type="submit" class="btn btn-success">Edit</button>
+                                      </form>
+
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}

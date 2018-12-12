@@ -71,6 +71,13 @@ class HomeView(ListView):
 		sales = 0
 		for order in Order.objects.all():
 			sales += order.get_total_cost()
+		context['users_admins'] = User.objects.filter(user_type=5).count()
+		context['users_customers'] = User.objects.filter(user_type=1).count()
+		context['users_agents'] = User.objects.filter(user_type=2).count()
+		context['users_execs'] = User.objects.filter(user_type=3).count()
+		context['num_of_orders'] = Order.objects.all().count()
+		context['num_of_products'] = Product.objects.all().count()
+		context['num_of_categories'] = Category.objects.all().count()
 		context['sales']=sales
 		return context
 	def get_queryset(self):
@@ -80,7 +87,7 @@ class HomeView(ListView):
 @method_decorator([login_required, executive_required], name='dispatch')
 class ExecutiveDetailsView(UpdateView):
 	model = Executive
-	template_name = "registration/details.html"
+	template_name = "executives/details.html"
 	form_class = ExecutiveDetailsForm
 
 	def get_object(self, *args, **kwargs):
