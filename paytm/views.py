@@ -21,9 +21,6 @@ from django.core.mail import EmailMessage
 
 # Create your views here.
 
-@login_required
-def home(request):
-    return HttpResponse("<html><a href='"+ settings.HOST_URL +"/paytm/payment'>PayNow</html>")
 
 def payment(request):
     cart = Cart(request)
@@ -31,7 +28,7 @@ def payment(request):
     cart.clear()
     MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
     MERCHANT_ID = settings.PAYTM_MERCHANT_ID
-    CALLBACK_URL = settings.HOST_URL + settings.PAYTM_CALLBACK_URL
+    CALLBACK_URL = 'http://'+get_current_site(request).domain + settings.PAYTM_CALLBACK_URL
     # Generating unique temporary ids
     order_id = Checksum.__id_generator__()
     if bill_amount:
