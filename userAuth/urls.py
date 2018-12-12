@@ -8,6 +8,7 @@ import executives.views as executives
 from django.conf.urls import url
 urlpatterns = [
 	path('about-us', userAuth.AboutUs, name='aboutus'),
+	path('faq', userAuth.FAQ, name='faq'),
     path('', userAuth.home, name='home'),
     path('', userAuth.myProfile, name='profile'),
     path('partner-with-us/', userAuth.PartnerWithUsView.as_view(), name='partner_with_us'),

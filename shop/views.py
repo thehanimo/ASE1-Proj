@@ -6,8 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from userAuth.decorators import customer_required
 
-@login_required
-@customer_required
+
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -24,8 +23,6 @@ def product_list(request, category_slug=None):
     }
     return render(request, 'shop/product/list.html', context)
 
-@login_required
-@customer_required
 def product_detail(request, id, slug):
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
     cart_product_form = CartAddProductForm()

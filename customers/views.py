@@ -68,6 +68,11 @@ class NewCustomerDetailsView(FormView):
 	template_name = "registration/details.html"
 	form_class = CustomerDetailsForm
 
+	def get_context_data(self, **kwargs):
+		context=super(NewCustomerDetailsView, self).get_context_data(**kwargs)
+		context['cart'] = Cart(self.request)
+		return context
+
 	def form_valid(self, form):
 		form.save(self.request.user)
 		return super(NewCustomerDetailsView, self).form_valid(form)
@@ -88,6 +93,7 @@ class CustomerDetailsView(UpdateView):
 	def get_context_data(self, **kwargs):
 		context = super(CustomerDetailsView, self).get_context_data(**kwargs)
 		context.update({'user':self.request.user})
+		context['cart'] = Cart(self.request)
 		return context
 
 	def get_success_url(self, *args, **kwargs):
@@ -111,9 +117,9 @@ def activate(request, uidb64, token):
 		user.email_verified = True
 		user.save()
 		login(request, user)
-		return render(request, 'registration/activation_suc.html')
+		return render(request, 'registration/activation_suc.html',{'cart':cart,})
 	else:
-		return render(request, 'registration/activation_err.html')
+		return render(request, 'registration/activation_err.html',{'cart':cart,})
 
 @method_decorator([login_required, customer_required], name='dispatch')
 class MyOrdersView(ListView):
@@ -121,6 +127,11 @@ class MyOrdersView(ListView):
 	ordering = ('created', )
 	context_object_name = 'orders'
 	template_name = 'customers/orders_list.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(MyOrdersView, self).get_context_data(**kwargs)
+		context['cart'] = Cart(self.request)
+		return context
 
 	def get_queryset(self):
 		queryset = Order.objects.filter(customer=self.request.user)
@@ -133,6 +144,11 @@ class OrderView(ListView):
 	context_object_name = 'items'
 	template_name = 'customers/items_list.html'
 
+	def get_context_data(self, **kwargs):
+		context = super(OrderView, self).get_context_data(**kwargs)
+		context['cart'] = Cart(self.request)
+		return context
+
 	def get_queryset(self):
 		order = Order.objects.get(id=self.kwargs['oid'])
 		cur_user = self.request.user
@@ -144,6 +160,7 @@ class OrderView(ListView):
 @login_required
 @customer_required
 def CancelOrderView(request, oid):
+	cart = Cart(request)
 	try:
 		order = Order.objects.get(id=oid)
 	except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
@@ -156,7 +173,7 @@ def CancelOrderView(request, oid):
 				form.save(order)
 				return redirect('customer:myorders')
 
-		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
+		return render(request, 'registration/order_cancel.html', {'cart':cart,'form':form, 'order':order})
 	return redirect('forbidden')
 
 def genRoom():
@@ -169,24 +186,26 @@ def genRoom():
 @login_required
 @customer_required
 def support(request):
+	cart = Cart(request)
 	if request.method == 'POST':
 		customer = request.user
 		room = genRoom()
 		room.customer = customer
 		room.save()
 		return redirect('chat:room', room_name=room.label)
-	return render(request, 'customers/support.html')
+	return render(request, 'customers/support.html',{'cart':cart,})
 
 @login_required
 @customer_required
 def orderTrack(request):
+	cart = Cart(request)
 	if request.method == 'POST':
 		try:
 			order = Order.objects.get(id=request.POST['oid'])
 		except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
 			order = None
 		if order and order.customer == request.user:
-			return render(request, 'customers/track.html', {'order':order})
+			return render(request, 'customers/track.html', {'order':order},{'cart':cart,})
 		return redirect('forbidden')
 	return render('500.html')
 
@@ -194,10 +213,16 @@ def orderTrack(request):
 class PartyOrderCreateView(FormView):
 	template_name = "orders/partyOrder.html"
 	form_class = PartyOrderCreateForm
+	
+	def get_context_data(self, **kwargs):
+		context = super(PartyOrderCreateView, self).get_context_data(**kwargs)
+		context['cart'] = Cart(self.request)
+		return context
 
 	def form_valid(self, form):
 		form.save(self.request.user)
-		return render(self.request,'orders/newPartyOrder.html')
+		cart = Cart(self.request)
+		return render(self.request,'orders/newPartyOrder.html',{'cart':cart,})
 
 @method_decorator([login_required, customer_required, customer_details_required], name='dispatch')
 class SubscriptionsView(FormView):
@@ -205,9 +230,15 @@ class SubscriptionsView(FormView):
 	template_name = "customers/Subscription.html"
 	form_class = SubscriptionForm
 
+	def get_context_data(self, **kwargs):
+		context = super(SubscriptionsView, self).get_context_data(**kwargs)
+		context['cart'] = Cart(self.request)
+		return context
+
 	def form_valid(self, form):
 		form.save(self.request.user)
-		return render(self.request,'customers/newSubscription.html')
+		cart=Cart(self.request)
+		return render(self.request,'customers/newSubscription.html',{'cart':cart,})
 
 @method_decorator([login_required, customer_required], name='dispatch')
 class MySubscriptionsView(ListView):
@@ -221,13 +252,14 @@ class MySubscriptionsView(ListView):
 		return queryset
 
 def SubscriptionClaimView(request, id):
+	cart = Cart(request)
 	sub = Subscription.objects.get(id=id)
 	try:
 		agent = Agent.objects.get(area=request.user.customer.area)
 		if agent.user.is_active == False:
 			raise Agent.DoesNotExist
 	except Agent.DoesNotExist:
-		return render(request, 'orders/order/NoDelivery.html', {'area':request.user.customer.area})
+		return render(request, 'orders/order/NoDelivery.html', {'cart':cart,'area':request.user.customer.area})
 	order = Order.objects.create(customer=request.user, agent=agent.user, payment_type='1', preferred_time='ASAP')
 	cat,created = Category.objects.get_or_create(
 		name="Water",

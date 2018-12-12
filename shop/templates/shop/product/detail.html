@@ -21,7 +21,7 @@
             <p class="product-price">₹{{ product.price }}</p>
             <p class="product-desc">{{ product.description|safe|linebreaksbr }}</p>
             <!-- Form -->
-            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="cart-form clearfix" method="post">
+            <form id = "form1" action="{% url 'cart:cart_add' product.id %}" method="post" class="cart-form clearfix" method="post">
               {% csrf_token %}
                 <!-- Select Box -->
                 <div class="select-box d-flex mt-50 mb-30">
@@ -34,9 +34,18 @@
                 <!-- Cart & Favourite Box -->
                 <div class="cart-fav-box d-flex align-items-center">
                     <!-- Cart -->
-                    <input type="submit" value="Add to cart" class="btn essence-btn">
+                    <input id="added" type="button" value="Add to cart" class="btn essence-btn" onclick="myfunc()" style="width: 50px">
                 </div>
             </form>
           </div>
         </section>
+        <script type="text/javascript">
+            function myfunc(){
+                $('#added').attr('value',"Adding..");
+                setTimeout(delayedSubmit, 1000);
+            }
+            function delayedSubmit(){
+                $('#form1').submit();
+            }
+        </script>
 {% endblock %}

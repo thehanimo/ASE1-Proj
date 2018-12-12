@@ -19,6 +19,9 @@ from django.core.mail import EmailMessage
 def AboutUs(request):
 	return render(request, 'aboutus.html')
 
+def FAQ(request):
+	return render(request, 'faq.html')
+
 def home(request):
 	if request.user.is_authenticated:
 		if request.user.user_type == 2:

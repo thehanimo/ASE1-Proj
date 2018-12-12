@@ -24,6 +24,19 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 </head>
 <body>
+    <style type="text/css">
+.wrapper1 {
+  /* The height needs to be set to a fixed value for the effect to work.
+   * 100vh is the full height of the viewport. */
+  height: 100vh;
+  /* The scaling of the images would add a horizontal scrollbar, so disable x overflow. */
+  overflow-x: hidden;
+  /* Enable scrolling on the page. */
+  overflow-y: auto;
+  /* Set the perspective to 2px. This is essentailly the simulated distance from the viewport to transformed objects.*/
+  perspective: 2px;
+}
+</style>
     <!-- ##### Header Area Start ##### -->
     <header class="header_area">
         <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
@@ -164,10 +177,160 @@
     </div>
     <!-- ##### Right Side Cart End ##### -->
     {% endif %}
-    <div style="min-height: 46vh">
-    {% block content %}
-	{% endblock %}
-	</div>
+    <main class="wrapper1" style="min-height: 46vh">
+    <style type="text/css">
+
+
+.section1 {
+  /* Needed for children to be absolutely positioned relative to the parent. */
+  position: relative;
+  /* The height of the container. Must be set, but it doesn't really matter what the value is. */
+  height: 50vh;
+  
+  /* For text formatting. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 0 0 5px #000;
+}
+
+.parallax1::after {
+  /* Display and position the pseudo-element */
+  content: " ";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  
+  /* Move the pseudo-element back away from the camera,
+   * then scale it back up to fill the viewport.
+   * Because the pseudo-element is further away, it appears to move more slowly, like in real life. */
+  transform: translateZ(-1px) scale(1.5);
+  /* Force the background image to fill the whole element. */
+  background-size: 100%;
+  /* Keep the image from overlapping sibling elements. */ 
+  z-index: -1;
+}
+
+/* Sets the actual background images to adorable kitties. This part is crucial. */
+.bg1::after {
+  background-image: url({% static "assets" %}/img/bg-img/bg-8.jpg);
+}
+</style>
+
+    
+  <section class="welcome_area bg-img background-overlay" style='background-image: url({% static "assets" %}/img/bg-img/bg-landing.jpg);'>
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12" style="padding-left: 5vw">
+                    <div class="hero-content">
+                        <h2 style="margin-bottom: 0">The Water Company </h2>
+                        <p class="lead" style="padding-left: 17vw">Elixir of life - refined to perfection.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container" style="background-color: #FFFFFF">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8">
+                    <div class="regular-page-content-wrapper section-padding-80">
+                        <div class="regular-page-text">
+                            <span class="lead" style="font-size: 40px; ">H<sub>2</sub>O - Redefined</span><br><br>
+                            <p>TWC natural mineral water originates from rain and snow deposited on the catchment area, a millennia-old site in the heart of the French Alps
+surrounded by mountains and glaciers.<br>
+ 
+The water then filters down on a 15-year journey through rocks,
+taking on its unique balanced mineral composition,
+until it reaches its unique underground source.<br>
+ 
+TWC natural mineral water truly is a product of nature.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    <section class="section1 parallax1 bg1">
+  </section>
+
+        <div class="container">
+            <div class="row justify-content-center" style="background-color: #FFFFFF">
+                <div class="col-12 col-md-8">
+                    <div class="regular-page-content-wrapper section-padding-80">
+                        <div class="regular-page-text">
+                        <p>Dive into our variety of All Natural, Eco-friendly range of products from Tissue rolls to Water jugs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                            
+    <!-- ##### Top Catagory Area Start ##### -->
+    <div class="top_catagory_area section-padding-80 clearfix">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- Single Catagory -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'assets' %}/img/bg-img/bg-3.jpg);">
+                        <div class="catagory-content">
+                            <a href="{% url 'shop:product_list' %}">Tissues</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Catagory -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'assets' %}/img/bg-img/bg-2.jpg);">
+                        <div class="catagory-content">
+                            <a href="{% url 'shop:product_list' %}">Water</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Catagory -->
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'assets' %}/img/bg-img/bg-4.jpg);">
+                        <div class="catagory-content">
+                            <a href="{% url 'shop:product_list' %}">Misc.</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Top Catagory Area End ##### -->
+
+    <!-- ##### Brands Area Start ##### -->
+    <div style="height: 2vh; background-color: #F5F7F9; text-align: center;">Our Partners:</div>
+    <div class="brands-area d-flex align-items-center justify-content-between">
+        <!-- Brand Logo -->
+        <div class="single-brands-logo">
+            <img src="{% static 'assets' %}/img/core-img/brand1.png" alt="">
+        </div>
+        <!-- Brand Logo -->
+        <div class="single-brands-logo">
+            <img src="{% static 'assets' %}/img/core-img/brand2.png" alt="">
+        </div>
+        <!-- Brand Logo -->
+        <div class="single-brands-logo">
+            <img src="{% static 'assets' %}/img/core-img/brand3.png" alt="">
+        </div>
+        <!-- Brand Logo -->
+        <div class="single-brands-logo">
+            <img src="{% static 'assets' %}/img/core-img/brand4.png" alt="">
+        </div>
+        <!-- Brand Logo -->
+        <div class="single-brands-logo">
+            <img src="{% static 'assets' %}/img/core-img/brand5.png" alt="">
+        </div>
+        <!-- Brand Logo -->
+        <div class="single-brands-logo">
+            <img src="{% static 'assets' %}/img/core-img/brand6.png" alt="">
+        </div>
+    </div>
+    <!-- ##### Brands Area End ##### -->
+
 	<!-- ##### Footer Area Start ##### -->
     <footer class="footer_area clearfix">
         <div class="container">
@@ -250,7 +413,8 @@
     <script src="{% static 'assets' %}/js/classy-nav.min.js"></script>
     <!-- Active js -->
     <script src="{% static 'assets' %}/js/active.js"></script>
-
+    
+</main>
 </body>
 
 </html>
