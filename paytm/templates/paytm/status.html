@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if resultDict.STATUS == 'TXN_SUCCESS' %}
+    <h6> Transaction Successful </h6>
+{% else %}
+    <h6>{{ resultDict.STATUS }}</h6>
+{% endif %}
+
+</body>
+</html>

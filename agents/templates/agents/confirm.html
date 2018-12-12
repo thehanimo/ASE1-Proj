@@ -1,0 +1,49 @@
+{% extends 'agent_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                  <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Confirm Action</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="javascript:history.back()">Back</a></li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    
+
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h1 class="card-header">Confirm Action?</h1>
+                                <div class="card-body">
+                                        <form method="post" enctype='multipart/form-data' novalidate>
+                                        {% csrf_token %}
+                                        {% for field in form %}
+                                            <div class="form-group">
+                                               {{ field|as_crispy_field }}
+                                             </div>
+                                        {% endfor %}
+                                        </table>
+                                        <button type="submit" class="btn btn-danger">Confirm</button>
+                                      </form>
+
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}

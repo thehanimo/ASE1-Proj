@@ -194,45 +194,9 @@
     $(id).fadeOut(500);
     $(id).fadeIn(500);
     }
-    (function(window, document, $, undefined) {
-        "use strict";
-        $(function() {
-            var ctx = document.getElementById("chartjs_pie").getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ["Admins", "Customers", "Executives", "Agents"],
-                    datasets: [{
-                        backgroundColor: [
-                           "#5969ff",
-                            "#ff407b",
-                            "#25d5f2",
-                            "#ffc750",
-                        ],
-                        data: [{{users_admins}}, {{users_customers}}, {{users_execs}}, {{users_agents}}]
-                    }]
-                },
-                options: {
-                       legend: {
-                    display: true,
-                    position: 'bottom',
-
-                    labels: {
-                        fontColor: '#71748d',
-                        fontFamily: 'Circular Std Book',
-                        fontSize: 14,
-                    }
-                },
-
-                
-            }
-            });
-
-
-        });
-
-})(window, document, window.jQuery);
 </script>
+{% block script %}
+{% endblock %}
 </body>
  
 </html>

@@ -44,6 +44,7 @@ urlpatterns = [
     path('forbidden', userAuth.forbidden, name='forbidden'),
     path('feedback/', include('feedback.urls')),
     url(r'^captcha/', include('captcha.urls')),
+    url('paytm/', include('paytm.urls')),
 ]
 #urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

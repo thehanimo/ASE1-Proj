@@ -7,6 +7,7 @@ from django.utils import timezone
 BILLING_TYPES = [
         ('1','COD'),
         ('2','ONLINE'),
+        ('3','SUBSCRIPTION'),
     ]
 ORDER_STATUSES = [
         ('0','FAILED'),
@@ -15,7 +16,8 @@ ORDER_STATUSES = [
         ('1','PLACED'),
         ('2','CONFIRMED'),
         ('3','OUT FOR DELIVERY'),
-        ('4','DELIVERED')
+        ('4','DELIVERED'),
+        ('P','PROCESSING'),
     ]
 
 class Order(models.Model):
@@ -24,6 +26,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
+    rated = models.BooleanField(default=False)
     payment_type = models.CharField(max_length=1, default='1', choices=BILLING_TYPES)
     order_status = models.CharField(max_length=1, default='1', choices=ORDER_STATUSES)
     preferred_time = models.CharField(max_length=20,blank=True)

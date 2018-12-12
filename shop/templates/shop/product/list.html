@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    {% if category %}{{ category.name }} {% else %} Products {% endif %}
+    Shop
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
             <div class="row h-100 align-items-center">
                 <div class="col-12">
                     <div class="page-title text-center">
-                        <h2>shop</h2>
+                        <h2>{% if category %}{{ category.name }} {% else %} Shop {% endif %}</h2>
                     </div>
                 </div>
             </div>

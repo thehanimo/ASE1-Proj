@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'feedback',
     'captcha',
     'crispy_forms',
+    'paytm',
 ]
 
 MIDDLEWARE = [
@@ -164,3 +165,20 @@ ALLOWED_HOSTS = ['*']
 CART_SESSION_ID = 'cart'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+PAYTM_MERCHANT_KEY = ""
+PAYTM_MERCHANT_ID = ""
+HOST_URL = "http://localhost:8080"
+PAYTM_CALLBACK_URL = "/paytm/response/"
+
+if DEBUG:
+    PAYTM_MERCHANT_KEY = "T1GsewDpWX%z3BdZ"
+    PAYTM_MERCHANT_ID = "xNaORM51969003078152"
+    PAYTM_WEBSITE = 'WEBSTAGING'
+    HOST_URL = 'http://localhost:8000'
+    '''
+    In sandbox enviornment you can use following wallet credentials to login and make payment.
+    Mobile Number : 7777777777
+    Password : Paytm12345
+    This test wallet is topped-up to a balance of 7000 Rs. every 5 minutes.
+    '''

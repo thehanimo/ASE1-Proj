@@ -50,10 +50,18 @@ class Cart(object):
     def get_total_price(self):
         return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values())
 
+    def get_online(self):
+        online = 0
+        product_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
+        for product in products:
+            if product.only_online:
+                online = 1
+        return online
+
     def get_total_items(self):
         return len(self.cart.values())
 
     def clear(self):
         del self.session[settings.CART_SESSION_ID]
         self.session.modified = True
-

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="welcome_area bg-img background-overlay" style='background-image: url({% static "assets" %}/img/bg-img/bg-1.jpg);'>
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
+                      <h2>Rate Delivery of Order {{ order.id }}</h2>
+                      <form method="post" novalidate enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <table>
+                        {% for field in form %}
+                          <tr>
+                              <td> {{ field|as_crispy_field }}</td>
+                          </tr>
+                        {% endfor %}
+                        </table>
+                        <a href='/'><button type="submit" class="btn btn-success">Submit</button></a>
+                      </form><br/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

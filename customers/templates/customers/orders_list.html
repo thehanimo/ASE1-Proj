@@ -30,6 +30,8 @@
             <td class="text-right">
               {% if order.order_status == '1' %}
               <a href="{% url 'customer:cancel_order' oid=order.id %}"><button type="submit" class="btn">Cancel Order</button></a>
+              {% elif order.order_status == '4' and not order.rated %}
+              <a href="{% url 'customer:rate_order' oid=order.id %}"><button type="submit" class="btn">Rate Delivery</button></a>
               {% endif %}
             </td>
           </tr>

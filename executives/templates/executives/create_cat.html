@@ -47,4 +47,23 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+function convertToSlug(Text)
+{
+    return Text
+        .toLowerCase()
+        .replace(/[^\w ]+/g,'')
+        .replace(/ +/g,'-')
+        ;
+}
+$("#id_name").keyup(function(){
+    var Text = $(this).val();
+    $("#id_slug").val(convertToSlug(Text));    
+});
+</script>
 {% endblock %}

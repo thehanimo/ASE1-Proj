@@ -33,7 +33,7 @@ class CategorySignUpForm(forms.ModelForm):
 class ProductSignUpForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('category','name','slug','description','price','available','stock','image')
+        fields = ('category','name','slug','description','price','available','stock','image','number_of_cans','only_online')
 
     def save(self):
         prod = Product.objects.create(
@@ -63,7 +63,7 @@ class ProductDeleteForm(forms.ModelForm):
 class ProductDetailsForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('category','name','slug','description','price','available','stock','image')
+        fields = ('category','name','slug','description','price','available','stock','image','number_of_cans','only_online')
 
     def save(self, user=None):
         product_details = super(ProductDetailsForm, self).save(commit=False)

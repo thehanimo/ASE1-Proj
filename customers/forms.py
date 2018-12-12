@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
-
+from cart.cart import Cart
 from orders.models import Order
 from userAuth.models import User
 from agents.models import Agent
@@ -38,6 +38,11 @@ class CustomerDetailsForm(forms.ModelForm):
             customer_details.user = user
         customer_details.save()
         return customer_details
+
+class AgentRateForm(forms.ModelForm):
+    class Meta:
+        model = Agent
+        fields = ('rating',)
 
 class SubscriptionForm(forms.Form):
     subscription = forms.ChoiceField(choices=Subscriptions.objects.none(),widget=forms.RadioSelect)

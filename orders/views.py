@@ -14,7 +14,7 @@ from .forms import CheckoutForm
 
 from InvoiceGenerator.create import create_invoice
 from aseproject.settings import MEDIA_ROOT
-
+from orders.models import Subscriptions, Subscription
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -40,6 +40,12 @@ def order_create(request):
             preferred_time = request.POST.get('preferred_time')
             order = Order.objects.create(customer=request.user, agent=agent.user, payment_type=request.POST.get('payment_type'), preferred_time=preferred_time)
             for item in cart:
+                if item['product'].category.name == 'Subscriptions':
+                    Subscription.objects.create(
+                        customer=request.user,
+                        subscription=item['product'].name,
+                        number_of_cans=item['product'].number_of_cans,
+                    )
                 OrderItem.objects.create(
                     order=order,
                     product=item['product'],
@@ -48,6 +54,10 @@ def order_create(request):
                 )
                 item['product'].reduce_stock(item['quantity'])
                 item['product'].save()
+            if request.POST.get('payment_type') == '2':
+                order.order_status = 'P'
+                order.save()
+                return redirect('paytm:payment')
             cart.clear()
             order.save()
             oid = urlsafe_base64_encode(force_bytes(order.id)).decode()
@@ -62,7 +72,8 @@ def order_create(request):
             email.attach_file(MEDIA_ROOT+'/orders/'+str(order.id)+".pdf")
             email.send()
             return HttpResponseRedirect('/orders/placed/'+oid)
-    return render(request, 'orders/order/create.html', {'cart': cart,'details':details,})
+    online = cart.get_online()
+    return render(request, 'orders/order/create.html', {'cart': cart,'details':details,'online':online})
 
 @login_required
 @customer_required

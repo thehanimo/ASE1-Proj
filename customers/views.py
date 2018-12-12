@@ -20,9 +20,9 @@ from userAuth.tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 from userAuth.decorators import customer_required, customer_details_required, customer_details_empty, customer_or_executive_required
-from customers.forms import CustomerSignUpForm, CustomerDetailsForm, SubscriptionForm
+from customers.forms import CustomerSignUpForm, CustomerDetailsForm, SubscriptionForm, AgentRateForm
 from orders.forms import OrderCancelForm, PartyOrderCreateForm
-from orders.models import Subscription
+from orders.models import Subscription, Subscriptions
 from userAuth.models import User
 from customers.models import Customer
 
@@ -224,21 +224,16 @@ class PartyOrderCreateView(FormView):
 		cart = Cart(self.request)
 		return render(self.request,'orders/newPartyOrder.html',{'cart':cart,})
 
-@method_decorator([login_required, customer_required, customer_details_required], name='dispatch')
-class SubscriptionsView(FormView):
-	model = Subscription
-	template_name = "customers/Subscription.html"
-	form_class = SubscriptionForm
-
-	def get_context_data(self, **kwargs):
-		context = super(SubscriptionsView, self).get_context_data(**kwargs)
-		context['cart'] = Cart(self.request)
-		return context
-
-	def form_valid(self, form):
-		form.save(self.request.user)
-		cart=Cart(self.request)
-		return render(self.request,'customers/newSubscription.html',{'cart':cart,})
+@login_required
+@customer_required
+@customer_details_required
+def SubscriptionsView(request):
+	try:
+		cat = Category.objects.get(name='Subscriptions')
+	except:
+		return redirect('shop')
+	return redirect('shop:product_list_by_category',category_slug=cat.slug)
+	
 
 @method_decorator([login_required, customer_required], name='dispatch')
 class MySubscriptionsView(ListView):
@@ -260,7 +255,7 @@ def SubscriptionClaimView(request, id):
 			raise Agent.DoesNotExist
 	except Agent.DoesNotExist:
 		return render(request, 'orders/order/NoDelivery.html', {'cart':cart,'area':request.user.customer.area})
-	order = Order.objects.create(customer=request.user, agent=agent.user, payment_type='1', preferred_time='ASAP')
+	order = Order.objects.create(customer=request.user, agent=agent.user, payment_type='3', preferred_time='ASAP')
 	cat,created = Category.objects.get_or_create(
 		name="Water",
 		slug="water",
@@ -284,7 +279,28 @@ def SubscriptionClaimView(request, id):
 	oid = urlsafe_base64_encode(force_bytes(order.id)).decode()
 	return HttpResponseRedirect('/orders/placed/'+str(oid))
 
-
+@login_required
+@customer_required
+def AgentRateView(request, oid):
+	cart = Cart(request)
+	try:
+		order = Order.objects.get(id=oid)
+		agent = order.agent.agent
+	except(TypeError, ValueError, OverflowError, Order.DoesNotExist):
+		agent = None
+	if agent and order.rated == False:
+		form = AgentRateForm()
+		if request.method == 'POST':
+			form = AgentRateForm(request.POST)
+			if form.is_valid():
+				agent.no_of_ratings += 1
+				agent.rating = (agent.rating + float(request.POST.get('rating')))/agent.no_of_ratings
+				order.rated = True
+				order.save()
+				agent.save()
+				return redirect('customer:myorders')
+		return render(request, 'registration/order_rate.html', {'cart':cart,'form':form, 'order':order})
+	return redirect('forbidden')
 
 
 

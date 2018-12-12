@@ -15,7 +15,7 @@ from userAuth.forms import NewPasswordForm
 from orders.forms import OrderAcceptForm, OrderCancelConfirmForm, OrderOutForDeliveryForm, OrderDeliveredForm
 from userAuth.models import User
 from .models import Agent
-from orders.models import Order, OrderItem
+from orders.models import Order, OrderItem, Tracking
 
 from executives.models import AgentNotification
 from django.contrib.sites.shortcuts import get_current_site
@@ -182,6 +182,9 @@ def OutForDeliveryOrderView(request, oid):
 			form = OrderOutForDeliveryForm(request.POST)
 			if request.POST.get('check', False):
 				form.save(order)
+				tracking = Tracking.objects.get(order=order)
+				tracking.enabled = True
+				tracking.save()
 				return redirect('agent:assignedorders')
 
 		return render(request, 'executives/confirm.html', {'form':form, 'order':order})
@@ -201,6 +204,8 @@ def DeliveredOrderView(request, oid):
 			form = OrderDeliveredForm(request.POST)
 			if request.POST.get('check', False):
 				form.save(order)
+				tracking = Tracking.objects.get(order=order)
+				tracking.delete()
 				return redirect('agent:assignedorders')
 
 		return render(request, 'executives/confirm.html', {'form':form, 'order':order})

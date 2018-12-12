@@ -20,6 +20,7 @@
     width: 32px;
     height: 32px;
     opacity: 0.3;
+    z-index: 3;
   }
   .close:hover {
     opacity: 1;
@@ -124,9 +125,10 @@
           document.querySelector('#frame').style.display = 'block'
         } else if (data['command'] === 'user_left'){
           if (user_type === 1){
-            window.location.replace("{% url 'chat:support_error' %}")
+            window.onbeforeunload = null;
+            window.location = "{% url 'chat:support_error' %}";
           } else {
-            $('.responsive-html5-chat').append('<div class="message"><div class="left"><p>Customer has left the chat</p></div></div>');
+            $('.responsive-html5-chat').append('<div style="position:fixed; top:0;width:100%;text-align:center;font-size:30px;" class="message"><p>Customer has left the chat</p></div>');
           }
         }
     };
@@ -172,13 +174,15 @@ function responsiveChat(element) {
     $(element + ' input[type="submit"]').click(function (event) {
         event.preventDefault();
         var message = $(element + ' input[type="text"]').val();
-        chatSocket.send(JSON.stringify({
-            'command': 'new_message',
-            'message': message,
-            'from': username
-        }));
-        $(element + ' input[type="text"]').val("");
-        showLatestMessage();
+        if (message.length != 0){
+          chatSocket.send(JSON.stringify({
+              'command': 'new_message',
+              'message': message,
+              'from': username
+          }));
+          $(element + ' input[type="text"]').val("");
+          showLatestMessage();
+      }
     });
 }
 

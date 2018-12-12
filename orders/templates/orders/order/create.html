@@ -75,6 +75,21 @@
                         <form id="form" action="." method="post">
                             {% csrf_token %}
                             <div id="accordion" role="tablist" class="mb-4">
+                            {% if online %}
+                            <div class="card">
+                                <div class="card-header" role="tab" id="headingOne">
+                                    <h6 class="mb-0">
+                                        <span data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><input type="radio" name="payment_type" value="1" onclick="this.checked=false;"> Cash on delivery</span>
+                                    </h6>
+                                </div>
+
+                                <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p>We're sorry but your cart does not qualify for Cash on Delivery.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
                             <div class="card">
                                 <div class="card-header" role="tab" id="headingOne">
                                     <h6 class="mb-0">
@@ -88,15 +103,16 @@
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="card">
                                 <div class="card-header" role="tab" id="headingTwo">
                                     <h6 class="mb-0">
-                                        <span class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><input type="radio" name="payment_type" value="2" onclick="this.checked=false;"> ONLINE</span>
+                                        <span class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><input type="radio" name="payment_type" value="2"> ONLINE</span>
                                     </h6>
                                 </div>
                                 <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
                                     <div class="card-body">
-                                        <p>Apologies. We don't accept online payments at the moment.</p>
+                                        <p>Pay Using PayTM's secure gateway.</p>
                                     </div>
                                 </div>
                             </div>

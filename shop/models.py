@@ -35,6 +35,8 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to=upload_path_handler, blank=True)
+    number_of_cans = models.IntegerField(default=0,blank=True)
+    only_online = models.BooleanField(default=False,blank=True)
 
     class Meta:
         ordering = ('name', )
