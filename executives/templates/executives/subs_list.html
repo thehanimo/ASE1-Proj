@@ -1,39 +1,72 @@
-{% extends 'base.html' %}
+{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Subscriptions</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">Subscriptions</h2>
-  <a href="{% url 'executive:create_subscription' %}" class="btn btn-primary mb-3" role="button">Add Subscription</a>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Price</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for sub in subs %}
-          <tr>
-            <td class="align-middle">{{ sub.name }}</td>
-            <td class="align-middle">{{ sub.description }}</td>
-            <td class="align-middle">{{ sub.price }}</td>
-            <td class="text-right">
-              <a href="{% url 'executive:deletesubscription' id=sub.id %}"><button type="submit" class="btn">Delete Subscription</button></a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No subscriptions have been added yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Subscriptions</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Subscriptions</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                    <a href="{% url 'executive:create_subscription' %}" class="btn btn-primary mb-3" role="button">Add Subscription</a>
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Subscriptions</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Name</th>
+                                                    <th class="border-0">Description</th>
+                                                    <th class="border-0">Price</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for sub in subs %}
+                                                <tr>
+                                                <td class="align-middle">{{ sub.name }}</td>
+                                                <td class="align-middle">{{ sub.description }}</td>
+                                                <td class="align-middle">{{ sub.price }}</td>
+                                                <td class="text-right">
+                                                  <a href="{% url 'executive:deletesubscription' id=sub.id %}"><button type="submit" class="btn btn-danger">Delete</button></a>
+                                                </td>
+                                              </tr>
+                                                {% empty %}
+                                                <tr>
+                                                  <td class="bg-light text-center font-italic" colspan="5">No subscriptions have been added yet.</td>
+                                                </tr>
+                                              {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
 {% endblock %}

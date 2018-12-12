@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
-  <h2>We're fixing it!</h2>
-  You've received an email with further steps.. That's unless the email you entered was fake :)
+  <section class="welcome_area bg-img background-overlay" style='background-image: url({% static "assets" %}/img/bg-img/bg-1.jpg);'>
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
+                        <h2>We're fixing it!</h2>
+                        <p class="lead">You've received an email with further steps.. That's unless the email you entered was fake :)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

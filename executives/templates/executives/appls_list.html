@@ -1,43 +1,76 @@
-{% extends 'base.html' %}
+{{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Agent Applications</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">Agent Applications</h2>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Email</th>
-          <th>Area</th>
-          <th>Zipcode</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for appl in appls %}
-          <tr>
-            <td class="align-middle"><a href="#">{{ appl.fullname }}</a></td>
-            <td class="align-middle">{{ appl.phone }}</td>
-            <td class="align-middle">{{ appl.email }}</td>
-            <td class="align-middle">{{ appl.area }}</td>
-            <td class="align-middle">{{ appl.zipcode }}</td>
-            <td class="text-right">
-              <a href="{% url 'executive:accept_agent_appl' aid=appl.id %}"><button type="submit" class="btn">Accept</button></a>
-              <a href="{% url 'executive:reject_agent_appl' aid=appl.id %}"><button type="submit" class="btn">Reject</button></a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No categories have been added yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">All Agent Applications</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">All Agent Applications</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Agent Applications</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Name</th>
+                                                    <th class="border-0">Phone</th>
+                                                    <th class="border-0">Email</th>
+                                                    <th class="border-0">Area</th>
+                                                    <th class="border-0">Zipcode</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for appl in appls %}
+                                              <tr>
+                                                <td class="align-middle"><a href="#">{{ appl.fullname }}</a></td>
+                                                <td class="align-middle">{{ appl.phone }}</td>
+                                                <td class="align-middle">{{ appl.email }}</td>
+                                                <td class="align-middle">{{ appl.area }}</td>
+                                                <td class="align-middle">{{ appl.zipcode }}</td>
+                                                <td class="text-right">
+                                                  <a href="{% url 'executive:accept_agent_appl' aid=appl.id %}"><button type="submit" class="btn btn-primary">Accept</button></a>
+                                                  <a href="{% url 'executive:reject_agent_appl' aid=appl.id %}"><button type="submit" class="btn btn-danger">Reject</button></a>
+                                                </td>
+                                              </tr>
+                                            {% empty %}
+                                              <tr>
+                                                <td class="bg-light text-center font-italic" colspan="5">No categories have been added yet.</td>
+                                              </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
 {% endblock %}

@@ -1,37 +1,70 @@
-{% extends 'base.html' %}
+{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Categories</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">Categories</h2>
-  <a href="{% url 'executive:create_category' %}" class="btn btn-primary mb-3" role="button">Add Category</a>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>slug</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for cat in cats %}
-          <tr>
-            <td class="align-middle">{{ cat.name }}</td>
-            <td class="align-middle">{{ cat.slug }}</td>
-            <td class="text-right">
-              <a href="{% url 'executive:deletecategory' id=cat.id %}"><button type="submit" class="btn">Delete Category</button></a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No categories have been added yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">All Categories</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">All Categories</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                    <a href="{% url 'executive:create_category' %}" class="btn btn-primary mb-3" role="button">Add Category</a>
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Categories</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Name</th>
+                                                    <th class="border-0">Slug</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for cat in cats %}
+                                                 <tr>
+                                                  <td class="align-middle">{{ cat.name }}</td>
+                                                  <td class="align-middle">{{ cat.slug }}</td>
+                                                  <td class="text-right">
+                                                    <a href="{% url 'executive:deletecategory' id=cat.id %}"><button type="submit" class="btn btn-danger">Delete</button></a>
+                                                  </td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr>
+                                                  <td class="bg-light text-center font-italic" colspan="5">No categories have been added yet.</td>
+                                                </tr>
+                                              {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
 {% endblock %}

@@ -1,43 +1,120 @@
-{% extends 'base.html' %}
+{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Agents List</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">Agents List</h2>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Area</th>
-          <th>Rating</th>
-          <th>Email Verification</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for agent in agents %}
-          <tr>
-            <td class="align-middle"><a href="{% url 'executive:viewagentprofile' aid=agent.user.id %}">{{ agent.fullname }}</a></td>
-            <td class="align-middle">{{ agent.phone }}</td>
-            <td class="align-middle">{{ agent.area }}</td>
-            <td class="align-middle">{{ agent.rating }}</td>
-            <td class="align-middle">{{ agent.user.email_verified }}</td>
-            <td class="text-right">
-              <a href="{% url 'executive:editagent' id=agent.user.id %}" class="btn btn-primary">Edit Agent</a>
-              <a href="{% url 'executive:deleteagent' id=agent.user.id %}"><button type="submit" class="btn">Delete Agent</button></a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No agents have been added yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">All Agents</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">All Agents</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Agents</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Name</th>
+                                                    <th class="border-0">Phone</th>
+                                                    <th class="border-0">Area</th>
+                                                    <th class="border-0">Zipcode</th>
+                                                    <th class="border-0">Rating</th>
+                                                    <th class="border-0">Verified</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for agent in agents %}
+                                                <tr>
+                                                  <td class="align-middle"><a href="{% url 'executive:viewagentprofile' aid=agent.user.id %}">{{ agent.fullname }}</a></td>
+                                                  <td class="align-middle">{{ agent.phone }}</td>
+                                                  <td class="align-middle">{{ agent.area }}</td>
+                                                  <td class="align-middle">{{ agent.zipcode }}</td>
+                                                  <td class="align-middle">{{ agent.rating }}</td>
+                                                  <td class="align-middle">{{ agent.user.email_verified }}</td>
+                                                  <td class="text-right">
+                                                    <a href="{% url 'executive:notify_agent' aid=agent.user.id %}" class="btn btn-brand">Notify</a>
+                                                    <a href="{% url 'executive:editagent' id=agent.user.id %}" class="btn btn-primary">Edit</a>
+                                                    <a href="{% url 'executive:deleteagent' id=agent.user.id %}"><button type="submit" class="btn btn-danger">Delete</button></a>
+                                                  </td>
+                                                </tr>
+                                              {% empty %}
+                                                <tr>
+                                                  <td class="bg-light text-center font-italic" colspan="5">No agents have been added yet.</td>
+                                                </tr>
+                                              {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Agent Applications</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Name</th>
+                                                    <th class="border-0">Phone</th>
+                                                    <th class="border-0">Email</th>
+                                                    <th class="border-0">Area</th>
+                                                    <th class="border-0">Zipcode</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for appl in appls %}
+                                              <tr>
+                                                <td class="align-middle"><a href="#">{{ appl.fullname }}</a></td>
+                                                <td class="align-middle">{{ appl.phone }}</td>
+                                                <td class="align-middle">{{ appl.email }}</td>
+                                                <td class="align-middle">{{ appl.area }}</td>
+                                                <td class="align-middle">{{ appl.zipcode }}</td>
+                                                <td class="text-right">
+                                                  <a href="{% url 'executive:accept_agent_appl' aid=appl.id %}"><button type="submit" class="btn btn-primary">Accept</button></a>
+                                                  <a href="{% url 'executive:reject_agent_appl' aid=appl.id %}"><button type="submit" class="btn btn-danger">Reject</button></a>
+                                                </td>
+                                              </tr>
+                                            {% empty %}
+                                              <tr>
+                                                <td class="bg-light text-center font-italic" colspan="5">No Applications yet.</td>
+                                              </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
 {% endblock %}

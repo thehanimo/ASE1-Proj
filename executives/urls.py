@@ -31,6 +31,6 @@ urlpatterns = [
     path('subscriptions/', views.SubscriptionsView.as_view(), name='subscriptions'),
     path('subscriptions/create', views.SubscriptionCreateView.as_view(), name='create_subscription'),
     path('subscriptions/delete/<str:id>', views.SubscriptionDeleteView, name='deletesubscription'),
-    path('notify-agent/', views.AgentNotifyView.as_view(), name='notify_agent'),
+    path('notify-agent/<int:aid>', views.AgentNotifyView.as_view(), name='notify_agent'),
     path('feedback-view/all', views.FeedbackView.as_view(), name='feedback_all'),
     ]

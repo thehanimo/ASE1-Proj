@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -61,10 +61,21 @@ class ExecutiveSignUpView(CreateView):
 
 @method_decorator([login_required, executive_required], name='dispatch')
 class HomeView(ListView):
+	model = Order
+	ordering = ('updated', )
+	context_object_name = 'orders'
 	template_name = 'executives/home.html'
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		sales = 0
+		for order in Order.objects.all():
+			sales += order.get_total_cost()
+		context['sales']=sales
+		return context
 	def get_queryset(self):
-		return []
+		queryset = Order.objects.all()[:5]
+		return queryset
 
 @method_decorator([login_required, executive_required], name='dispatch')
 class ExecutiveDetailsView(UpdateView):
@@ -99,6 +110,11 @@ class AgentsView(ListView):
 	context_object_name = 'agents'
 	template_name = 'executives/agents_list.html'
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['appls'] = AgentApplications.objects.all()
+		return context
+
 	def get_queryset(self):
 		queryset = Agent.objects.all()
 		return queryset
@@ -119,7 +135,7 @@ class OrderView(ListView):
 	model = OrderItem
 	ordering = ('id', )
 	context_object_name = 'items'
-	template_name = 'customers/items_list.html'
+	template_name = 'executives/items_list.html'
 
 	def get_queryset(self):
 		order = Order.objects.get(id=self.kwargs['oid'])
@@ -150,9 +166,9 @@ def CancelOrderView(request, oid):
 			form = OrderCancelConfirmForm(request.POST)
 			if request.POST.get('check', False):
 				form.save(order)
-				return redirect('home')
+				return redirect('executive:all_orders')
 
-		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
+		return render(request, 'executives/confirm.html', {'form':form, 'order':order})
 	return redirect('forbidden')
 
 @login_required
@@ -162,15 +178,19 @@ def PartyOrderCancelView(request, oid):
 		order = PartyOrders.objects.get(id=oid)
 	except(TypeError, ValueError, OverflowError, PartyOrders.DoesNotExist):
 		order = None
+	
 	if order:
-		form = OrderCancelConfirmForm()
+		form = CategoryDeleteForm()
 		if request.method == 'POST':
-			form = OrderCancelConfirmForm(request.POST)
+			form = CategoryDeleteForm(request.POST)
 			if request.POST.get('check', False):
-				order.delete()
+				try:
+					order.delete()
+				except ProtectedError:
+					return render(request,'executives/no_delete.html')
 				return redirect('executive:all_party_orders')
 
-		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
+		return render(request, 'executives/confirm.html', {'form':form})
 	return redirect('forbidden')
 
 @method_decorator([login_required, executive_required], name='dispatch')
@@ -227,6 +247,7 @@ def AcceptAgentApplication(request, aid):
 			fullname=agent_appl.fullname,
 			phone=agent_appl.phone,
 			area=agent_appl.area,
+			zipcode=agent_appl.zipcode,
 			rating=0,
 			user=newAgent,
 		)
@@ -244,7 +265,7 @@ def AcceptAgentApplication(request, aid):
 					mail_subject, message, to=[to_email]
 		)
 		email.send()
-		return render(request, 'registration/newAgent.html')
+		return render(request, 'executives/newAgent.html')
 	return render(request, '500.html')
 
 @login_required
@@ -267,7 +288,7 @@ def RejectAgentApplication(request, aid):
 					mail_subject, message, to=[to_email]
 		)
 		email.send()
-		return render(request, 'registration/rejectAgent.html')
+		return render(request, 'executives/rejectAgent.html')
 	return render(request, '500.html')
 
 
@@ -280,10 +301,8 @@ def AgentDetailsView(request, aid):
 	except:
 		agent = None
 	if agent and (agent.id == request.user.id or request.user.user_type == 3):
-		details = {}
-		for field in Agent._meta.get_fields():
-			details[field.name] = getattr(agent.agent, field.name)
-		return render(request, "registration/details_view.html", {'details':details})
+		agent = agent.agent
+		return render(request, "executives/agent_profile.html", {'agent':agent})
 	return render(request, '500.html')
 
 
@@ -301,6 +320,7 @@ def AgentEditView(request, id):
 			'phone': agent_user.agent.phone,
 			'area': agent_user.agent.area,
 			'rating': agent_user.agent.rating,
+			'zipcode':agent_user.agent.zipcode,
 			})
 		if request.method == 'POST':
 			form = AgentDetailsForm(request.POST)
@@ -308,9 +328,9 @@ def AgentEditView(request, id):
 				form.dummy_phone_save(agent_user, '')
 			if form.is_valid():
 				form.save(agent_user)
-				return redirect('/')
+				return redirect('executive:agentslist')
 
-		return render(request, 'registration/agent_edit.html', {'form':form})
+		return render(request, 'executives/agent_edit.html', {'form':form})
 	return redirect('forbidden')
 
 @login_required
@@ -326,31 +346,34 @@ def AgentDeleteView(request, id):
 		if request.method == 'POST':
 			form = AgentDeleteForm(request.POST)
 			if request.POST.get('check', False):
-				form.save(agent_user)
-				return redirect('/')
+				try:
+					form.save(agent_user)
+				except ProtectedError:
+					return render(request,'executives/no_delete.html')
+				return redirect('executive:agentslist')
 
-		return render(request, 'registration/agent_edit.html', {'form':form, 'agent':agent_user})
+		return render(request, 'executives/confirm.html', {'form':form})
 	return redirect('forbidden')
 
 @method_decorator([login_required, executive_required], name='dispatch')
 class CategoryCreateView(CreateView):
 	model = Category
 	form_class = CategorySignUpForm
-	template_name = 'registration/create.html'
+	template_name = 'executives/create_cat.html'
 
 	def form_valid(self,form):
 		form.save()
-		return redirect('/')
+		return redirect('executive:category')
 
 @method_decorator([login_required, executive_required], name='dispatch')
 class ProductCreateView(CreateView):
 	model = Product
 	form_class = ProductSignUpForm
-	template_name = 'registration/create.html'
+	template_name = 'executives/create_prd.html'
 
 	def form_valid(self,form):
 		form.save()
-		return redirect('/')
+		return redirect('executive:product')
 
 @login_required
 @executive_required
@@ -365,10 +388,13 @@ def ProductDeleteView(request, id):
 		if request.method == 'POST':
 			form = ProductDeleteForm(request.POST)
 			if request.POST.get('check', False):
-				form.save(prd)
-				return redirect('/')
+				try:
+					form.save(prd)
+				except ProtectedError:
+					return render(request,'executives/no_delete.html')
+				return redirect('executive:product')
 
-		return render(request, 'registration/order_confirm.html', {'form':form})
+		return render(request, 'executives/confirm.html', {'form':form})
 	return redirect('forbidden')
 
 @login_required
@@ -384,16 +410,19 @@ def CategoryDeleteView(request, id):
 		if request.method == 'POST':
 			form = CategoryDeleteForm(request.POST)
 			if request.POST.get('check', False):
-				form.save(cat)
-				return redirect('/')
+				try:
+					form.save(cat)
+				except ProtectedError:
+					return render(request,'executives/no_delete.html')
+				return redirect('executive:category')
 
-		return render(request, 'registration/order_confirm.html', {'form':form})
+		return render(request, 'executives/confirm.html', {'form':form})
 	return redirect('forbidden')
 
 @method_decorator([login_required, executive_required], name='dispatch')
 class ProductDetailsView(UpdateView):
 	model = Product
-	template_name = "registration/obj_details.html"
+	template_name = "executives/obj_details.html"
 	form_class = ProductDetailsForm
 
 	def get_object(self):
@@ -429,11 +458,11 @@ class SubscriptionsView(ListView):
 class SubscriptionCreateView(CreateView):
 	model = Subscriptions
 	form_class = SubscriptionSignUpForm
-	template_name = 'registration/create.html'
+	template_name = 'executives/create_sub.html'
 
 	def form_valid(self,form):
 		form.save()
-		return redirect('/')
+		return redirect('executive:subscriptions')
 
 @login_required
 @executive_required
@@ -448,10 +477,13 @@ def SubscriptionDeleteView(request, id):
 		if request.method == 'POST':
 			form = CategoryDeleteForm(request.POST)
 			if request.POST.get('check', False):
-				sub.delete()
-				return redirect('/')
+				try:
+					sub.delete()
+				except ProtectedError:
+					return render(request,'executives/no_delete.html')
+				return redirect('executive:subscriptions')
 
-		return render(request, 'registration/order_confirm.html', {'form':form})
+		return render(request, 'executives/confirm.html', {'form':form})
 	return redirect('forbidden')
 
 @method_decorator([login_required, executive_required], name='dispatch')
@@ -460,9 +492,13 @@ class AgentNotifyView(CreateView):
 	form_class = AgentNotifyForm
 	template_name = 'executives/agent_notify.html'
 
+	def get_object(self):
+		agent = User.objects.get(id=self.kwargs['aid'])
+		return agent
+
 	def form_valid(self,form):
 		form.save()
-		return redirect('home')
+		return render(self.request,'executives/agent_notified.html')
 
 @method_decorator([login_required, executive_required], name='dispatch')
 class FeedbackView(ListView):

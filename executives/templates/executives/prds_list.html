@@ -1,52 +1,85 @@
-{% extends 'base.html' %}
+{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Products</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">Products</h2>
-  <a href="{% url 'executive:create_product' %}" class="btn btn-primary mb-3" role="button">Add Product</a>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Category</th>
-          <th>Name</th>
-          <th>Slug</th>
-          <th>Price</th>
-          <th>Available</th>
-          <th>Stock</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for prd in prds %}
-          <tr>
-            <td class="align-middle">
-              <a href="{% url 'executive:editproduct' pid=prd.id %}">
-                <img src='{{ MEDIA_URL}}{{prd.image}}' onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" alt=".." style="height: 30px; width: 50px;">
-              </a>
-            </td>
-            <td class="align-middle">{{ prd.category }}</td>
-            <td class="align-middle">{{ prd.name }}</td>
-            <td class="align-middle">{{ prd.slug }}</td>
-            <td class="align-middle">{{ prd.price }}</td>
-            <td class="align-middle">{{ prd.available }}</td>
-            <td class="align-middle">{{ prd.stock }}</td>
-            <td class="text-right">
-              <a href="{% url 'executive:deleteproduct' id=prd.id %}"><button type="submit" class="btn">Delete Product</button></a>
-              <a href="{% url 'executive:editproduct' pid=prd.id %}"><button type="submit" class="btn">Edit Product</button></a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No products have been added yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">All Products</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">All Products</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                    <a href="{% url 'executive:create_product' %}" class="btn btn-primary mb-3" role="button">Add Product</a>
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Products</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Image</th>
+                                                    <th class="border-0">Category</th>
+                                                    <th class="border-0">Name</th>
+                                                    <th class="border-0">Slug</th>
+                                                    <th class="border-0">Price</th>
+                                                    <th class="border-0">Available</th>
+                                                    <th class="border-0">Stock</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for prd in prds %}
+                                                <tr>
+                                                    <td class="align-middle">
+                                                      <a href="{% url 'executive:editproduct' pid=prd.id %}">
+                                                        <img src='{{ MEDIA_URL}}{{prd.image}}' onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" alt=".." style="height: 30px; width: 50px;">
+                                                      </a>
+                                                    </td>
+                                                    <td class="align-middle">{{ prd.category }}</td>
+                                                    <td class="align-middle">{{ prd.name }}</td>
+                                                    <td class="align-middle">{{ prd.slug }}</td>
+                                                    <td class="align-middle">{{ prd.price }}</td>
+                                                    <td class="align-middle">{{ prd.available }}</td>
+                                                    <td class="align-middle">{{ prd.stock }}</td>
+                                                    <td class="text-right">
+                                                      <a href="{% url 'executive:deleteproduct' id=prd.id %}"><button type="submit" class="btn btn-danger">Delete</button></a>
+                                                      <a href="{% url 'executive:editproduct' pid=prd.id %}"><button type="submit" class="btn btn-brand">Edit</button></a>
+                                                    </td>
+                                                  </tr>
+                                                {% empty %}
+                                                  <tr>
+                                                    <td class="bg-light text-center font-italic" colspan="5">No products have been added yet.</td>
+                                                  </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
 {% endblock %}

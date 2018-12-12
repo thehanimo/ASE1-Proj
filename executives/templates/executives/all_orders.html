@@ -1,52 +1,86 @@
-{% extends 'base.html' %}
+{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">All Orders</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">All Orders</h2>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>Order Id</th>
-          <th>Date Created</th>
-          <th>Date Updated</th>
-          <th>Customer</th>
-          <th>Agent</th>
-          <th>Status</th>
-          <th>Payment Type</th>
-          <th>Time of Delivery</th>
-          <th>Total</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for order in orders %}
-          <tr>
-            <td class="align-middle"><a href="{% url 'executive:order' oid=order.id %}">{{ order.id }}</a></td>
-            <td class="align-middle">{{ order.created }}</td>
-            <td class="align-middle">{{ order.updated }}</td>
-            <td class="align-middle">{{ order.customer }}</td>
-            <td class="align-middle"><a href="{% url 'executive:viewagentprofile' aid=order.agent.id %}">{{ order.agent }}</a></td>
-            <td class="align-middle">{{ order.get_order_status_display }}</td>
-            <td class="align-middle">{{ order.get_payment_type_display }}</td>
-            <td class="align-middle">{{ order.preferred_time }}</td>
-            <td class="align-middle">Rs.{{ order.get_total_cost }}</td>
-            <td class="text-right">
-              {% if order.order_status != '4' and order.order_status != 'X'%}
-              <a href="{% url 'executive:cancel_order' oid=order.id %}"><button type="submit" class="btn">Cancel Order</button></a>
-              {% endif %}
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No orders have been placed yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">All Orders</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">All Orders</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Orders</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">ID</th>
+                                                    <th class="border-0">Date Created</th>
+                                                    <th class="border-0">Date Updated</th>
+                                                    <th class="border-0">Customer</th>
+                                                    <th class="border-0">Agent</th>
+                                                    <th class="border-0">Status</th>
+                                                    <th class="border-0">Payment Type</th>
+                                                    <th class="border-0">Time of Delivery</th>
+                                                    <th class="border-0">Total</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for order in orders %}
+                                                <tr>
+                                                    <td><a href="{% url 'executive:order' oid=order.id %}">{{ order.id }}</a></td>
+                                                    <td>{{ order.created}}</td>
+                                                    <td>{{ order.updated }}</td>
+                                                    <td>{{ order.customer }}</td>
+                                                    <td><a href="{% url 'executive:viewagentprofile' aid=order.agent.id %}">{{ order.agent }}</a></td>
+                                                    <td>{{ order.get_order_status_display }}</td>
+                                                    <td>{{ order.get_payment_type_display }}</td>
+                                                    <td></span>{{ order.preferred_time }}</td>
+                                                    <td>₹ {{ order.get_total_cost }}</td>
+                                                    <td class="text-right">
+                                                    {% if order.order_status != '4' and order.order_status != 'X'%}
+                                                    <a href="{% url 'executive:cancel_order' oid=order.id %}"><button type="submit" class="btn btn-danger">Cancel</button></a>
+                                                    {% endif %}
+                                                  </td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr>
+                                                  <td colspan="9" style="text-align: center;">No orders have been placed yet.</td>
+                                                </tr>
+                                              {% endfor %}
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
 {% endblock %}

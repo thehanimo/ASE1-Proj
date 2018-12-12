@@ -27,6 +27,7 @@
         </div>
     </section>
   <script type="text/javascript">
+    $("#id_area").attr('readonly',true);
     function zipcodeAutoFill() {
       var el = $("#id_zipcode");
       if ((el.val().length == 6) && $.isNumeric(el.val())) {

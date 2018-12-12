@@ -12,7 +12,7 @@ from shop.models import Product, Category
 class AgentDetailsForm(forms.ModelForm):
     class Meta:
         model = Agent
-        fields = ('fullname', 'phone', 'area', 'rating')
+        fields = ('fullname', 'phone', 'area','zipcode', 'rating')
 
     def save(self, user=None):
         agent_details = super(AgentDetailsForm, self).save(commit=False)
@@ -34,6 +34,6 @@ class AgentDeleteForm(forms.ModelForm):
 
     def save(self, user=None):
         agent = Agent.objects.get(user=user)
-        agent.delete()
         user.delete()
+        agent.delete()
         return

@@ -1,40 +1,74 @@
-{% extends 'base.html' %}
+{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">All Party Orders</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">All Party Orders</h2>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>Customer</th>
-          <th>Date Created</th>
-          <th>Number of Cans</th>
-          <th>Comments</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for order in orders %}
-          <tr>
-            <td class="align-middle">{{ order.user }}</td>
-            <td class="align-middle">{{ order.created }}</td>
-            <td class="align-middle">{{ order.number_of_cans }}</td>
-            <td class="align-middle">{{ order.comments }}</td>
-            <td class="text-right">
-              <a href="{% url 'executive:cancel_party_order' oid=order.id %}"><button type="submit" class="btn">Cancel Order</button></a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No orders have been placed yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Party Orders</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:all_orders' %}" class="breadcrumb-link">All Orders</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Party Orders</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Party Orders</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Customer</th>
+                                                    <th class="border-0">Date Created</th>
+                                                    <th class="border-0">No. of Cans</th>
+                                                    <th class="border-0">Comments</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for order in orders %}
+                                                <tr>
+                                                  <td class="align-middle">{{ order.user }}</td>
+                                                  <td class="align-middle">{{ order.created }}</td>
+                                                  <td class="align-middle">{{ order.number_of_cans }}</td>
+                                                  <td class="align-middle">{{ order.comments }}</td>
+                                                  <td class="text-right">
+                                                    <a href="{% url 'executive:cancel_party_order' oid=order.id %}"><button type="submit" class="btn btn-danger">Resolve</button></a>
+                                                  </td>
+                                                </tr>
+                                              {% empty %}
+                                                <tr>
+                                                  <td class="bg-light text-center font-italic" colspan="5">No orders have been placed yet.</td>
+                                                </tr>
+                                              {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
 {% endblock %}

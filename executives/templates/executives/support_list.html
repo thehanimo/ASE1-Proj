@@ -1,36 +1,69 @@
-{% extends 'base.html' %}
+{{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Incoming Support Requests</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">Incoming Support Requests</h2>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Timestamp</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for req in reqs %}
-          <tr>
-            <td class="align-middle">{{ req.customer.email }}</td>
-            <td class="align-middle">{{ req.timestamp }}</td>
-            <td class="align-middle">
-              <a href="{% url 'chat:room' room_name=req.label%}"><button type="submit" class="btn">Accept</button></a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No incoming support requests.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Support Requests</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Support Requests</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">Incoming Support Requests</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Email</th>
+                                                    <th class="border-0">Timestamp</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for req in reqs %}
+                                                <tr>
+                                                  <td class="align-middle">{{ req.customer.email }}</td>
+                                                  <td class="align-middle">{{ req.timestamp }}</td>
+                                                  <td class="align-middle">
+                                                    <a href="{% url 'chat:room' room_name=req.label%}"><button type="submit" class="btn">Accept</button></a>
+                                                  </td>
+                                                </tr>
+                                              {% empty %}
+                                                <tr>
+                                                  <td class="bg-light text-center font-italic" colspan="5">No incoming support requests.</td>
+                                                </tr>
+                                              {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
 {% endblock %}

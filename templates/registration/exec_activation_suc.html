@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
-  <h2>Hurray!</h2>
-  Thanks for confirming your email. Please wait until the administrator approves your account.
+  <section class="welcome_area bg-img background-overlay" style='background-image: url({% static "assets" %}/img/bg-img/bg-1.jpg);'>
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content">
+                        <h2>Hurray!</h2>
+                        <p class="lead">Thanks for confirming your email. Please wait until the administrator approves your account.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

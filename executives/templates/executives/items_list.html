@@ -1,0 +1,72 @@
+{% extends 'exec_base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Order {{ items.first.order.id }}</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:all_orders' %}" class="breadcrumb-link">All Orders</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Order {{ items.first.order.id }}</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">Order {{ items.first.order.id }}</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">Product</th>
+                                                    <th class="border-0">Quantity</th>
+                                                    <th class="border-0">Price</th>
+                                                    <th class="border-0">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for item in items %}
+                                                <tr>
+                                                    <td class="align-middle"><a href="{% url 'executive:editproduct' pid=item.product.id %}">{{ item.product.name }}</a></td>
+                                                    <td class="align-middle">{{ item.quantity }}</td>
+                                                    <td class="align-middle">{{ item.price }}</td>
+                                                    <td class="align-middle">{{ item.get_cost }}</td>
+                                                  </td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr>
+                                                  <td colspan="4" style="text-align: center;">No orders have been placed yet.</td>
+                                                </tr>
+                                              {% endfor %}
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
+{% endblock %}

@@ -1,22 +1,50 @@
-{% extends 'base.html' %}
-
+{% extends 'exec_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-  <div>
-    <div class="col-md-8 col-sm-10 col-12">
-      <h1>Create</h1>
-      <form method="post" enctype='multipart/form-data' novalidate>
-        {% csrf_token %}
-        <table>
-        {% for field in form %}
-          <tr>
-            <td style="font-weight: 500;">{{ field.label_tag }}</td><td> {{ field }}</td><td>{{ field.errors }}</td>
-          </tr>
-        {% endfor %}
-        </table>
-        <button type="submit" class="btn btn-success">Create</button>
-      </form>
-    </div>
-    <br/>
-  </div>
+<div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Notify Agent</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:agentslist' %}" class="breadcrumb-link">All Agents</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Notify Agent</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">Notify Agent</h5>
+                                <div class="card-body">
+                                        <form method="post" enctype='multipart/form-data' novalidate>
+                                        {% csrf_token %}
+                                        {% for field in form %}
+                                            <div class="form-group">
+                                               {{ field|as_crispy_field }}
+                                             </div>
+                                        {% endfor %}
+                                        </table>
+                                        <button type="submit" class="btn btn-success">Send</button>
+                                      </form>
+
+                                </div>
+                            </div>
+                        </div>
 {% endblock %}

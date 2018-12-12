@@ -51,9 +51,10 @@ class SubscriptionSignUpForm(forms.ModelForm):
         sub.save()
 
 class AgentNotifyForm(forms.ModelForm):
-    def __init__(self,*args,**kwargs):
-        super (AgentNotifyForm,self ).__init__(*args,**kwargs) # populates the post
-        self.fields['agent'].queryset = User.objects.filter(user_type='2')
     class Meta:
         model = AgentNotification
-        fields = ('agent','message')
+        fields = ('message',)
+    def save(self, user=None):
+        agent_notif = super(AgentNotifyForm, self).save(commit=False)
+        agent_notif.save()
+        return agent_notif

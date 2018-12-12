@@ -1,0 +1,66 @@
+{% extends 'exec_base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Agent Profile</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="javascript:history.back()">Back</a></li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                              <td style="font-weight: bold;">Email</td><td>: {{ agent.user.email }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Username</td><td>: {{ agent.user.username }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Fullname</td><td>: {{ agent.fullname }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Phone</td><td>: {{ agent.phone }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Zipcode</td><td>: {{ agent.zipcode }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Area</td><td>: {{ agent.area }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Rating</td><td>: {{ agent.rating }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
+{% endblock %}

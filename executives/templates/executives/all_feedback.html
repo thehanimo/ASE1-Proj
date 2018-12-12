@@ -1,35 +1,65 @@
-{% extends 'base.html' %}
+{{% extends 'exec_base.html' %}
+{% load static %}
 
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">All Feedback</li>
-    </ol>
-  </nav>
-  <h2 class="mb-3">All Feedback</h2> 
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr>
-          <th>S.No.</th>
-          <th>Message</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for ind, feedback in all_feedback %}
-          <tr>
-            <td class="align-middle">{{ ind }}</td>
-            <td class="align-middle">{{ feedback.message }}</td>
-            <td class="text-right">
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No Feedback.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">All Feedback</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="{% url 'executive:home' %}" class="breadcrumb-link">My Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">All Feedback</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <h5 class="card-header">All Feedback</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th width="20px" class="border-0">S.No</th>
+                                                    <th class="border-0">Message</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              {% for ind, feedback in all_feedback %}
+                                                <tr>
+                                                  <td >{{ ind }}</td>
+                                                  <td>{{ feedback.message }}</td>
+                                                </tr>
+                                              {% empty %}
+                                                <tr>
+                                                  <td class="bg-light text-center font-italic" colspan="2">No Feedback yet.</td>
+                                                </tr>
+                                              {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+
 {% endblock %}
