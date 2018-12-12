@@ -89,7 +89,7 @@ form.chat .myMessage,.fromThem{
   color: white;
   border-radius: 25px;
   clear: both;
-  font: 400 15px 'Open Sans', sans-serif;
+  font: 400 4vw 'Open Sans', sans-serif;
 }
 
 form.chat .myMessage {
@@ -168,7 +168,7 @@ form.chat .fromThem:after {
 form.chat date {
   position:absolute;
   top: 10px;
-  font-size:14px;
+  font-size:2vw;
   white-space:nowrap;
   vertical-align:middle;
   color: #8b8b90;
@@ -185,7 +185,7 @@ form.chat .fromThem date {
 }
 
 form.chat input{
-  font: 400 13px 'Open Sans', sans-serif;
+  font: 400 4vw 'Open Sans', sans-serif;
   border:0;
   padding:0 15px;
   height:10%;
@@ -207,7 +207,7 @@ form.chat input[type='submit']{
 }
 
   form.chat .myMessage,form.chat .fromThem{
-    font-size:12px;
+    font-size:4vw;
   }
   
   form.chat .message:hover .myMessage{
@@ -224,14 +224,14 @@ form.chat input[type='submit']{
     top: -20px;
     left:auto;
     right:0;
-    font-size:12px;
+    font-size:2vw;
   }
 
   form.chat .fromThem date {
     top: -20px;
     left:0;
     right:auto;
-    font-size:12px;
+    font-size:2vw;
   }
   
   form.chat .myMessage,
@@ -291,5 +291,5 @@ a.article{
   background-color:#00e34d;
   padding: 10px 20px;
   border-radius: 25px;
-  font: 400 15px sans-serif;
+  font: 400 1vw sans-serif;
 }

@@ -204,8 +204,6 @@ def DeliveredOrderView(request, oid):
 			form = OrderDeliveredForm(request.POST)
 			if request.POST.get('check', False):
 				form.save(order)
-				tracking = Tracking.objects.get(order=order)
-				tracking.delete()
 				return redirect('agent:assignedorders')
 
 		return render(request, 'executives/confirm.html', {'form':form, 'order':order})

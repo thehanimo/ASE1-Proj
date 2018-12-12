@@ -25,7 +25,7 @@ from orders.forms import OrderCancelConfirmForm
 from userAuth.models import User, AgentApplications
 from executives.models import Executive, AgentNotification
 from agents.models import Agent
-from orders.models import Order, OrderItem, PartyOrders, Subscriptions
+from orders.models import Order, OrderItem, PartyOrders, Subscriptions,Subscription
 from shop.models import Product, Category
 from feedback.models import Feedback
 
@@ -452,13 +452,13 @@ class SupportView(ListView):
 
 @method_decorator([login_required, executive_required], name='dispatch')
 class SubscriptionsView(ListView):
-	model = Subscriptions
+	model = Subscription
 	ordering = ('id', )
 	context_object_name = 'subs'
 	template_name = 'executives/subs_list.html'
 
 	def get_queryset(self):
-		queryset = Subscriptions.objects.all()
+		queryset = Subscription.objects.all()
 		return queryset
 
 @method_decorator([login_required, executive_required], name='dispatch')
@@ -469,7 +469,7 @@ class SubscriptionCreateView(CreateView):
 
 	def form_valid(self,form):
 		form.save()
-		return redirect('executive:subscriptions')
+		return redirect('executive:product')
 
 @login_required
 @executive_required

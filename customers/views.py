@@ -107,6 +107,7 @@ def HomeView(request):
 	return render(request, 'customers/home.html',{'cart':cart, 'categories':categories})
 
 def activate(request, uidb64, token):
+	cart = Cart(request)
 	try:
 		uid = force_text(urlsafe_base64_decode(uidb64))
 		user = User.objects.get(pk=uid)
@@ -231,7 +232,7 @@ def SubscriptionsView(request):
 	try:
 		cat = Category.objects.get(name='Subscriptions')
 	except:
-		return redirect('shop')
+		return redirect('shop:product_list')
 	return redirect('shop:product_list_by_category',category_slug=cat.slug)
 	
 
@@ -257,8 +258,8 @@ def SubscriptionClaimView(request, id):
 		return render(request, 'orders/order/NoDelivery.html', {'cart':cart,'area':request.user.customer.area})
 	order = Order.objects.create(customer=request.user, agent=agent.user, payment_type='3', preferred_time='ASAP')
 	cat,created = Category.objects.get_or_create(
-		name="Water",
-		slug="water",
+		name="Subscriptions",
+		slug="subscriptions",
 		)
 	can,created = Product.objects.get_or_create(
 		category=cat,

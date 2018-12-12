@@ -31,7 +31,7 @@
             <nav class="classy-navbar" id="essenceNav" style="padding-left: 0">
             	<!-- Back Button -->
                 <div class="user-login-info">
-                    <a href="javascript:history.back()"><img src="{% static 'assets' %}/img/core-img/arrow-left.svg" alt=""></a>
+                    <a href="javascript:window.history.go(-1);"><img src="{% static 'assets' %}/img/core-img/arrow-left.svg" alt=""></a>
                 </div>
                 <!-- Logo -->
                 <a class="nav-brand" href="{% url 'home' %}"><img src="{% static 'assets' %}/img/core-img/logo.png" alt="" width="111"></a>
@@ -68,7 +68,6 @@
                             {% else %}
                             <li><a href="{% url 'aboutus' %}">About Us</a></li>
                             <li><a href="{% url 'partner_with_us' %}">Partner With Us</a></li>
-                            <li><a href="#">Donate</a></li>
                             {% endif %}
                         </ul>
                     </div>
@@ -127,7 +126,7 @@
                 	<div class="product-image">
                         <img src="{{ MEDIA_URL}}{{product.image}}" onerror="if (this.src != '{{ MEDIA_URL}}product/default.jpg') this.src = '{{ MEDIA_URL}}product/default.jpg';" class="cart-thumb" alt="">
                         <!-- Cart Item Desc -->
-                        <div class="cart-item-desc" style="min-height: 250px">
+                        <div class="cart-item-desc">
 		                    <a href="{% url 'cart:cart_remove' product.id %}" title="Remove">
 		                    	<span class="product-remove"><i class="fa fa-close" aria-hidden="true"></i></span>
 		                    </a>
@@ -201,7 +200,6 @@
                         <ul class="footer_widget_menu">
                             <li><a href="{% url 'faq' %}">FAQ</a></li>
                             <li><a href="{% url 'aboutus' %}">About Us</a></li>
-                            <li><a href="#">Donate</a></li>
                             <li><a href="#">Guides</a></li>
                             <li><a href="#">Privacy Policy</a></li>
                             <li><a href="#">Terms of Use</a></li>

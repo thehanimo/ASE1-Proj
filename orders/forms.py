@@ -68,8 +68,9 @@ class OrderOutForDeliveryForm(forms.ModelForm):
 		try:
 			tracking = Tracking.objects.get(order=order)
 			tracking.enabled=True
-		except Tracking.DoesNotExist:
+		except:
 			tracking = Tracking.objects.create(order=order, enabled=True)
+		tracking.save()
 		order.save()
 		return
 

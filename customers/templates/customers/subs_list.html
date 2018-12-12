@@ -5,7 +5,8 @@
 {% block content %}
   <h2 class="mb-3 mt-100 ml-30">My Subscriptions</h2> 
   <div class="card mr-50 ml-50 mb-30">
-    <table class="table mb-0">
+    <div class="responsive-table">
+    <table class="table">
       <thead>
         <tr>
           <th>Name</th>
@@ -35,5 +36,6 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
   </div>
 {% endblock %}

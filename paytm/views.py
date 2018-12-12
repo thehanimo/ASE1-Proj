@@ -75,29 +75,24 @@ def status(request):
     context = {'resultDict': data_dict}
     if data_dict['STATUS'] == 'TXN_SUCCESS':
         oid = order_create(request)
-        if oid == 'S':
-            return render(request, 'paytm/success.html', {'cart':Cart(request)})
         return HttpResponseRedirect('/orders/placed/'+oid)
     return render(request, 'paytm/failed.html', context )
 
 
 
 def order_create(request):
-    try:
-        order = Order.objects.filter(customer=request.user,order_status='P').first()
-        oid = urlsafe_base64_encode(force_bytes(order.id)).decode()
-        create_invoice(request.user, order)
-        current_site = get_current_site(request)
-        mail_subject = 'Your Order.'
-        message = render_to_string('email/order_suc.html')
-        to_email = request.user.email
-        email = EmailMessage(
-                    mail_subject, message, to=[to_email]
-        )
-        email.attach_file(MEDIA_ROOT+'/orders/'+str(order.id)+".pdf")
-        email.send()
-        order.order_status = '1'
-        order.save()
-    except:
-        oid = 'S'
+    order = Order.objects.filter(customer=request.user,order_status='P').first()
+    oid = urlsafe_base64_encode(force_bytes(order.id)).decode()
+    create_invoice(request.user, order)
+    current_site = get_current_site(request)
+    mail_subject = 'Your Order.'
+    message = render_to_string('email/order_suc.html')
+    to_email = request.user.email
+    email = EmailMessage(
+                mail_subject, message, to=[to_email]
+    )
+    email.attach_file(MEDIA_ROOT+'/orders/'+str(order.id)+".pdf")
+    email.send()
+    order.order_status = '1'
+    order.save()
     return oid

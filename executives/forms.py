@@ -8,6 +8,7 @@ from agents.models import Agent
 from customers.models import Customer
 from executives.models import Executive,AgentNotification
 from shop.models import Product, Category
+from django.core.validators import MinValueValidator, MaxValueValidator
 from orders.models import Subscriptions
 
 
@@ -37,11 +38,29 @@ class ExecutiveDetailsForm(forms.ModelForm):
         return executive_details
 
 class SubscriptionSignUpForm(forms.ModelForm):
+    number_of_cans = forms.IntegerField(validators=[MinValueValidator(0)])
     class Meta:
-        model = Subscriptions
-        fields = ('name','description', 'price', 'number_of_cans')
+        model = Product
+        fields = ('name','slug','description','price','available','stock','image','number_of_cans')
 
     def save(self):
+        cat,created = Category.objects.get_or_create(
+            name="Subscriptions",
+            slug="subscriptions",
+            )
+        cat.save()
+        prod = Product.objects.create(
+            category=cat,
+            slug=self.cleaned_data['slug'],
+            name=self.cleaned_data['name'],
+            description=self.cleaned_data['description'],
+            price=self.cleaned_data['price'],
+            available=self.cleaned_data['available'],
+            stock=self.cleaned_data['stock'],
+            image=self.cleaned_data['image'],
+            number_of_cans=self.cleaned_data['number_of_cans'],
+            only_online=True
+            )
         sub = Subscriptions.objects.create(
             name=self.cleaned_data['name'],
             description=self.cleaned_data['description'],
@@ -49,6 +68,8 @@ class SubscriptionSignUpForm(forms.ModelForm):
             number_of_cans=self.cleaned_data['number_of_cans']
             )
         sub.save()
+        a=prod.reduce_stock(0)
+        prod.save()
 
 class AgentNotifyForm(forms.ModelForm):
     class Meta:

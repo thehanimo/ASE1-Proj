@@ -6,7 +6,8 @@
 
   <h2 class="mb-3 mt-100 ml-30">My Orders</h2> 
   <div class="card mr-50 ml-50 mb-30">
-    <table class="table mb-0">
+    <div class="table-responsive">
+    <table class="table">
       <thead>
         <tr>
           <th>Order Id</th>
@@ -37,10 +38,11 @@
           </tr>
         {% empty %}
           <tr>
-            <td class="bg-light text-center font-italic" colspan="5">No orders have been placed yet.</td>
+            <td class="bg-light text-center font-italic" colspan="7">No orders have been placed yet.</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
+  </div>
   </div>
 {% endblock %}
