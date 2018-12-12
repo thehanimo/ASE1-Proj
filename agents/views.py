@@ -30,27 +30,17 @@ from django.core.mail import EmailMessage
 @login_required
 @agent_required
 def HomeView(request):
-	inc_orders = len(Order.objects.filter(agent=request.user, order_status='W')) + len(Order.objects.filter(agent=request.user, order_status='1'))
-	ass_orders = len(Order.objects.filter(agent=request.user, order_status='2')) + len(Order.objects.filter(agent=request.user, order_status='3'))
-	del_orders = len(Order.objects.filter(agent=request.user, order_status='4'))
-	can_orders = len(Order.objects.filter(agent=request.user, order_status='X'))
-	return render(request, "agents/home.html", {'inc_orders':inc_orders,'ass_orders':ass_orders,'del_orders':del_orders, 'can_orders':can_orders,})
+	context = {}
+	context['num_of_orders'] = Order.objects.filter(agent=request.user).count()
+	context['orders'] = Order.objects.filter(agent=request.user)[:5]
+	return render(request, "agents/home.html", context)
 
 
 
 @login_required 
 @agent_or_executive_required
-def AgentDetailsView(request, aid):
-	try:
-		agent = User.objects.get(pk=aid)
-	except:
-		agent = None
-	if agent and (agent.id == request.user.id or request.user.user_type == 3):
-		details = {}
-		for field in Agent._meta.get_fields():
-			details[field.name] = getattr(agent.agent, field.name)
-		return render(request, "registration/details_view.html", {'details':details})
-	return render(request, '500.html')
+def AgentDetailsView(request):
+	return render(request, 'agents/agent_profile.html', {'agent':request.user.agent})
 
 
 def activate(request, uidb64, token):
@@ -78,7 +68,7 @@ class OrderView(ListView):
 	model = OrderItem
 	ordering = ('id', )
 	context_object_name = 'items'
-	template_name = 'customers/items_list.html'
+	template_name = 'agents/order_view.html'
 
 	def get_queryset(self):
 		order = Order.objects.get(id=self.kwargs['oid'])
@@ -97,6 +87,17 @@ class IncomingOrdersView(ListView):
 
 	def get_queryset(self):
 		queryset = Order.objects.filter(agent=self.request.user, order_status='W') | Order.objects.filter(agent=self.request.user, order_status='1')
+		return queryset
+
+@method_decorator([login_required, agent_required], name='dispatch')
+class AllOrdersView(ListView):
+	model = Order
+	ordering = ('created', )
+	context_object_name = 'orders'
+	template_name = 'agents/all_orders.html'
+
+	def get_queryset(self):
+		queryset = Order.objects.filter(agent=self.request.user)
 		return queryset
 
 @method_decorator([login_required, agent_required], name='dispatch')
@@ -147,7 +148,7 @@ def AcceptOrderView(request, oid):
 				form.save(order)
 				return redirect('agent:incomingorders')
 
-		return render(request, 'registration/order_accept.html', {'form':form, 'order':order})
+		return render(request, 'executives/confirm.html', {'form':form, 'order':order})
 	return redirect('forbidden')
 
 @login_required
@@ -165,7 +166,7 @@ def CancelOrderView(request, oid):
 				form.save(order)
 				return redirect('home')
 
-		return render(request, 'registration/order_cancel.html', {'form':form, 'order':order})
+		return render(request, 'executives/confirm.html', {'form':form, 'order':order})
 	return redirect('forbidden')
 
 @login_required
@@ -183,7 +184,7 @@ def OutForDeliveryOrderView(request, oid):
 				form.save(order)
 				return redirect('agent:assignedorders')
 
-		return render(request, 'registration/order_confirm.html', {'form':form, 'order':order})
+		return render(request, 'executives/confirm.html', {'form':form, 'order':order})
 	return redirect('forbidden')
 
 
@@ -202,7 +203,7 @@ def DeliveredOrderView(request, oid):
 				form.save(order)
 				return redirect('agent:assignedorders')
 
-		return render(request, 'registration/order_confirm.html', {'form':form, 'order':order})
+		return render(request, 'executives/confirm.html', {'form':form, 'order':order})
 	return redirect('forbidden')
 
 @method_decorator([login_required, agent_required], name='dispatch')

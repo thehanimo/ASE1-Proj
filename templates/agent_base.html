@@ -1,0 +1,235 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+ 
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'executive/assets' %}/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="{% static 'executive/assets' %}/vendor/fonts/circular-std/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'executive/assets' %}/libs/css/style.css">
+    <link rel="stylesheet" href="{% static 'executive/assets' %}/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <link rel="stylesheet" href="{% static 'executive/assets' %}/vendor/charts/chartist-bundle/chartist.css">
+    <link rel="stylesheet" href="{% static 'executive/assets' %}/vendor/charts/morris-bundle/morris.css">
+    <link rel="stylesheet" href="{% static 'executive/assets' %}/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="{% static 'executive/assets' %}/vendor/charts/c3charts/c3.css">
+    <link rel="stylesheet" href="{% static 'executive/assets' %}/vendor/fonts/flag-icon-css/flag-icon.min.css">
+
+    <title>TWC - Agent</title>
+
+    <body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'assets' %}/img/core-img/logo.png" alt="" width="111"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"><i class="fas fa-fw fa-bell"></i> <span id="indic1"></span>
+                </button>
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto navbar-right-top">
+                        <li class="nav-item dropdown notification">
+                            <a class="nav-link nav-icons" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-fw fa-bell"></i> <span id="indic2"></span></a>
+                            <ul class="dropdown-menu dropdown-menu-right notification-dropdown">
+                                <li>
+                                    <div class="notification-title">Notifications</div>
+                                    <div class="notification-list">
+                                        <div class="list-group" id="notif1">
+                                            <a href="{% url 'agent:notifications' %}" class="list-group-item list-group-item-action active">
+                                                <div class="notification-info">
+                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">New</span>Message from Executive
+                                                        <div class="notification-date">New!</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="list-group" id="notif1">
+                                            <a href="{% url 'agent:incomingorders' %}" class="list-group-item list-group-item-action active">
+                                                <div class="notification-info">
+                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">New</span>Incoming Orders
+                                                        <div class="notification-date">New!</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown nav-user">
+                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src='{{ MEDIA_URL}}default.jpg'" alt="" class="user-avatar-md rounded-circle"></a>
+                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
+                                <div class="nav-user-info">
+                                    <h5 class="mb-0 text-white nav-user-name">{{user.username}}</h5>
+                                </div>
+                                <a class="dropdown-item" href="{% url 'agent:viewprofile' %}"><i class="fas fa-user mr-2"></i>Account</a>
+                                <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-power-off mr-2"></i>Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <div class="nav-left-sidebar sidebar-dark">
+            <div class="menu-list">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-divider">
+                                Menu
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-2" aria-controls="submenu-2"><i class="fa fa-fw fa-rocket"></i>My Dashboard</a>
+                                <div id="submenu-2" class="collapse submenu" style="">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'agent:incomingorders' %}">Incoming Orders</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'agent:assignedorders' %}">Assigned Orders</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'agent:completedorders' %}">Completed Orders</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'agent:cancelledorders' %}">Cancelled Orders</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'agent:notifications' %}">Messages</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'agent:viewprofile' %}" ><i class="fa fa-fw fa-user-circle"></i>My Account</a>
+                                <div id="submenu-2" class="collapse submenu" style="">
+                                    <ul class="nav flex-column">
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}"" ><i class="fa fa-fw fa-power-off"></i>Logout</a>
+                                <div id="submenu-2" class="collapse submenu" style="">
+                                    <ul class="nav flex-column">
+                                    </ul>
+                                </div>
+                            </li>
+                            </nav>
+                        </div>
+                    </div>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        {% block content %}
+        {% endblock %}
+    </div>
+    <!-- ============================================================== -->
+    <!-- end wrapper  -->
+    <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper  -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+    <!-- jquery 3.3.1 -->
+    <script src="{% static 'executive/assets' %}/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script src="{% static 'executive/assets' %}/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="{% static 'executive/assets' %}/vendor/slimscroll/jquery.slimscroll.js"></script>
+    <script src="{% static 'executive/assets' %}/vendor/charts/charts-bundle/Chart.bundle.js"></script>
+
+
+<script type="text/javascript">
+    $( document ).ready(ajaxCall)
+    $('#notif1').hide();
+    setInterval(ajaxCall, 1500); //300000 MS == 5 minutes
+    function ajaxCall() {
+        $.ajax({
+        type: 'POST',
+        url: '{% url "api:poll"%}',
+        data: '{"user_id":{{request.user.id}}, "page":"home"}', // or JSON.stringify ({name: 'jonas'}),
+        success: function(data){
+           if(data['reload'] === 'true'){
+            if(data['type'] === 'notifs'){
+                blink_text('#notifs');
+                setInterval(function() { blink_text('#notifs'); }, 1200);
+                $('#indic1').addClass('indicator');
+                $('#indic2').addClass('indicator');
+                $('#notif1').show();
+               }
+            if(data['type'] === 'incOrders'){
+                blink_text('#incOrders');
+                setInterval(function() { blink_text('#incOrders'); }, 1200);
+                $('#indic1').addClass('indicator');
+                $('#indic2').addClass('indicator');
+                $('#notif2').show();
+            }
+           }
+        },
+        contentType: "application/json",
+        dataType: 'json'
+        });
+    }
+    function blink_text(id) {
+    $(id).fadeOut(500);
+    $(id).fadeIn(500);
+    }
+    (function(window, document, $, undefined) {
+        "use strict";
+        $(function() {
+            var ctx = document.getElementById("chartjs_pie").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ["Admins", "Customers", "Executives", "Agents"],
+                    datasets: [{
+                        backgroundColor: [
+                           "#5969ff",
+                            "#ff407b",
+                            "#25d5f2",
+                            "#ffc750",
+                        ],
+                        data: [{{users_admins}}, {{users_customers}}, {{users_execs}}, {{users_agents}}]
+                    }]
+                },
+                options: {
+                       legend: {
+                    display: true,
+                    position: 'bottom',
+
+                    labels: {
+                        fontColor: '#71748d',
+                        fontFamily: 'Circular Std Book',
+                        fontSize: 14,
+                    }
+                },
+
+                
+            }
+            });
+
+
+        });
+
+})(window, document, window.jQuery);
+</script>
+</body>
+ 
+</html>

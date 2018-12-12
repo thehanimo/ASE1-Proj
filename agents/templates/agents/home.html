@@ -1,41 +1,165 @@
-{% extends 'base.html' %}
-{% block content %}
-<h3>Hi {{user.username}}!</h3>
-<h6>Agent site</h6>
-<img src='{{ MEDIA_URL}}default.jpg';" width="200px" height="200px"><br>
-<a href="{% url 'agent:viewprofile' aid=user.id%}">View profile</a><br/>
-<span id='incOrders'><a href="{% url 'agent:incomingorders' %}">Incoming Orders(s)</a></span><br/>
-<a href="{% url 'agent:assignedorders' %}">Assigned Orders : {{ass_orders}}</a><br/>
-<a href="{% url 'agent:completedorders' %}">Completed Orders : {{del_orders}}</a><br/>
-<a href="{% url 'agent:cancelledorders' %}">Cancelled Orders : {{can_orders}}</a><br/>
-<span id='notifs'><a href="{% url 'agent:notifications' %}">Notifications</a></span>
-<script type="text/javascript">
-	$( document ).ready(ajaxCall)
-	setInterval(ajaxCall, 3000); //300000 MS == 5 minutes
+{% extends 'agent_base.html' %}
+{% load static %}
 
-	function ajaxCall() {
-	    $.ajax({
-	    type: 'POST',
-	    url: '{% url "api:poll"%}',
-	    data: '{"user_id":{{request.user.id}}, "page":"home"}', // or JSON.stringify ({name: 'jonas'}),
-	    success: function(data){
-	       if(data['reload'] === 'true'){
-	       	if(data['type'] === 'notifs'){
-		       	setInterval(function() { blink_text('#notifs'); }, 1000);
-		       }
-		    if(data['type'] === 'incOrders'){
-		    	setInterval(function() { blink_text('#incOrders'); }, 1000);
-		    }
-	       }
-	    },
-	    contentType: "application/json",
-	    dataType: 'json'
-		});
-	}
-	
-	function blink_text(id) {
-    $(id).fadeOut(500);
-    $(id).fadeIn(500);
-	}
-</script>
+{% block content %}
+<!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">My Dashboard</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item active" aria-current="page">My Dashboard</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="ecommerce-widget">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                            	<a href="{% url 'agent:incomingorders' %}">
+	                                <div class="card card-figure has-hoverable border-3 border-top border-top-primary">
+	                                    <div class="card-body">
+	                                        <h5 class="text-muted">Orders</h5>
+	                                        <div class="metric-value d-inline-block">
+	                                            <h1 class="mb-1" id="incOrders">Incoming</h1>
+	                                        </div>
+	                                    </div>
+	                                </div>
+                            	</a>	
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                            	<a href="{% url 'agent:assignedorders' %}">
+	                                <div class="card card-figure has-hoverable border-3 border-top border-top-primary">
+	                                    <div class="card-body">
+	                                        <h5 class="text-muted">Orders</h5>
+	                                        <div class="metric-value d-inline-block">
+	                                            <h1 class="mb-1">Assigned</h1>
+	                                        </div>
+	                                    </div>
+	                                </div>
+                            	</a>	
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                                <a href="{% url 'agent:completedorders' %}">
+                                 <div class="card card-figure has-hoverable border-3 border-top border-top-primary">
+                                       <div class="card-body">
+                                           <h5 class="text-muted">Orders</h5>
+                                           <div class="metric-value d-inline-block">
+                                               <h1 class="mb-1">Completed</h1>
+                                        </div>
+                                       </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                            <a href="{% url 'agent:cancelledorders' %}">
+                                <div class="card card-figure has-hoverable border-3 border-top border-top-primary">
+                                    <div class="card-body">
+                                        <h5 class="text-muted">Orders </h5>
+                                        <div class="metric-value d-inline-block">
+                                            <h1 class="mb-1">Cancelled</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                            
+                        </div>
+                        <div class="row">
+                            <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card card-figure has-hoverable border-3 border-top border-top-primary">
+                                <h5 class="card-header">Recent Orders</h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table" style="text-align: center;">
+                                            <thead class="bg-light">
+                                                <tr class="border-0">
+                                                    <th class="border-0">ID</th>
+                                                    <th class="border-0">Date Created</th>
+                                                    <th class="border-0">Date Updated</th>
+                                                    <th class="border-0">Customer</th>
+                                                    <th class="border-0">Agent</th>
+                                                    <th class="border-0">Status</th>
+                                                    <th class="border-0">Payment Type</th>
+                                                    <th class="border-0">Time of Delivery</th>
+                                                    <th class="border-0">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            	{% for order in orders %}
+                                                <tr>
+                                                    <td>{{ order.id }}</td>
+                                                    <td>{{ order.created}}</td>
+                                                    <td>{{ order.updated }}</td>
+                                                    <td>{{ order.customer }}</td>
+                                                    <td>{{ order.agent }}</td>
+                                                    <td>{{ order.get_order_status_display }}</td>
+                                                    <td>{{ order.get_payment_type_display }}</td>
+                                                    <td></span>{{ order.preferred_time }}</td>
+                                                    <td>₹ {{ order.get_total_cost }}</td>
+                                                </tr>
+                                                {% empty %}
+										          <tr>
+										            <td colspan="9" style="text-align: center;">No orders have been placed yet.</td>
+										          </tr>
+										        {% endfor %}
+                                                <tr>
+                                                    <td colspan="9"><a href="{% url 'agent:all_orders' %}" class="btn btn-brand float-right">Manage All Orders</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end recent orders  -->
+                        <!-- hover list  -->
+                            <!-- ============================================================== -->
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                            <a href="{% url 'agent:notifications' %}">
+                                <div class="card card-figure has-hoverable border-3 border-top border-top-primary">
+                                    <div class="card-body">
+                                        <h5 class="text-muted">View</h5>
+                                        <div class="metric-value d-inline-block">
+                                            <h1 class="mb-1" id="notifs">Messages</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                            <!-- ============================================================== -->
+                            <!-- end hoverlist  -->
+                            
+                    
+                    <!-- ============================================================== -->
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                                <div class="card card-figure has-hoverable border-3 border-top border-top-primary">
+                                    <div class="card-body">
+                                        <h5 class="text-muted">Total Orders</h5>
+                                        <div class="metric-value d-inline-block">
+                                            <h1 class="mb-1">{{num_of_orders}}</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
 {% endblock %}

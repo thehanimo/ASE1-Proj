@@ -14,12 +14,12 @@
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Assigned Orders</h2>
+                                <h2 class="pageheader-title">All Orders</h2>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="{% url 'agent:home' %}" class="breadcrumb-link">My Dashboard</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Assigned Orders</li>
+                                            <li class="breadcrumb-item active" aria-current="page">All Orders</li>
                                         </ol>
                                     </nav>
                                 </div>
@@ -32,7 +32,7 @@
                     <!-- ============================================================== -->
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="card border-3 border-top border-top-primary">
-                                <h5 class="card-header">Assigned Orders</h5>
+                                <h5 class="card-header">All Orders</h5>
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
                                         <table class="table" style="text-align: center;">
@@ -59,16 +59,21 @@
                                                     <td></span>{{ order.preferred_time }}</td>
                                                     <td>₹ {{ order.get_total_cost }}</td>
                                                     <td class="text-right">
-                                                    {% if order.order_status == '2' %}
-              <a href="{% url 'agent:outfordelivery_order' oid=order.id %}"><button type="submit" class="btn btn-success">Proceed to Deliver</button></a>
-              {% else %}
-              <a href="{% url 'agent:delivered_order' oid=order.id %}"><button type="submit" class="btn btn-brand">Confirm Delivery</button></a>
-              {% endif %}
+                                                    {% if order.order_status == '1' %}
+                                                    <a href="{% url 'agent:accept_order' oid=order.id %}"><button type="submit" class="btn btn-success">Accept</button></a>
+                                                    {% elif order.order_status == '2' %}
+                                                      <a href="{% url 'agent:outfordelivery_order' oid=order.id %}"><button type="submit" class="btn btn-success">Proceed to Deliver</button></a>
+                                                    {% elif order.order_status == '3' %}
+                                                      <a href="{% url 'agent:delivered_order' oid=order.id %}"><button type="submit" class="btn btn-brand">Confirm Delivery</button></a>
+                                                    {% elif order.order_status == 'W' %}
+                                                    <a href="{% url 'agent:accept_order' oid=order.id %}"><button type="submit" class="btn btn-primary">Revert</button></a>
+                                                    <a href="{% url 'agent:cancel_order' oid=order.id %}"><button type="submit" class="btn btn-danger">Cancel</button></a>
+                                                    {% endif %}
                                                   </td>
                                                 </tr>
                                                 {% empty %}
                                                 <tr>
-                                                  <td colspan="9" style="text-align: center;">No orders assigned yet.</td>
+                                                  <td colspan="9" style="text-align: center;">No orders have been placed yet.</td>
                                                 </tr>
                                               {% endfor %}
                                                 

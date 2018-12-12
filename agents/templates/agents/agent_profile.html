@@ -1,4 +1,4 @@
-{{% extends 'agent_base.html' %}
+{% extends 'agent_base.html' %}
 {% load static %}
 
 {% block content %}
@@ -14,12 +14,11 @@
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Messages</h2>
+                                <h2 class="pageheader-title">Agent Profile</h2>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="{% url 'agent:home' %}" class="breadcrumb-link">My Dashboard</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Messages</li>
+                                            <li class="breadcrumb-item"><a href="javascript:history.back()">Back</a></li>
                                         </ol>
                                     </nav>
                                 </div>
@@ -28,34 +27,36 @@
                     </div>
                     <!-- ============================================================== -->
                     <!-- end pageheader  -->
-                    
                     <!-- ============================================================== -->
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="card border-3 border-top border-top-primary">
-                                <h5 class="card-header">Messages</h5>
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
-                                        <table class="table" style="text-align: center;">
-                                            <thead class="bg-light">
-                                                <tr class="border-0">
-                                                    <th class="border-0">Timestamp</th>
-                                                    <th class="border-0">Message</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                              {% for notif in notifs %}
-                                                <tr>
-                                                  <td class="align-middle">{{ notif.created }}</td>
-                                                  <td class="align-middle">{{ notif.message }}</td>
-                                                </tr>
-                                              {% empty %}
-                                                <tr>
-                                                  <td class="bg-light text-center font-italic" colspan="5">No Notifications.</td>
-                                                </tr>
-                                              {% endfor %}
-                                            </tbody>
+                                        <table class="table">
+                                            <tr>
+                                              <td style="font-weight: bold;">Email</td><td>: {{ agent.user.email }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Username</td><td>: {{ agent.user.username }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Fullname</td><td>: {{ agent.fullname }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Phone</td><td>: {{ agent.phone }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Zipcode</td><td>: {{ agent.zipcode }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Area</td><td>: {{ agent.area }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td style="font-weight: bold;">Rating</td><td>: {{ agent.rating }}</td>
+                                            </tr>
                                         </table>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
