@@ -50,7 +50,7 @@
                                                 </div>
                                             </a>
                                         </div>
-                                        <div class="list-group" id="notif1">
+                                        <div class="list-group" id="notif2">
                                             <a href="{% url 'agent:incomingorders' %}" class="list-group-item list-group-item-action active">
                                                 <div class="notification-info">
                                                     <div class="notification-list-user-block"><span class="notification-list-user-name">New</span>Incoming Orders
@@ -159,6 +159,7 @@
 <script type="text/javascript">
     $( document ).ready(ajaxCall)
     $('#notif1').hide();
+    $('#notif2').hide();
     setInterval(ajaxCall, 1500); //300000 MS == 5 minutes
     function ajaxCall() {
         $.ajax({

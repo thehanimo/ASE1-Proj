@@ -499,12 +499,8 @@ class AgentNotifyView(CreateView):
 	form_class = AgentNotifyForm
 	template_name = 'executives/agent_notify.html'
 
-	def get_object(self):
-		agent = User.objects.get(id=self.kwargs['aid'])
-		return agent
-
 	def form_valid(self,form):
-		form.save()
+		form.save(User.objects.get(id=self.kwargs['aid']))
 		return render(self.request,'executives/agent_notified.html')
 
 @method_decorator([login_required, executive_required], name='dispatch')

@@ -75,7 +75,10 @@ class AgentNotifyForm(forms.ModelForm):
     class Meta:
         model = AgentNotification
         fields = ('message',)
-    def save(self, user=None):
-        agent_notif = super(AgentNotifyForm, self).save(commit=False)
+    def save(self, agent):
+        agent_notif = AgentNotification.objects.create(
+            agent=agent,
+            message=self.cleaned_data['message'],
+        )
         agent_notif.save()
         return agent_notif
